@@ -9,6 +9,7 @@ import (
 type OrganizerStorer interface {
 	RegisterOrganizer(orgDetail dto.RegisterOrganizerRequest) error
 	GetOrganizerIDPassword(email string) (int, string, error)
+	VerifyOrganizer(organizerId int) error
 }
 
 type Organizer struct {

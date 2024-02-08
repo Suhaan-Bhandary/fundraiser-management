@@ -10,3 +10,9 @@ const getOrganizerIdPasswordQuery = `
 	from organizer
 	where email = $1;
 `
+
+const verifyOrganizerQuery = `
+	update organizer
+	set is_verified = true
+	where id = $1;
+`

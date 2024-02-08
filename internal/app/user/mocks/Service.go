@@ -60,6 +60,34 @@ func (_m *Service) GetUserList() ([]dto.UserView, error) {
 	return r0, r1
 }
 
+// GetUserProfile provides a mock function with given fields: userId
+func (_m *Service) GetUserProfile(userId int) (dto.UserView, error) {
+	ret := _m.Called(userId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserProfile")
+	}
+
+	var r0 dto.UserView
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (dto.UserView, error)); ok {
+		return rf(userId)
+	}
+	if rf, ok := ret.Get(0).(func(int) dto.UserView); ok {
+		r0 = rf(userId)
+	} else {
+		r0 = ret.Get(0).(dto.UserView)
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(userId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // LoginUser provides a mock function with given fields: req
 func (_m *Service) LoginUser(req dto.LoginUserRequest) (string, error) {
 	ret := _m.Called(req)
