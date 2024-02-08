@@ -92,3 +92,15 @@ func (userStore *userStore) GetUserList() ([]dto.UserView, error) {
 
 	return users, nil
 }
+func (userStore *userStore) GetUserProfile(userId int) (dto.UserView, error) {
+	row := userStore.db.QueryRow(getUserQuery, userId)
+
+	user := dto.UserView{}
+	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email)
+
+	if err != nil {
+		return dto.UserView{}, errors.New("error while fetching users")
+	}
+
+	return user, nil
+}

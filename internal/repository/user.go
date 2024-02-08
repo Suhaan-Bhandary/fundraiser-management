@@ -11,6 +11,7 @@ type UserStorer interface {
 	GetUserIDPassword(email string) (int, string, error)
 	DeleteUser(userId int) error
 	GetUserList() ([]dto.UserView, error)
+	GetUserProfile(userId int) (dto.UserView, error)
 }
 
 type User struct {

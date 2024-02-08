@@ -17,7 +17,7 @@ paths:
     post:
       tags:
         - "user"
-      summary: Register an user
+      summary: Register an user DONE
       description: Creates an user in the database
       requestBody:
         description: User data
@@ -80,7 +80,7 @@ paths:
     post:
       tags:
         - "user"
-      summary: User Login
+      summary: User Login DONE
       description: Returns JWT token once loggedIn
       requestBody:
         description: email and password
@@ -183,7 +183,7 @@ paths:
     get:
       tags:
         - "user"
-      summary: Data of LoggedIn User
+      summary: Data of LoggedIn User DONE
       description: Returns detail of the loggedIn user using token in header, user_id and user_id in token should match
       security:
         - userBearerAuth: []
@@ -231,7 +231,7 @@ paths:
     delete:
       tags:
         - "user"
-      summary: Delete an user
+      summary: Delete an user DONE
       description: Deletes an user from the database
       security:
         - adminBearerAuth: []
@@ -336,7 +336,7 @@ paths:
     post:
       tags:
         - "organizer"
-      summary: Register an organizer
+      summary: Register an organizer DONE
       description: Creates an organizer in the database
       requestBody:
         description: Organizer data
@@ -398,7 +398,7 @@ paths:
     post:
       tags:
         - "organizer"
-      summary: Organizer Login
+      summary: Organizer Login DONE
       description: Returns JWT token once loggedIn
       requestBody:
         description: email and password
@@ -730,7 +730,7 @@ paths:
     post:
       tags:
         - "admin"
-      summary: Admin Login
+      summary: Admin Login DONE
       description: Returns JWT token once loggedIn
       requestBody:
         description: username and password

@@ -20,6 +20,7 @@ type Service interface {
 	LoginUser(req dto.LoginUserRequest) (string, error)
 	DeleteUser(userId int) error
 	GetUserList() ([]dto.UserView, error)
+	GetUserProfile(userId int) (dto.UserView, error)
 }
 
 func NewService(userRepo repository.UserStorer) Service {
@@ -80,4 +81,14 @@ func (userSvc *service) GetUserList() ([]dto.UserView, error) {
 	}
 
 	return users, nil
+}
+
+func (userSvc *service) GetUserProfile(userId int) (dto.UserView, error) {
+	user, err := userSvc.userRepo.GetUserProfile(userId)
+
+	if err != nil {
+		return dto.UserView{}, err
+	}
+
+	return user, nil
 }
