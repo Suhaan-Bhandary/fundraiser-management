@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/user"
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/middleware"
 )
@@ -29,6 +30,8 @@ func RegisterUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.R
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, req)
+		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+			Message: "User registered successfully",
+		})
 	}
 }

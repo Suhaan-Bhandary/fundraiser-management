@@ -1,7 +1,10 @@
 package user
 
 import (
+	"errors"
+
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/helpers"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/repository"
 )
 
@@ -21,7 +24,14 @@ func NewService(userRepo repository.UserStorer) Service {
 }
 
 func (orderSvc *service) RegisterUser(userDetail dto.RegisterUserRequest) error {
-	err := orderSvc.userRepo.RegisterUser(userDetail)
+	// Hash the password before registering the user
+	hashedPassword, err := helpers.HashPassword(userDetail.Password)
+	if err != nil {
+		return errors.New("Internal Server Error")
+	}
+	userDetail.Password = hashedPassword
+
+	err = orderSvc.userRepo.RegisterUser(userDetail)
 	if err != nil {
 		return err
 	}
