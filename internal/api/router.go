@@ -22,6 +22,7 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 	userRouter.HandleFunc("/register", RegisterUserHandler(deps.UserService)).Methods(http.MethodPost)
 	userRouter.HandleFunc("/login", LoginUserHandler(deps.UserService)).Methods(http.MethodPost)
 	userRouter.HandleFunc("", UserListHandler(deps.UserService)).Methods(http.MethodGet)
+	userRouter.HandleFunc("/{id}", DeleteUserHandler(deps.UserService)).Methods(http.MethodDelete)
 
 	// Admin routes
 	adminRouter := router.PathPrefix("/admin").Subrouter()

@@ -55,6 +55,27 @@ func (userStore *userStore) GetUserIDPassword(email string) (int, string, error)
 	return id, password, nil
 }
 
+func (userStore *userStore) DeleteUser(userId int) error {
+	res, err := userStore.db.Exec(
+		deleteUserQuery,
+		userId,
+	)
+	if err != nil {
+		return errors.New("error while deleting the user")
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return errors.New("error while deleting the user")
+	}
+
+	if rowsAffected == 0 {
+		return internal_errors.NotFoundError{Message: "User not found"}
+	}
+
+	return nil
+}
+
 func (userStore *userStore) GetUserList() ([]dto.UserView, error) {
 	rows, err := userStore.db.Query(getUsersQuery)
 	if err != nil {

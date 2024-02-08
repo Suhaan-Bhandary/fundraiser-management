@@ -9,6 +9,7 @@ import (
 type UserStorer interface {
 	RegisterUser(userDetail dto.RegisterUserRequest) error
 	GetUserIDPassword(email string) (int, string, error)
+	DeleteUser(userId int) error
 	GetUserList() ([]dto.UserView, error)
 }
 

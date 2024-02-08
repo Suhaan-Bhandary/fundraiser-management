@@ -9,6 +9,41 @@ type AdminStorer struct {
 	mock.Mock
 }
 
+// GetAdminIDPassword provides a mock function with given fields: username
+func (_m *AdminStorer) GetAdminIDPassword(username string) (int, string, error) {
+	ret := _m.Called(username)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAdminIDPassword")
+	}
+
+	var r0 int
+	var r1 string
+	var r2 error
+	if rf, ok := ret.Get(0).(func(string) (int, string, error)); ok {
+		return rf(username)
+	}
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(username)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) string); ok {
+		r1 = rf(username)
+	} else {
+		r1 = ret.Get(1).(string)
+	}
+
+	if rf, ok := ret.Get(2).(func(string) error); ok {
+		r2 = rf(username)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // NewAdminStorer creates a new instance of AdminStorer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewAdminStorer(t interface {

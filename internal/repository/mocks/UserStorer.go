@@ -12,6 +12,24 @@ type UserStorer struct {
 	mock.Mock
 }
 
+// DeleteUser provides a mock function with given fields: userId
+func (_m *UserStorer) DeleteUser(userId int) error {
+	ret := _m.Called(userId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteUser")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(userId)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetUserIDPassword provides a mock function with given fields: email
 func (_m *UserStorer) GetUserIDPassword(email string) (int, string, error) {
 	ret := _m.Called(email)
