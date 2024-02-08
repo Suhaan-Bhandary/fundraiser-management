@@ -27,7 +27,7 @@ func NewService(userRepo repository.UserStorer) Service {
 	}
 }
 
-func (orderSvc *service) RegisterUser(userDetail dto.RegisterUserRequest) error {
+func (userSvc *service) RegisterUser(userDetail dto.RegisterUserRequest) error {
 	// Hash the password before registering the user
 	hashedPassword, err := helpers.HashPassword(userDetail.Password)
 	if err != nil {
@@ -35,7 +35,7 @@ func (orderSvc *service) RegisterUser(userDetail dto.RegisterUserRequest) error 
 	}
 	userDetail.Password = hashedPassword
 
-	err = orderSvc.userRepo.RegisterUser(userDetail)
+	err = userSvc.userRepo.RegisterUser(userDetail)
 	if err != nil {
 		return err
 	}
@@ -43,8 +43,8 @@ func (orderSvc *service) RegisterUser(userDetail dto.RegisterUserRequest) error 
 	return nil
 }
 
-func (orderSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
-	user_id, hashedPassword, err := orderSvc.userRepo.GetUserIDPassword(req.Email)
+func (userSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
+	user_id, hashedPassword, err := userSvc.userRepo.GetUserIDPassword(req.Email)
 	if err != nil {
 		return "", err
 	}
@@ -62,8 +62,8 @@ func (orderSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
 	return token, nil
 }
 
-func (orderSvc *service) GetUserList() ([]dto.UserView, error) {
-	users, err := orderSvc.userRepo.GetUserList()
+func (userSvc *service) GetUserList() ([]dto.UserView, error) {
+	users, err := userSvc.userRepo.GetUserList()
 
 	if err != nil {
 		return []dto.UserView{}, err
