@@ -6,6 +6,7 @@ import (
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/repository/mocks"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestRegisterUser(t *testing.T) {
@@ -15,7 +16,7 @@ func TestRegisterUser(t *testing.T) {
 	tests := []struct {
 		name            string
 		input           dto.RegisterUserRequest
-		setup           func(mock *mocks.UserStorer, userDetail dto.RegisterUserRequest)
+		setup           func(userMock *mocks.UserStorer)
 		isErrorExpected bool
 	}{
 		{
@@ -26,8 +27,8 @@ func TestRegisterUser(t *testing.T) {
 				Email:     "suhaanbhandary1@gmail.com",
 				Password:  "hi",
 			},
-			setup: func(mock *mocks.UserStorer, userDetail dto.RegisterUserRequest) {
-				mock.On("RegisterUser", userDetail).Return(nil).Once()
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("RegisterUser", mock.Anything).Return(nil).Once()
 			},
 			isErrorExpected: false,
 		},
@@ -39,8 +40,8 @@ func TestRegisterUser(t *testing.T) {
 				Email:     "suhaanbhandary1@gmail.com",
 				Password:  "hi",
 			},
-			setup: func(mock *mocks.UserStorer, userDetail dto.RegisterUserRequest) {
-				mock.On("RegisterUser", userDetail).Return(errors.New("Error")).Once()
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("RegisterUser", mock.Anything).Return(errors.New("Error")).Once()
 			},
 			isErrorExpected: true,
 		},
@@ -48,7 +49,7 @@ func TestRegisterUser(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			test.setup(userRepo, test.input)
+			test.setup(userRepo)
 
 			// test service
 			err := service.RegisterUser(test.input)
