@@ -2,7 +2,9 @@ package repository
 
 import "time"
 
-type AdminStorer interface{}
+type AdminStorer interface {
+	GetAdminIDPassword(username string) (int, string, error)
+}
 
 type Admin struct {
 	ID        uint

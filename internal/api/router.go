@@ -17,11 +17,15 @@ func notFoundHandler(w http.ResponseWriter, _ *http.Request) {
 func NewRouter(deps app.Dependencies) *mux.Router {
 	router := mux.NewRouter()
 
-	// Register routes
+	// user routes
 	userRouter := router.PathPrefix("/user").Subrouter()
 	userRouter.HandleFunc("/register", RegisterUserHandler(deps.UserService)).Methods(http.MethodPost)
 	userRouter.HandleFunc("/login", LoginUserHandler(deps.UserService)).Methods(http.MethodPost)
 	userRouter.HandleFunc("", UserListHandler(deps.UserService)).Methods(http.MethodGet)
+
+	// Admin routes
+	adminRouter := router.PathPrefix("/admin").Subrouter()
+	adminRouter.HandleFunc("/login", LoginAdminHandler(deps.AdminService)).Methods(http.MethodPost)
 
 	// Not Found Router
 	router.HandleFunc("/", notFoundHandler).Methods(http.MethodGet)
