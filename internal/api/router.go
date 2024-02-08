@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app"
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/middleware"
 	"github.com/gorilla/mux"
 )
@@ -22,7 +23,10 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 	userRouter.HandleFunc("/register", RegisterUserHandler(deps.UserService)).Methods(http.MethodPost)
 	userRouter.HandleFunc("/login", LoginUserHandler(deps.UserService)).Methods(http.MethodPost)
 	userRouter.HandleFunc("", UserListHandler(deps.UserService)).Methods(http.MethodGet)
-	userRouter.HandleFunc("/{id}", DeleteUserHandler(deps.UserService)).Methods(http.MethodDelete)
+	userRouter.HandleFunc(
+		"/{id}",
+		middleware.CheckAuth(DeleteUserHandler(deps.UserService), []string{constants.ADMIN}),
+	).Methods(http.MethodDelete)
 
 	// Admin routes
 	adminRouter := router.PathPrefix("/admin").Subrouter()

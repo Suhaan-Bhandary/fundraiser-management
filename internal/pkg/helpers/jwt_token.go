@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"time"
 
 	"os"
@@ -11,14 +12,14 @@ import (
 
 var SECRET_KEY = []byte(os.Getenv("SECRET_KEY"))
 
-func CreateToken(user_id int, role string) (string, error) {
+func CreateToken(id int, role string) (string, error) {
 	expirationTime := time.Now().Add(time.Hour * 24 * 30) // 30 Days expiration
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"user_id": user_id,
-			"role":    role,
-			"exp":     expirationTime,
+			"id":   id,
+			"role": role,
+			"exp":  expirationTime.Unix(),
 		})
 
 	tokenString, err := token.SignedString(SECRET_KEY)
@@ -29,14 +30,15 @@ func CreateToken(user_id int, role string) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyToken(tokenString string) error {
+func VerifyToken(tokenString string) (*jwt.Token, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return SECRET_KEY, nil
 	})
 
 	if err != nil || !token.Valid {
-		return internal_errors.InvalidCredentialError{Message: "Invalid JWT token"}
+		fmt.Println(err, token.Valid)
+		return nil, internal_errors.InvalidCredentialError{Message: "Invalid JWT token"}
 	}
 
-	return nil
+	return token, nil
 }
