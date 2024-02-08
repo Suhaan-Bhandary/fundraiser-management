@@ -21,6 +21,7 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 	userRouter := router.PathPrefix("/user").Subrouter()
 	userRouter.HandleFunc("/register", RegisterUserHandler(deps.UserService)).Methods(http.MethodPost)
 	userRouter.HandleFunc("/login", LoginUserHandler(deps.UserService)).Methods(http.MethodPost)
+	userRouter.HandleFunc("", UserListHandler(deps.UserService)).Methods(http.MethodGet)
 
 	// Not Found Router
 	router.HandleFunc("/", notFoundHandler).Methods(http.MethodGet)

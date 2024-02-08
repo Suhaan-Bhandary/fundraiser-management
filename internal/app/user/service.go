@@ -18,6 +18,7 @@ type service struct {
 type Service interface {
 	RegisterUser(userDetail dto.RegisterUserRequest) error
 	LoginUser(req dto.LoginUserRequest) (string, error)
+	GetUserList() ([]dto.UserView, error)
 }
 
 func NewService(userRepo repository.UserStorer) Service {
@@ -59,4 +60,14 @@ func (orderSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
 	}
 
 	return token, nil
+}
+
+func (orderSvc *service) GetUserList() ([]dto.UserView, error) {
+	users, err := orderSvc.userRepo.GetUserList()
+
+	if err != nil {
+		return []dto.UserView{}, err
+	}
+
+	return users, nil
 }

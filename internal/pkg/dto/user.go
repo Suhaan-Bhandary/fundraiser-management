@@ -7,6 +7,13 @@ import (
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 )
 
+type UserView struct {
+	ID        uint
+	FirstName string
+	LastName  string
+	Email     string
+}
+
 type RegisterUserRequest struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
@@ -65,4 +72,8 @@ func (req *LoginUserRequest) Validate() error {
 
 type LoginUserResponse struct {
 	Token string `json:"token"`
+}
+
+type GetUsersResponse struct {
+	Users []UserView `json:"users"`
 }
