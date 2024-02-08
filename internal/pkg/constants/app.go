@@ -10,3 +10,9 @@ const (
 	ADMIN     = "admin"
 	ORGANIZER = "organizer"
 )
+
+const (
+	ACTIVE_STATUS   = "active"
+	INACTIVE_STATUS = "inactive"
+	BANNED_STATUS   = "banned"
+)

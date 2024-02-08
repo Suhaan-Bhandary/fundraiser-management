@@ -1,8 +1,14 @@
 package repository
 
-import "time"
+import (
+	"time"
 
-type FundraiserStorer interface{}
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
+)
+
+type FundraiserStorer interface {
+	CreateFundraiser(fundDetail dto.CreateFundraiserRequest) error
+}
 
 type Fundraiser struct {
 	ID           uint
