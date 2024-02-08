@@ -11,6 +11,12 @@ const getOrganizerIdPasswordQuery = `
 	where email = $1;
 `
 
+const deleteOrganizerQuery = `
+	delete
+	from organizer
+	where id = $1;
+`
+
 const verifyOrganizerQuery = `
 	update organizer
 	set is_verified = true

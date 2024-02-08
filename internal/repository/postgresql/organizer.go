@@ -106,3 +106,25 @@ func (organizerStore *organizerStore) GetOrganizerList(search string, verified s
 
 	return organizers, nil
 }
+
+func (organizerStore *organizerStore) DeleteOrganizer(organizerId int) error {
+	res, err := organizerStore.db.Exec(
+		deleteOrganizerQuery,
+		organizerId,
+	)
+
+	if err != nil {
+		return errors.New("error while deleting the organizer")
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return errors.New("error while deleting the organizer")
+	}
+
+	if rowsAffected == 0 {
+		return internal_errors.NotFoundError{Message: "Organizer not found"}
+	}
+
+	return nil
+}

@@ -573,7 +573,7 @@ paths:
     delete:
       tags:
         - "organizer"
-      summary: Delete an organizer
+      summary: Delete an organizer DONE
       description: Deletes an organizer from the database
       parameters:
         - in: path
