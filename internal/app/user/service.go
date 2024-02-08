@@ -3,8 +3,10 @@ package user
 import (
 	"errors"
 
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/helpers"
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/repository"
 )
 
@@ -15,6 +17,7 @@ type service struct {
 
 type Service interface {
 	RegisterUser(userDetail dto.RegisterUserRequest) error
+	LoginUser(req dto.LoginUserRequest) (string, error)
 }
 
 func NewService(userRepo repository.UserStorer) Service {
@@ -37,4 +40,23 @@ func (orderSvc *service) RegisterUser(userDetail dto.RegisterUserRequest) error 
 	}
 
 	return nil
+}
+
+func (orderSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
+	user_id, hashedPassword, err := orderSvc.userRepo.GetUserIDPassword(req.Email)
+	if err != nil {
+		return "", err
+	}
+
+	isMatch := helpers.MatchPasswordAndHash(req.Password, hashedPassword)
+	if !isMatch {
+		return "", internal_errors.NotFoundError{Message: "incorrect email or password"}
+	}
+
+	token, err := helpers.CreateToken(user_id, constants.USER)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
