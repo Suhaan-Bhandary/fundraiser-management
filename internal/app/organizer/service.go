@@ -20,6 +20,7 @@ type Service interface {
 	LoginOrganizer(req dto.LoginOrganizerRequest) (string, error)
 	VerifyOrganizer(organizerId int) error
 	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
+	DeleteOrganizer(organizerId int) error
 }
 
 func NewService(organizerRepo repository.OrganizerStorer) Service {
@@ -37,6 +38,15 @@ func (orgSvc *service) RegisterOrganizer(orgDetail dto.RegisterOrganizerRequest)
 	orgDetail.Password = hashedPassword
 
 	err = orgSvc.organizerRepo.RegisterOrganizer(orgDetail)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (orgSvc *service) DeleteOrganizer(organizerId int) error {
+	err := orgSvc.organizerRepo.DeleteOrganizer(organizerId)
 	if err != nil {
 		return err
 	}

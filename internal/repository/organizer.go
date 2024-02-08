@@ -11,6 +11,7 @@ type OrganizerStorer interface {
 	GetOrganizerIDPassword(email string) (int, string, error)
 	VerifyOrganizer(organizerId int) error
 	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
+	DeleteOrganizer(organizerId int) error
 }
 
 type Organizer struct {
