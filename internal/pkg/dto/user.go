@@ -39,3 +39,30 @@ func (req *RegisterUserRequest) Validate() error {
 
 	return nil
 }
+
+type LoginUserRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (req *LoginUserRequest) Validate() error {
+	if req.Email == "" {
+		return errors.New("email is required")
+	}
+
+	// check if email is in correct format
+	match, err := regexp.MatchString(constants.REGEX, req.Email)
+	if err != nil || !match {
+		return errors.New("email is invalid")
+	}
+
+	if req.Password == "" {
+		return errors.New("password is required")
+	}
+
+	return nil
+}
+
+type LoginUserResponse struct {
+	Token string `json:"token"`
+}

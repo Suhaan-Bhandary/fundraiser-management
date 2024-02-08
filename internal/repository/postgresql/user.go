@@ -40,3 +40,17 @@ func (userStore *userStore) RegisterUser(userDetail dto.RegisterUserRequest) err
 
 	return nil
 }
+
+func (userStore *userStore) GetUserIDPassword(email string) (int, string, error) {
+	var id int
+	var password string
+
+	row := userStore.db.QueryRow(getUserPasswordQuery, email)
+	err := row.Scan(&id, &password)
+
+	if err != nil {
+		return -1, "", internal_errors.NotFoundError{Message: "Invalid username or password"}
+	}
+
+	return id, password, nil
+}

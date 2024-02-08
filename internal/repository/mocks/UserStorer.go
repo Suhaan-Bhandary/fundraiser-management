@@ -12,6 +12,41 @@ type UserStorer struct {
 	mock.Mock
 }
 
+// GetUserIDPassword provides a mock function with given fields: email
+func (_m *UserStorer) GetUserIDPassword(email string) (int, string, error) {
+	ret := _m.Called(email)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserIDPassword")
+	}
+
+	var r0 int
+	var r1 string
+	var r2 error
+	if rf, ok := ret.Get(0).(func(string) (int, string, error)); ok {
+		return rf(email)
+	}
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(email)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) string); ok {
+		r1 = rf(email)
+	} else {
+		r1 = ret.Get(1).(string)
+	}
+
+	if rf, ok := ret.Get(2).(func(string) error); ok {
+		r2 = rf(email)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
 // RegisterUser provides a mock function with given fields: userDetail
 func (_m *UserStorer) RegisterUser(userDetail dto.RegisterUserRequest) error {
 	ret := _m.Called(userDetail)

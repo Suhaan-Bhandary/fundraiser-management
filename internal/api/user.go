@@ -35,3 +35,30 @@ func RegisterUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.R
 		})
 	}
 }
+
+func LoginUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		req, err := decodeLoginUserRequest(r)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		err = req.Validate()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		token, err := userSvc.LoginUser(req)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusOK, dto.LoginUserResponse{
+			Token: token,
+		})
+	}
+}

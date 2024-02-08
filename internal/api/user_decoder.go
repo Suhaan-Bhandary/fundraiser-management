@@ -17,3 +17,13 @@ func decodeRegisterUserRequest(r *http.Request) (dto.RegisterUserRequest, error)
 
 	return req, nil
 }
+
+func decodeLoginUserRequest(r *http.Request) (dto.LoginUserRequest, error) {
+	var req dto.LoginUserRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return dto.LoginUserRequest{}, errors.New("Invalid Json in request body.")
+	}
+
+	return req, nil
+}

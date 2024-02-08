@@ -12,6 +12,34 @@ type Service struct {
 	mock.Mock
 }
 
+// LoginUser provides a mock function with given fields: req
+func (_m *Service) LoginUser(req dto.LoginUserRequest) (string, error) {
+	ret := _m.Called(req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for LoginUser")
+	}
+
+	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(dto.LoginUserRequest) (string, error)); ok {
+		return rf(req)
+	}
+	if rf, ok := ret.Get(0).(func(dto.LoginUserRequest) string); ok {
+		r0 = rf(req)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	if rf, ok := ret.Get(1).(func(dto.LoginUserRequest) error); ok {
+		r1 = rf(req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // RegisterUser provides a mock function with given fields: userDetail
 func (_m *Service) RegisterUser(userDetail dto.RegisterUserRequest) error {
 	ret := _m.Called(userDetail)
