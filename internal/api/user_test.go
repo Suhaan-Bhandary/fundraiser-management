@@ -140,3 +140,88 @@ func TestRegisterUserHandler(t *testing.T) {
 		})
 	}
 }
+
+func TestLoginUserHandler(t *testing.T) {
+	userSvc := mocks.NewService(t)
+	userLoginHandler := LoginUserHandler(userSvc)
+
+	tests := []struct {
+		name               string
+		input              string
+		setup              func(mock *mocks.Service)
+		expectedStatusCode int
+	}{
+		{
+			name: "Success for user login",
+			input: `{
+						"email": "suhaanbhandary1@gmail.com",
+						"password": "123"   
+					}`,
+			setup: func(mockSvc *mocks.Service) {
+				mockSvc.On("LoginUser", mock.Anything).Return("token", nil).Once()
+			},
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name:               "Fail for incorrect json",
+			input:              "",
+			setup:              func(mockSvc *mocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for missing email field",
+			input: `{
+						"password": "123"   
+					}`,
+			setup:              func(mockSvc *mocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for incorrect email",
+			input: `{
+						"email": "suhaanbhandary1.com",
+					}`,
+			setup:              func(mockSvc *mocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for missing password field",
+			input: `{
+						"email": "suhaanbhandary1@gmail.com",
+					}`,
+			setup:              func(mockSvc *mocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Success for user login",
+			input: `{
+						"email": "suhaanbhandary1@gmail.com",
+						"password": "123"   
+					}`,
+			setup: func(mockSvc *mocks.Service) {
+				mockSvc.On("LoginUser", mock.Anything).Return("", errors.New("Error when login")).Once()
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.setup(userSvc)
+
+			req, err := http.NewRequest("GET", "/user/login", bytes.NewBuffer([]byte(test.input)))
+			if err != nil {
+				t.Fatal(err)
+				return
+			}
+
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc(userLoginHandler)
+			handler.ServeHTTP(rr, req)
+
+			if rr.Result().StatusCode != test.expectedStatusCode {
+				t.Errorf("Expected %d but got %d", test.expectedStatusCode, rr.Result().StatusCode)
+			}
+		})
+	}
+}
