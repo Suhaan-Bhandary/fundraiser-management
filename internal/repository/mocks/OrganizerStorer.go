@@ -65,6 +65,24 @@ func (_m *OrganizerStorer) RegisterOrganizer(orgDetail dto.RegisterOrganizerRequ
 	return r0
 }
 
+// VerifyOrganizer provides a mock function with given fields: organizerId
+func (_m *OrganizerStorer) VerifyOrganizer(organizerId int) error {
+	ret := _m.Called(organizerId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for VerifyOrganizer")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(organizerId)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewOrganizerStorer creates a new instance of OrganizerStorer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewOrganizerStorer(t interface {

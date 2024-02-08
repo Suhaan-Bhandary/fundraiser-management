@@ -18,6 +18,7 @@ type service struct {
 type Service interface {
 	RegisterOrganizer(userDetail dto.RegisterOrganizerRequest) error
 	LoginOrganizer(req dto.LoginOrganizerRequest) (string, error)
+	VerifyOrganizer(organizerId int) error
 }
 
 func NewService(organizerRepo repository.OrganizerStorer) Service {
@@ -59,4 +60,13 @@ func (orgSvc *service) LoginOrganizer(req dto.LoginOrganizerRequest) (string, er
 	}
 
 	return token, nil
+}
+
+func (orgSvc *service) VerifyOrganizer(organizerId int) error {
+	err := orgSvc.organizerRepo.VerifyOrganizer(organizerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

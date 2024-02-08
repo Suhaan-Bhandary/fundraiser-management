@@ -62,3 +62,24 @@ func LoginOranizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *h
 		})
 	}
 }
+
+func VerifyOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		organizerId, err := decodeId(r)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		err = orgSvc.VerifyOrganizer(organizerId)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+			Message: "Organizer verified successfully",
+		})
+	}
+}

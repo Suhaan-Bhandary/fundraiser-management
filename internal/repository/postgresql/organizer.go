@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
@@ -53,4 +54,28 @@ func (organizerStore *organizerStore) GetOrganizerIDPassword(email string) (int,
 	}
 
 	return id, password, nil
+}
+
+func (organizerStore *organizerStore) VerifyOrganizer(organizerId int) error {
+	res, err := organizerStore.db.Exec(
+		verifyOrganizerQuery,
+		organizerId,
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		return errors.New("error while verifying the organizer")
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+		return errors.New("error while verifying the organizer")
+	}
+
+	if rowsAffected == 0 {
+		return internal_errors.NotFoundError{Message: "Organizer not found"}
+	}
+
+	return nil
 }
