@@ -57,7 +57,7 @@ func LoginUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Requ
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusOK, dto.LoginUserResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.LoginResponse{
 			Token: token,
 		})
 	}

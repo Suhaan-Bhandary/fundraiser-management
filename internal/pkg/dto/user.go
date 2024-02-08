@@ -70,10 +70,6 @@ func (req *LoginUserRequest) Validate() error {
 	return nil
 }
 
-type LoginUserResponse struct {
-	Token string `json:"token"`
-}
-
 type GetUsersResponse struct {
 	Users []UserView `json:"users"`
 }
