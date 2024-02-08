@@ -2,6 +2,11 @@ package dto
 
 import "errors"
 
+type Token struct {
+	ID   int
+	Role string
+}
+
 type IdParam struct {
 	ID string
 }
