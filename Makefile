@@ -1,6 +1,9 @@
 run: ## Run project on host machine
 	go run cmd/main.go
 
+create-admin: ## create admin in db 
+	go run cmd/main.go create-admin
+
 clean: ## Clean database file for a fresh start
 	rm test.db
 
