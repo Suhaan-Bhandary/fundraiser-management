@@ -7,6 +7,15 @@ import (
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 )
 
+type OrganizerView struct {
+	ID           uint
+	Organization string
+	Detail       string
+	Email        string
+	Mobile       string
+	IsVerified   bool
+}
+
 type RegisterOrganizerRequest struct {
 	Organization string `json:"organization"`
 	Detail       string `json:"detail"`
@@ -66,4 +75,8 @@ func (req *LoginOrganizerRequest) Validate() error {
 	}
 
 	return nil
+}
+
+type GetNotVerifiedOrganizersResponse struct {
+	Organizers []OrganizerView `json:"organizers"`
 }

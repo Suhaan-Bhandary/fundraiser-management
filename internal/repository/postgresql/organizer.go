@@ -79,3 +79,30 @@ func (organizerStore *organizerStore) VerifyOrganizer(organizerId int) error {
 
 	return nil
 }
+
+func (organizerStore *organizerStore) GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error) {
+	var rows *sql.Rows
+	var err error
+
+	// TODO: Check how to use verified also here
+	if len(search) >= 3 {
+		rows, err = organizerStore.db.Query(getOrganizersWithFilter, search)
+	} else {
+		rows, err = organizerStore.db.Query(getOrganizers)
+	}
+
+	if err != nil {
+		fmt.Println(err)
+		return []dto.OrganizerView{}, errors.New("error while fetching organizers")
+	}
+
+	organizers := []dto.OrganizerView{}
+	for rows.Next() {
+		organizer := dto.OrganizerView{}
+		rows.Scan(&organizer.ID, &organizer.Organization, &organizer.Detail, &organizer.Email, &organizer.Mobile, &organizer.IsVerified)
+		organizers = append(organizers, organizer)
+	}
+	defer rows.Close()
+
+	return organizers, nil
+}

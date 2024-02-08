@@ -16,3 +16,16 @@ const verifyOrganizerQuery = `
 	set is_verified = true
 	where id = $1;
 `
+
+const getOrganizers = `
+	select id, organization, detail, email, mobile, is_verified
+	from organizer
+	order by created_at desc;
+`
+
+const getOrganizersWithFilter = `
+	select id, organization, detail, email, mobile, is_verified
+	from organizer
+	where (organization ilike '%' || $1 || '%') 
+	order by created_at desc;
+`

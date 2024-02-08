@@ -19,6 +19,7 @@ type Service interface {
 	RegisterOrganizer(userDetail dto.RegisterOrganizerRequest) error
 	LoginOrganizer(req dto.LoginOrganizerRequest) (string, error)
 	VerifyOrganizer(organizerId int) error
+	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
 }
 
 func NewService(organizerRepo repository.OrganizerStorer) Service {
@@ -69,4 +70,13 @@ func (orgSvc *service) VerifyOrganizer(organizerId int) error {
 	}
 
 	return nil
+}
+
+func (orgSvc *service) GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error) {
+	organizers, err := orgSvc.organizerRepo.GetOrganizerList(search, verified)
+	if err != nil {
+		return []dto.OrganizerView{}, err
+	}
+
+	return organizers, nil
 }

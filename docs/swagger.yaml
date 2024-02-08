@@ -457,7 +457,7 @@ paths:
     get:
       tags:
         - "organizer"
-      summary: List of all organizer
+      summary: List of all organizer DONE
       description: Returns list of all organizer
       security:
         - adminBearerAuth: []
@@ -623,7 +623,7 @@ paths:
     get:
       tags:
         - "organizer"
-      summary: Not verified admin
+      summary: Not verified admin DONE
       description: All the organizers who have registered by are not verified by the admin.
       security:
         - adminBearerAuth: []
@@ -676,7 +676,7 @@ paths:
     patch:
       tags:
         - "organizer"
-      summary: verify admin
+      summary: verify organizer DONE
       description: Sets the status of admin as verified
       parameters:
         - in: path
@@ -790,7 +790,7 @@ paths:
     post:
       tags:
         - "fundraiser"
-      summary: Create an fundraiser
+      summary: Create an fundraiser DONE
       description: Creates an fundraiser in the database
       security:
         - organizerBearerAuth: []
