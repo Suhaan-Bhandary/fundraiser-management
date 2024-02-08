@@ -35,7 +35,7 @@ func (userStore *userStore) RegisterUser(userDetail dto.RegisterUserRequest) err
 			}
 		}
 
-		return errors.New("Error while creating the user")
+		return errors.New("error while creating the user")
 	}
 
 	return nil
@@ -53,4 +53,21 @@ func (userStore *userStore) GetUserIDPassword(email string) (int, string, error)
 	}
 
 	return id, password, nil
+}
+
+func (userStore *userStore) GetUserList() ([]dto.UserView, error) {
+	rows, err := userStore.db.Query(getUsersQuery)
+	if err != nil {
+		return []dto.UserView{}, errors.New("error while fetching users")
+	}
+
+	users := []dto.UserView{}
+	for rows.Next() {
+		user := dto.UserView{}
+		rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email)
+		users = append(users, user)
+	}
+	defer rows.Close()
+
+	return users, nil
 }

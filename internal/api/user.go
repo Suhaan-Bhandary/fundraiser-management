@@ -62,3 +62,17 @@ func LoginUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Requ
 		})
 	}
 }
+
+func UserListHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
+		users, err := userSvc.GetUserList()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusOK, dto.GetUsersResponse{
+			Users: users,
+		})
+	}
+}
