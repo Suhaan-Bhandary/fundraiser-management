@@ -1,8 +1,15 @@
 package repository
 
-import "time"
+import (
+	"time"
 
-type OrganizerStorer interface{}
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
+)
+
+type OrganizerStorer interface {
+	RegisterOrganizer(orgDetail dto.RegisterOrganizerRequest) error
+	GetOrganizerIDPassword(email string) (int, string, error)
+}
 
 type Organizer struct {
 	ID           uint
