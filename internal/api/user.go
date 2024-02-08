@@ -63,6 +63,27 @@ func LoginUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Requ
 	}
 }
 
+func DeleteUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userId, err := decodeId(r)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		err = userSvc.DeleteUser(userId)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+			Message: "User deleted successfully",
+		})
+	}
+}
+
 func UserListHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, _ *http.Request) {
 		users, err := userSvc.GetUserList()

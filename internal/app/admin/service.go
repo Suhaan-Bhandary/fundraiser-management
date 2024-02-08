@@ -24,7 +24,7 @@ func NewService(adminRepo repository.AdminStorer) Service {
 }
 
 func (adminSvc *service) LoginAdmin(req dto.LoginAdminRequest) (string, error) {
-	user_id, hashedPassword, err := adminSvc.adminRepo.GetAdminIDPassword(req.Username)
+	userId, hashedPassword, err := adminSvc.adminRepo.GetAdminIDPassword(req.Username)
 	if err != nil {
 		return "", err
 	}
@@ -34,7 +34,7 @@ func (adminSvc *service) LoginAdmin(req dto.LoginAdminRequest) (string, error) {
 		return "", internal_errors.NotFoundError{Message: "incorrect email or password"}
 	}
 
-	token, err := helpers.CreateToken(user_id, constants.ADMIN)
+	token, err := helpers.CreateToken(userId, constants.ADMIN)
 	if err != nil {
 		return "", err
 	}

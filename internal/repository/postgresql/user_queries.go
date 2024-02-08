@@ -11,6 +11,12 @@ const getUserPasswordQuery = `
 	where email = $1;
 `
 
+const deleteUserQuery = `
+	delete
+	from users
+	where id = $1;
+`
+
 const getUsersQuery = `
 	select id, first_name, last_name, email
 	from users;

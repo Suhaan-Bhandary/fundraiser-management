@@ -18,6 +18,7 @@ type service struct {
 type Service interface {
 	RegisterUser(userDetail dto.RegisterUserRequest) error
 	LoginUser(req dto.LoginUserRequest) (string, error)
+	DeleteUser(userId int) error
 	GetUserList() ([]dto.UserView, error)
 }
 
@@ -60,6 +61,15 @@ func (userSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
 	}
 
 	return token, nil
+}
+
+func (userSvc *service) DeleteUser(userId int) error {
+	err := userSvc.userRepo.DeleteUser(userId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (userSvc *service) GetUserList() ([]dto.UserView, error) {
