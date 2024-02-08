@@ -12,6 +12,36 @@ type Service struct {
 	mock.Mock
 }
 
+// GetUserList provides a mock function with given fields:
+func (_m *Service) GetUserList() ([]dto.UserView, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserList")
+	}
+
+	var r0 []dto.UserView
+	var r1 error
+	if rf, ok := ret.Get(0).(func() ([]dto.UserView, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() []dto.UserView); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]dto.UserView)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // LoginUser provides a mock function with given fields: req
 func (_m *Service) LoginUser(req dto.LoginUserRequest) (string, error) {
 	ret := _m.Called(req)
