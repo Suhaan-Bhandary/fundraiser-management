@@ -35,7 +35,7 @@ func (req *RegisterUserRequest) Validate() error {
 	}
 
 	// check if email is in correct format
-	match, err := regexp.MatchString(constants.REGEX, req.Email)
+	match, err := regexp.MatchString(constants.EMAIL_REGEX, req.Email)
 	if err != nil || !match {
 		return errors.New("email is invalid")
 	}
@@ -58,7 +58,7 @@ func (req *LoginUserRequest) Validate() error {
 	}
 
 	// check if email is in correct format
-	match, err := regexp.MatchString(constants.REGEX, req.Email)
+	match, err := regexp.MatchString(constants.EMAIL_REGEX, req.Email)
 	if err != nil || !match {
 		return errors.New("email is invalid")
 	}
