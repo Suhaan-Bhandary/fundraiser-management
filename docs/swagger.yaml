@@ -501,6 +501,67 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
   /organizer/{organizer_id}:
+    get:
+      tags:
+        - "organizer"
+      summary: Get an organizer Detail
+      description: Get detail of the organizer
+      parameters:
+        - in: path
+          name: organizer_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Organizer updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      organizer: 
+                        type: object
+                        properties:
+                          organization:
+                            type: string
+                            example: "organization"
+                          detail:
+                            type: string
+                            example: "detail"
+                          email:
+                            type: string
+                            example: "organization@gmail.com"
+                          mobile:
+                            type: string 
+                            example: "888888888"
+        "404":
+          description: Organizer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Organizer not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    
+
     put:
       tags:
         - "organizer"
@@ -573,7 +634,7 @@ paths:
     delete:
       tags:
         - "organizer"
-      summary: Delete an organizer DONE
+      summary: Delete an organizer
       description: Deletes an organizer from the database
       parameters:
         - in: path
