@@ -33,6 +33,10 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 	organizerRouter.HandleFunc("/register", RegisterOrganizerHandler(deps.OrganizerService)).Methods(http.MethodPost)
 	organizerRouter.HandleFunc("/login", LoginOranizerHandler(deps.OrganizerService)).Methods(http.MethodPost)
 
+	// Fundraiser routes
+	fundraiserRouter := router.PathPrefix("/fundraiser").Subrouter()
+	fundraiserRouter.HandleFunc("", CreateFundraiserHandler(deps.FundraiserService)).Methods(http.MethodPost)
+
 	// Not Found Router
 	router.HandleFunc("/", notFoundHandler).Methods(http.MethodGet)
 
