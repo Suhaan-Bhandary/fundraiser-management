@@ -73,3 +73,7 @@ func (req *LoginUserRequest) Validate() error {
 type GetUsersResponse struct {
 	Users []UserView `json:"users"`
 }
+
+type GetUserProfileResponse struct {
+	User UserView `json:"user"`
+}

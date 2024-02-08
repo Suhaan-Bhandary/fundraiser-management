@@ -107,3 +107,23 @@ func UserListHandler(userSvc user.Service) func(http.ResponseWriter, *http.Reque
 		})
 	}
 }
+
+func GetUserProfileHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenData, err := decodeTokenFromContext(r.Context())
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusUnauthorized, err)
+			return
+		}
+
+		user, err := userSvc.GetUserProfile(tokenData.ID)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusOK, dto.GetUserProfileResponse{
+			User: user,
+		})
+	}
+}

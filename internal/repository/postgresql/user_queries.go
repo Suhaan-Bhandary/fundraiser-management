@@ -21,3 +21,9 @@ const getUsersQuery = `
 	select id, first_name, last_name, email
 	from users;
 `
+
+const getUserQuery = `
+	select id, first_name, last_name, email
+	from users
+	where id = $1;
+`
