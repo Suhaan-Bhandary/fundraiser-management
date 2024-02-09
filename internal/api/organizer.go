@@ -105,7 +105,7 @@ func VerifyOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, 
 	}
 }
 
-func GetOrganizers(orgSvc organizer.Service) func(http.ResponseWriter, *http.Request) {
+func ListOrganizersHandler(orgSvc organizer.Service) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		search := r.URL.Query().Get("search")
 		verified := r.URL.Query().Get("verified")
