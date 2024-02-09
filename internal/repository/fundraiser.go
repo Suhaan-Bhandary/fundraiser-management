@@ -12,6 +12,7 @@ type FundraiserStorer interface {
 	GetFundraiserOrganizerId(fundraiserId int) (int, error)
 	GetFundraiser(fundraiserId int) (dto.FundraiserView, error)
 	CloseFundraiser(fundraiserId int) error
+	BanFundraiser(fundraiserId int) error
 	GetFundraiserOrganizerIdAndStatus(fundraiserId int) (int, string, error)
 }
 
