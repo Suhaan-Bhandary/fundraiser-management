@@ -146,3 +146,31 @@ func (fundStore *fundraiserStore) BanFundraiser(fundraiserId int) error {
 
 	return nil
 }
+
+func (fundraiserStore *fundraiserStore) ListFundraiser() ([]dto.FundraiserView, error) {
+	fundraiserDetailList := []dto.FundraiserView{}
+
+	rows, err := fundraiserStore.db.Query(listFundraisers)
+	if err != nil {
+		fmt.Println(err)
+		return []dto.FundraiserView{}, errors.New("error while fetching user fundraiser")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var fundraiserDetail dto.FundraiserView
+		err := rows.Scan(
+			&fundraiserDetail.ID, &fundraiserDetail.Title, &fundraiserDetail.Description, &fundraiserDetail.OrganizerId,
+			&fundraiserDetail.OrganizerName, &fundraiserDetail.ImageUrl, &fundraiserDetail.VideoUrl, &fundraiserDetail.TargetAmount,
+			&fundraiserDetail.Status, &fundraiserDetail.CreatedAt, &fundraiserDetail.UpdatedAt,
+		)
+
+		if err != nil {
+			return []dto.FundraiserView{}, errors.New("error while fetching user fundraiser")
+		}
+
+		fundraiserDetailList = append(fundraiserDetailList, fundraiserDetail)
+	}
+
+	return fundraiserDetailList, nil
+}

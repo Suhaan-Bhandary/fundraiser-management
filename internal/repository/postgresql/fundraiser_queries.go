@@ -45,3 +45,14 @@ const banFundraiserQuery = `
 	set status = 'banned'
 	where id = $1;
 `
+
+const listFundraisers = `
+	select 
+		fundraiser.id, fundraiser.title, fundraiser.description, fundraiser.organizer_id, 
+		organizer.organization as organizer_name, fundraiser.image_url, fundraiser.video_url, 
+		fundraiser.target_amount, fundraiser.status, fundraiser.created_at, fundraiser.updated_at
+	from fundraiser
+	join organizer
+	on fundraiser.organizer_id = organizer.id
+	order by fundraiser.updated_at desc;
+`

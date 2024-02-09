@@ -916,10 +916,6 @@ paths:
         - "fundraiser"
       summary: list of fundraisers
       description: Returns list of fundraisers sorted by the given field and filtered
-      security:
-        - adminBearerAuth: []
-        - userBearerAuth: []
-        - organizerBearerAuth: []
       parameters:
         # TODO: Find other parameters for sorting and filtering
         - in: query
