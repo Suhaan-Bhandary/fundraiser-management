@@ -504,7 +504,7 @@ paths:
     get:
       tags:
         - "organizer"
-      summary: Get an organizer Detail
+      summary: Get an organizer Detail DONE
       description: Get detail of the organizer
       parameters:
         - in: path

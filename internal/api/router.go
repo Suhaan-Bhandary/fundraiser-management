@@ -46,6 +46,10 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 	).Methods(http.MethodGet)
 	organizerRouter.HandleFunc(
 		"/{id}",
+		GetOrganizerHandler(deps.OrganizerService),
+	).Methods(http.MethodGet)
+	organizerRouter.HandleFunc(
+		"/{id}",
 		middleware.CheckAuth(DeleteOrganizerHandler(deps.OrganizerService), []string{constants.ADMIN}),
 	).Methods(http.MethodDelete)
 	organizerRouter.HandleFunc(
