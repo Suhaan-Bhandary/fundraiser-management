@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/donation"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/fundraiser"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
@@ -66,6 +67,33 @@ func DeleteFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWrite
 
 		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
 			Message: "Fundraiser deleted successfully",
+		})
+	}
+}
+
+func CreateDonationHandler(donationSvc donation.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		req, err := decodeCreateDonation(r)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		err = req.Validate()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		donationId, err := donationSvc.CreateDonation(req)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusCreated, dto.CreateDonationResponse{
+			DonationId: donationId,
 		})
 	}
 }

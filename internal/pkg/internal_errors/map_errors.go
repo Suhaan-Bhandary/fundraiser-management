@@ -10,6 +10,8 @@ func MatchError(err error) (int, error) {
 		return http.StatusUnauthorized, err
 	case NotFoundError:
 		return http.StatusNotFound, err
+	case BadRequest:
+		return http.StatusBadRequest, err
 	default:
 		return http.StatusInternalServerError, err
 	}

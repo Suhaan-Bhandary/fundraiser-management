@@ -1272,7 +1272,7 @@ paths:
     post:
       tags:
         - "fundraiser"
-      summary: User can donate
+      summary: User can donate DONE
       description: User can donate to a specific fundraiser, user id is take from the jwt token
       security:
         - userBearerAuth: []
