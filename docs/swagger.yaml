@@ -987,7 +987,7 @@ paths:
     get:
       tags:
         - "fundraiser"
-      summary: Fundraiser
+      summary: Fundraiser DONE
       description: Returns a fundraiser with the given id
       parameters:
         - in: path

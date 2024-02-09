@@ -97,3 +97,24 @@ func CreateDonationHandler(donationSvc donation.Service) func(http.ResponseWrite
 		})
 	}
 }
+
+func GetFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fundraiserId, err := decodeId(r)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		fundraiserDetail, err := fundSvc.GetFundraiserDetail(fundraiserId)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusCreated, dto.GetFundraiserResponse{
+			Fundraiser: fundraiserDetail,
+		})
+	}
+}

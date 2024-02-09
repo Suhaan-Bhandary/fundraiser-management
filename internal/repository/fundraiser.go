@@ -10,6 +10,7 @@ type FundraiserStorer interface {
 	CreateFundraiser(fundDetail dto.CreateFundraiserRequest) (int, error)
 	DeleteFundraiser(fundraiserId int) error
 	GetFundraiserOrganizerId(fundraiserId int) (int, error)
+	GetFundraiser(fundraiserId int) (dto.FundraiserView, error)
 }
 
 type Fundraiser struct {

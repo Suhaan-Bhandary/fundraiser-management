@@ -2,7 +2,22 @@ package dto
 
 import (
 	"errors"
+	"time"
 )
+
+type FundraiserView struct {
+	ID            uint      `json:"id"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	OrganizerId   uint      `json:"organizer_id"`
+	OrganizerName string    `json:"organizer_name"`
+	ImageUrl      string    `json:"image_url"`
+	VideoUrl      string    `json:"video_url"`
+	TargetAmount  float64   `json:"target_amount"`
+	Status        string    `json:"status"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
 
 type CreateFundraiserRequest struct {
 	Title        string  `json:"title"`
@@ -43,4 +58,8 @@ func (req *CreateFundraiserRequest) Validate() error {
 
 type CreateFundraiserResponse struct {
 	FundraiserId int `json:"fundraiser_id"`
+}
+
+type GetFundraiserResponse struct {
+	Fundraiser FundraiserView `json:"fundraiser"`
 }
