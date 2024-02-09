@@ -8,6 +8,7 @@ import (
 
 type DonationStorer interface {
 	CreateDonation(donationDetail dto.CreateDonationRequest) (int, error)
+	ListUserDonations(user_id int) ([]dto.DonationView, error)
 }
 
 type Donation struct {

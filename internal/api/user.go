@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/donation"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/user"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
@@ -124,6 +125,26 @@ func GetUserProfileHandler(userSvc user.Service) func(http.ResponseWriter, *http
 
 		middleware.SuccessResponse(w, http.StatusOK, dto.GetUserProfileResponse{
 			User: user,
+		})
+	}
+}
+
+func ListUserDonationsHandler(donationSvc donation.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenData, err := decodeTokenFromContext(r.Context())
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusUnauthorized, err)
+			return
+		}
+
+		userDonations, err := donationSvc.ListUserDonation(tokenData.ID)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusOK, dto.ListUserDonationsResponse{
+			Donations: userDonations,
 		})
 	}
 }

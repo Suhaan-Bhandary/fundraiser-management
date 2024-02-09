@@ -33,3 +33,30 @@ func (donationStore *donationStore) CreateDonation(donationDetail dto.CreateDona
 
 	return donationId, nil
 }
+
+func (donationStore *donationStore) ListUserDonations(user_id int) ([]dto.DonationView, error) {
+	donationDetailList := []dto.DonationView{}
+
+	rows, err := donationStore.db.Query(listUserDonations, user_id)
+	if err != nil {
+		fmt.Println(err)
+		return []dto.DonationView{}, errors.New("error while fetching user donation")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var donationDetail dto.DonationView
+		err := rows.Scan(
+			&donationDetail.ID, &donationDetail.FundraiserId, &donationDetail.FundraiserTitle, &donationDetail.Amount,
+			&donationDetail.IsAnonymous, &donationDetail.CreatedAt,
+		)
+
+		if err != nil {
+			return []dto.DonationView{}, errors.New("error while fetching user donation")
+		}
+
+		donationDetailList = append(donationDetailList, donationDetail)
+	}
+
+	return donationDetailList, nil
+}

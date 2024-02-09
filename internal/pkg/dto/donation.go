@@ -1,6 +1,18 @@
 package dto
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
+
+type DonationView struct {
+	ID              uint      `json:"id"`
+	FundraiserId    uint      `json:"fundraiser_id"`
+	FundraiserTitle string    `json:"fundraiser_title"`
+	Amount          float64   `json:"amount"`
+	IsAnonymous     bool      `json:"is_anonymous"`
+	CreatedAt       time.Time `json:"created_at"`
+}
 
 type CreateDonationRequest struct {
 	UserId       uint    `json:"user_id"`
@@ -27,4 +39,8 @@ func (req *CreateDonationRequest) Validate() error {
 
 type CreateDonationResponse struct {
 	DonationId int `json:"donation_id"`
+}
+
+type ListUserDonationsResponse struct {
+	Donations []DonationView `json:"donations"`
 }

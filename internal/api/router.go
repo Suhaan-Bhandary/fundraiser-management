@@ -31,6 +31,10 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 		"/profile",
 		middleware.CheckAuth(GetUserProfileHandler(deps.UserService), []string{constants.USER}),
 	).Methods(http.MethodGet)
+	userRouter.HandleFunc(
+		"/donation",
+		middleware.CheckAuth(ListUserDonationsHandler(deps.DonationService), []string{constants.USER}),
+	).Methods(http.MethodGet)
 
 	// Admin routes
 	adminRouter := router.PathPrefix("/admin").Subrouter()
