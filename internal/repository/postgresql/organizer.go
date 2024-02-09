@@ -128,3 +128,19 @@ func (organizerStore *organizerStore) DeleteOrganizer(organizerId int) error {
 
 	return nil
 }
+
+func (organizerStore *organizerStore) GetOrganizer(organizerId int) (dto.OrganizerView, error) {
+	var organizer dto.OrganizerView
+	err := organizerStore.db.QueryRow(getOrganizerQuery, organizerId).Scan(
+		&organizer.ID, &organizer.Organization,
+		&organizer.Detail, &organizer.Email,
+		&organizer.Mobile, &organizer.IsVerified,
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		return dto.OrganizerView{}, internal_errors.NotFoundError{Message: "Organizer not found"}
+	}
+
+	return organizer, nil
+}

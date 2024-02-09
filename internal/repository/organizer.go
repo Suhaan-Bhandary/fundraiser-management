@@ -12,6 +12,7 @@ type OrganizerStorer interface {
 	VerifyOrganizer(organizerId int) error
 	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
 	DeleteOrganizer(organizerId int) error
+	GetOrganizer(organizerId int) (dto.OrganizerView, error)
 }
 
 type Organizer struct {

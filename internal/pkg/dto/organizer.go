@@ -80,3 +80,7 @@ func (req *LoginOrganizerRequest) Validate() error {
 type GetNotVerifiedOrganizersResponse struct {
 	Organizers []OrganizerView `json:"organizers"`
 }
+
+type GetOrganizerResponse struct {
+	Organizer OrganizerView `json:"organizer"`
+}

@@ -35,3 +35,10 @@ const getOrganizersWithFilter = `
 	where (organization ilike '%' || $1 || '%') 
 	order by created_at desc;
 `
+
+const getOrganizerQuery = `
+	select id, organization, detail, email, mobile, is_verified
+	from organizer
+	where id = $1;
+
+`
