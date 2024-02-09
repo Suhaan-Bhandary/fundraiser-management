@@ -70,3 +70,22 @@ func (fundStore *fundraiserStore) GetFundraiserOrganizerId(fundraiserId int) (in
 	return organizerId, nil
 
 }
+
+func (fundStore *fundraiserStore) GetFundraiser(fundraiserId int) (dto.FundraiserView, error) {
+	var fundraiser dto.FundraiserView
+	row := fundStore.db.QueryRow(getFundraiserQuery, fundraiserId)
+
+	// select title, description, organizer_id, image_url, video_url, target_amount, status, 1 as organizer_name
+	err := row.Scan(
+		&fundraiser.ID, &fundraiser.Title, &fundraiser.Description, &fundraiser.OrganizerId,
+		&fundraiser.OrganizerName, &fundraiser.ImageUrl, &fundraiser.VideoUrl, &fundraiser.TargetAmount,
+		&fundraiser.Status, &fundraiser.CreatedAt, &fundraiser.UpdatedAt,
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		return dto.FundraiserView{}, internal_errors.NotFoundError{Message: "Fundraiser not found"}
+	}
+
+	return fundraiser, nil
+}

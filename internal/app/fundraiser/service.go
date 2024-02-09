@@ -15,6 +15,7 @@ type service struct {
 type Service interface {
 	CreateFundraiser(userDetail dto.CreateFundraiserRequest) (int, error)
 	DeleteFundraiser(fundraiserId int, tokenData dto.Token) error
+	GetFundraiserDetail(fundraiserId int) (dto.FundraiserView, error)
 }
 
 func NewService(fundRepo repository.FundraiserStorer) Service {
@@ -53,4 +54,13 @@ func (fundSvc *service) DeleteFundraiser(fundraiserId int, tokenData dto.Token) 
 	}
 
 	return nil
+}
+
+func (fundSvc *service) GetFundraiserDetail(fundraiserId int) (dto.FundraiserView, error) {
+	fundraiserDetail, err := fundSvc.fundRepo.GetFundraiser(fundraiserId)
+	if err != nil {
+		return dto.FundraiserView{}, err
+	}
+
+	return fundraiserDetail, nil
 }
