@@ -42,7 +42,7 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 	organizerRouter.HandleFunc("/login", LoginOranizerHandler(deps.OrganizerService)).Methods(http.MethodPost)
 	organizerRouter.HandleFunc(
 		"",
-		middleware.CheckAuth(GetOrganizers(deps.OrganizerService), []string{constants.ADMIN}),
+		middleware.CheckAuth(ListOrganizersHandler(deps.OrganizerService), []string{constants.ADMIN}),
 	).Methods(http.MethodGet)
 	organizerRouter.HandleFunc(
 		"/{id}",
