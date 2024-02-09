@@ -7,7 +7,9 @@ import (
 )
 
 type FundraiserStorer interface {
-	CreateFundraiser(fundDetail dto.CreateFundraiserRequest) error
+	CreateFundraiser(fundDetail dto.CreateFundraiserRequest) (int, error)
+	DeleteFundraiser(fundraiserId int) error
+	GetFundraiserOrganizerId(fundraiserId int) (int, error)
 }
 
 type Fundraiser struct {
