@@ -118,3 +118,30 @@ func GetFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter, 
 		})
 	}
 }
+
+func CloseFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fundraiserId, err := decodeId(r)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		tokenData, err := decodeTokenFromContext(r.Context())
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusUnauthorized, err)
+			return
+		}
+
+		err = fundSvc.CloseFundraiser(fundraiserId, tokenData)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+			Message: "Fundraiser closed successfully",
+		})
+	}
+}

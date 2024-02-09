@@ -16,6 +16,7 @@ type Service interface {
 	CreateFundraiser(userDetail dto.CreateFundraiserRequest) (int, error)
 	DeleteFundraiser(fundraiserId int, tokenData dto.Token) error
 	GetFundraiserDetail(fundraiserId int) (dto.FundraiserView, error)
+	CloseFundraiser(fundraiserId int, tokenData dto.Token) error
 }
 
 func NewService(fundRepo repository.FundraiserStorer) Service {
@@ -63,4 +64,37 @@ func (fundSvc *service) GetFundraiserDetail(fundraiserId int) (dto.FundraiserVie
 	}
 
 	return fundraiserDetail, nil
+}
+
+func (fundSvc *service) CloseFundraiser(fundraiserId int, tokenData dto.Token) error {
+	// if the role is organizer then we have to match the id and the organizer id of the fundraiser
+	fundraiserOrganizerId, fundraiserStatus, err := fundSvc.fundRepo.GetFundraiserOrganizerIdAndStatus(fundraiserId)
+	if err != nil {
+		return err
+	}
+
+	if fundraiserOrganizerId != tokenData.ID {
+		return internal_errors.InvalidCredentialError{
+			Message: "Only creator of fundraiser can close it",
+		}
+	}
+
+	if fundraiserStatus == constants.INACTIVE_STATUS {
+		return internal_errors.BadRequest{
+			Message: "Fundraiser is already closed",
+		}
+	}
+
+	if fundraiserStatus == constants.BANNED_STATUS {
+		return internal_errors.BadRequest{
+			Message: "Cannot close a banned fundraiser",
+		}
+	}
+
+	err = fundSvc.fundRepo.CloseFundraiser(fundraiserId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

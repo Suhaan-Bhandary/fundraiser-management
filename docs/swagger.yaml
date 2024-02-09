@@ -1171,7 +1171,7 @@ paths:
     patch:
       tags:
         - "fundraiser"
-      summary: Fundraiser
+      summary: Fundraiser Done
       description: Organizer of the fundraiser or admin can close the fundraiser
       security:
         - adminBearerAuth: []
