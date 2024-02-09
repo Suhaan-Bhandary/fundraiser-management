@@ -39,3 +39,9 @@ const getOrganizerIdAndStatusFromFundraiserQuery = `
 	from fundraiser
 	where id = $1;
 `
+
+const banFundraiserQuery = `
+	update fundraiser
+	set status = 'banned'
+	where id = $1;
+`

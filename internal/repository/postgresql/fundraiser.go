@@ -123,5 +123,26 @@ func (fundStore *fundraiserStore) GetFundraiserOrganizerIdAndStatus(fundraiserId
 	}
 
 	return organizerId, fundraiserStatus, nil
+}
 
+func (fundStore *fundraiserStore) BanFundraiser(fundraiserId int) error {
+	res, err := fundStore.db.Exec(
+		banFundraiserQuery,
+		fundraiserId,
+	)
+
+	if err != nil {
+		return errors.New("error while banning the fundraiser")
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return errors.New("error while banning the fundraiser")
+	}
+
+	if rowsAffected == 0 {
+		return internal_errors.NotFoundError{Message: "Fundraiser not found"}
+	}
+
+	return nil
 }
