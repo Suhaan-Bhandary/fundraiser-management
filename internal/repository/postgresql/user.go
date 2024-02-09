@@ -85,13 +85,18 @@ func (userStore *userStore) GetUserList() ([]dto.UserView, error) {
 	users := []dto.UserView{}
 	for rows.Next() {
 		user := dto.UserView{}
-		rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email)
+		err := rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email)
+		if err != nil {
+			return []dto.UserView{}, errors.New("error while fetching users")
+		}
+
 		users = append(users, user)
 	}
 	defer rows.Close()
 
 	return users, nil
 }
+
 func (userStore *userStore) GetUserProfile(userId int) (dto.UserView, error) {
 	row := userStore.db.QueryRow(getUserQuery, userId)
 
