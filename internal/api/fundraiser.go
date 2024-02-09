@@ -166,3 +166,18 @@ func BanFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter, 
 		})
 	}
 }
+
+func ListFundraisersHandler(fundSvc fundraiser.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fundraisers, err := fundSvc.ListFundraisers()
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusCreated, dto.ListFundraisersResponse{
+			Fundraisers: fundraisers,
+		})
+	}
+}

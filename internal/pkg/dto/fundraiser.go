@@ -63,3 +63,7 @@ type CreateFundraiserResponse struct {
 type GetFundraiserResponse struct {
 	Fundraiser FundraiserView `json:"fundraiser"`
 }
+
+type ListFundraisersResponse struct {
+	Fundraisers []FundraiserView `json:"fundraisers"`
+}
