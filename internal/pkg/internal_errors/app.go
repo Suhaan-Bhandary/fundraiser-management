@@ -15,3 +15,11 @@ type NotFoundError struct {
 func (err NotFoundError) Error() string {
 	return err.Message
 }
+
+type BadRequest struct {
+	Message string
+}
+
+func (err BadRequest) Error() string {
+	return err.Message
+}
