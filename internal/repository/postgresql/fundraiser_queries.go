@@ -27,3 +27,15 @@ const getFundraiserQuery = `
 	on fundraiser.organizer_id = organizer.id
 	where fundraiser.id = $1;
 `
+
+const closeFundraiserQuery = `
+	update fundraiser
+	set status = 'inactive'
+	where id = $1;
+`
+
+const getOrganizerIdAndStatusFromFundraiserQuery = `
+	select organizer_id, status
+	from fundraiser
+	where id = $1;
+`

@@ -89,3 +89,39 @@ func (fundStore *fundraiserStore) GetFundraiser(fundraiserId int) (dto.Fundraise
 
 	return fundraiser, nil
 }
+
+func (fundStore *fundraiserStore) CloseFundraiser(fundraiserId int) error {
+	res, err := fundStore.db.Exec(
+		closeFundraiserQuery,
+		fundraiserId,
+	)
+
+	if err != nil {
+		return errors.New("error while closing the fundraiser")
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return errors.New("error while closing the fundraiser")
+	}
+
+	if rowsAffected == 0 {
+		return internal_errors.NotFoundError{Message: "Fundraiser not found"}
+	}
+
+	return nil
+}
+
+func (fundStore *fundraiserStore) GetFundraiserOrganizerIdAndStatus(fundraiserId int) (int, string, error) {
+	var organizerId int
+	var fundraiserStatus string
+	row := fundStore.db.QueryRow(getOrganizerIdAndStatusFromFundraiserQuery, fundraiserId)
+	err := row.Scan(&organizerId, &fundraiserStatus)
+
+	if err != nil {
+		return -1, "", internal_errors.NotFoundError{Message: "Invalid username or password"}
+	}
+
+	return organizerId, fundraiserStatus, nil
+
+}

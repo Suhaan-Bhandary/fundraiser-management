@@ -11,6 +11,8 @@ type FundraiserStorer interface {
 	DeleteFundraiser(fundraiserId int) error
 	GetFundraiserOrganizerId(fundraiserId int) (int, error)
 	GetFundraiser(fundraiserId int) (dto.FundraiserView, error)
+	CloseFundraiser(fundraiserId int) error
+	GetFundraiserOrganizerIdAndStatus(fundraiserId int) (int, string, error)
 }
 
 type Fundraiser struct {
