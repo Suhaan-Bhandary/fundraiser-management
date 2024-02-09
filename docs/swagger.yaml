@@ -1119,7 +1119,7 @@ paths:
     delete:
       tags:
         - "fundraiser"
-      summary: Delete Fundraiser
+      summary: Delete Fundraiser DONE
       description: Deletes the fundraiser
       security:
         - adminBearerAuth: []

@@ -40,3 +40,7 @@ func (req *CreateFundraiserRequest) Validate() error {
 
 	return nil
 }
+
+type CreateFundraiserResponse struct {
+	FundraiserId int `json:"fundraiser_id"`
+}
