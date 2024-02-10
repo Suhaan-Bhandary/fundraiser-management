@@ -13,7 +13,7 @@ type UserStorer struct {
 }
 
 // DeleteUser provides a mock function with given fields: userId
-func (_m *UserStorer) DeleteUser(userId int) error {
+func (_m *UserStorer) DeleteUser(userId uint) error {
 	ret := _m.Called(userId)
 
 	if len(ret) == 0 {
@@ -21,7 +21,7 @@ func (_m *UserStorer) DeleteUser(userId int) error {
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(int) error); ok {
+	if rf, ok := ret.Get(0).(func(uint) error); ok {
 		r0 = rf(userId)
 	} else {
 		r0 = ret.Error(0)
@@ -31,23 +31,23 @@ func (_m *UserStorer) DeleteUser(userId int) error {
 }
 
 // GetUserIDPassword provides a mock function with given fields: email
-func (_m *UserStorer) GetUserIDPassword(email string) (int, string, error) {
+func (_m *UserStorer) GetUserIDPassword(email string) (uint, string, error) {
 	ret := _m.Called(email)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetUserIDPassword")
 	}
 
-	var r0 int
+	var r0 uint
 	var r1 string
 	var r2 error
-	if rf, ok := ret.Get(0).(func(string) (int, string, error)); ok {
+	if rf, ok := ret.Get(0).(func(string) (uint, string, error)); ok {
 		return rf(email)
 	}
-	if rf, ok := ret.Get(0).(func(string) int); ok {
+	if rf, ok := ret.Get(0).(func(string) uint); ok {
 		r0 = rf(email)
 	} else {
-		r0 = ret.Get(0).(int)
+		r0 = ret.Get(0).(uint)
 	}
 
 	if rf, ok := ret.Get(1).(func(string) string); ok {
@@ -65,12 +65,40 @@ func (_m *UserStorer) GetUserIDPassword(email string) (int, string, error) {
 	return r0, r1, r2
 }
 
-// GetUserList provides a mock function with given fields:
-func (_m *UserStorer) GetUserList() ([]dto.UserView, error) {
+// GetUserProfile provides a mock function with given fields: userId
+func (_m *UserStorer) GetUserProfile(userId uint) (dto.UserView, error) {
+	ret := _m.Called(userId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserProfile")
+	}
+
+	var r0 dto.UserView
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint) (dto.UserView, error)); ok {
+		return rf(userId)
+	}
+	if rf, ok := ret.Get(0).(func(uint) dto.UserView); ok {
+		r0 = rf(userId)
+	} else {
+		r0 = ret.Get(0).(dto.UserView)
+	}
+
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(userId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListUsers provides a mock function with given fields:
+func (_m *UserStorer) ListUsers() ([]dto.UserView, error) {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetUserList")
+		panic("no return value specified for ListUsers")
 	}
 
 	var r0 []dto.UserView
@@ -88,34 +116,6 @@ func (_m *UserStorer) GetUserList() ([]dto.UserView, error) {
 
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetUserProfile provides a mock function with given fields: userId
-func (_m *UserStorer) GetUserProfile(userId int) (dto.UserView, error) {
-	ret := _m.Called(userId)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetUserProfile")
-	}
-
-	var r0 dto.UserView
-	var r1 error
-	if rf, ok := ret.Get(0).(func(int) (dto.UserView, error)); ok {
-		return rf(userId)
-	}
-	if rf, ok := ret.Get(0).(func(int) dto.UserView); ok {
-		r0 = rf(userId)
-	} else {
-		r0 = ret.Get(0).(dto.UserView)
-	}
-
-	if rf, ok := ret.Get(1).(func(int) error); ok {
-		r1 = rf(userId)
 	} else {
 		r1 = ret.Error(1)
 	}
