@@ -78,7 +78,7 @@ func DeleteOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, 
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
 			Message: "Organizer deleted successfully",
 		})
 	}
@@ -99,7 +99,7 @@ func VerifyOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, 
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
 			Message: "Organizer verified successfully",
 		})
 	}
