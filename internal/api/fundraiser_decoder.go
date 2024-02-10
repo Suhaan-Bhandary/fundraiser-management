@@ -42,3 +42,27 @@ func decodeCreateDonation(r *http.Request) (dto.CreateDonationRequest, error) {
 
 	return req, nil
 }
+
+func decodeUpdateFundraiser(r *http.Request) (dto.UpdateFundraiserRequest, error) {
+	var req dto.UpdateFundraiserRequest
+
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		return dto.UpdateFundraiserRequest{}, internal_errors.BadRequest{Message: "Invalid body data"}
+	}
+
+	tokenData, err := decodeTokenFromContext(r.Context())
+	if err != nil {
+		return dto.UpdateFundraiserRequest{}, internal_errors.InvalidCredentialError{Message: "organizer not found"}
+	}
+
+	fundraiserId, err := decodeId(r)
+	if err != nil || fundraiserId <= 0 {
+		return dto.UpdateFundraiserRequest{}, internal_errors.BadRequest{Message: "Invalid fundraiser Id in URL"}
+	}
+
+	req.FundraiserId = uint(fundraiserId)
+	req.RequestOrganizerId = uint(tokenData.ID)
+
+	return req, nil
+}

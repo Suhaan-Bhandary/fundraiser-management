@@ -217,3 +217,31 @@ func ListDonationsHandler(donationSvc donation.Service) func(http.ResponseWriter
 		})
 	}
 }
+
+func UpdateFundraiserHandler(fundraiserSvc fundraiser.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		req, err := decodeUpdateFundraiser(r)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		err = req.Validate()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		err = fundraiserSvc.UpdateFundraiser(req)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
+			Message: "Updated fundraiser successfully",
+		})
+	}
+}

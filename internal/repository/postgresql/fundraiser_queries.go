@@ -56,3 +56,9 @@ const listFundraisers = `
 	on fundraiser.organizer_id = organizer.id
 	order by fundraiser.updated_at desc;
 `
+
+const updateFundraiserQuery = `
+	update fundraiser
+	set title = $1, description = $2, image_url = $3, video_url = $4, target_amount = $5 
+	where id = $6;
+`
