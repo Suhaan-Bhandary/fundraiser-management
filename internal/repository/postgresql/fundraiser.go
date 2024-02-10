@@ -147,6 +147,28 @@ func (fundStore *fundraiserStore) BanFundraiser(fundraiserId uint) error {
 	return nil
 }
 
+func (fundStore *fundraiserStore) UnBanFundraiser(fundraiserId uint) error {
+	res, err := fundStore.db.Exec(
+		unbanFundraiserQuery,
+		fundraiserId,
+	)
+
+	if err != nil {
+		return errors.New("error while un-banning the fundraiser")
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return errors.New("error while un-banning the fundraiser")
+	}
+
+	if rowsAffected == 0 {
+		return internal_errors.NotFoundError{Message: "Fundraiser not found"}
+	}
+
+	return nil
+}
+
 func (fundraiserStore *fundraiserStore) ListFundraiser() ([]dto.FundraiserView, error) {
 	fundraiserDetailList := []dto.FundraiserView{}
 

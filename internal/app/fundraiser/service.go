@@ -18,6 +18,7 @@ type Service interface {
 	GetFundraiserDetail(fundraiserId uint) (dto.FundraiserView, error)
 	CloseFundraiser(fundraiserId uint, tokenData dto.Token) error
 	BanFundraiser(fundraiserId uint) error
+	UnBanFundraiser(fundraiserId uint) error
 	ListFundraisers() ([]dto.FundraiserView, error)
 	UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error
 }
@@ -104,6 +105,15 @@ func (fundSvc *service) CloseFundraiser(fundraiserId uint, tokenData dto.Token) 
 
 func (fundSvc *service) BanFundraiser(fundraiserId uint) error {
 	err := fundSvc.fundRepo.BanFundraiser(fundraiserId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (fundSvc *service) UnBanFundraiser(fundraiserId uint) error {
+	err := fundSvc.fundRepo.UnBanFundraiser(fundraiserId)
 	if err != nil {
 		return err
 	}

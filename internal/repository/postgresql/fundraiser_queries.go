@@ -46,6 +46,12 @@ const banFundraiserQuery = `
 	where id = $1;
 `
 
+const unbanFundraiserQuery = `
+	update fundraiser
+	set status = 'active', updated_at = CURRENT_TIMESTAMP
+	where id = $1;
+`
+
 const listFundraisers = `
 	select 
 		fundraiser.id, fundraiser.title, fundraiser.description, fundraiser.organizer_id, 
