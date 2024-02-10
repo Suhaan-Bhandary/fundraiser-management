@@ -680,59 +680,6 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
-  /organizer/not-verified:
-    get:
-      tags:
-        - "organizer"
-      summary: Not verified admin 
-      description: All the organizers who have registered by are not verified by the admin.
-      security:
-        - adminBearerAuth: []
-      parameters:
-        - in: query
-          name: search
-          schema:
-            type: string
-          required: false
-      responses:
-        "200":
-          description: user donations
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: integer
-                    example: 0
-                  error_message:
-                    type: string
-                    example: ""
-                  data:
-                    type: object
-                    properties:
-                      organizers:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            organization:
-                              type: string
-                              example: "organization"
-                            detail:
-                              type: string
-                              example: "detail"
-                            email:
-                              type: string
-                              example: "organization@gmail.com"
-                            password:
-                              type: string
-                              example: "abcdefg"
-        "401":
-          $ref: "#/components/responses/UnauthorizedError"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
   /organizer/{organizer_id}/verify:
     patch:
       tags:
