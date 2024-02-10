@@ -119,7 +119,7 @@ func (fundStore *fundraiserStore) GetFundraiserOrganizerIdAndStatus(fundraiserId
 	err := row.Scan(&organizerId, &fundraiserStatus)
 
 	if err != nil {
-		return 0, "", internal_errors.NotFoundError{Message: "Invalid username or password"}
+		return 0, "", internal_errors.NotFoundError{Message: "Fundraiser not found"}
 	}
 
 	return organizerId, fundraiserStatus, nil
@@ -217,4 +217,16 @@ func (fundStore *fundraiserStore) UpdateFundraiser(updateDetail dto.UpdateFundra
 	}
 
 	return nil
+}
+
+func (fundStore *fundraiserStore) GetFundraiserStatus(fundraiserId uint) (string, error) {
+	var fundraiserStatus string
+	row := fundStore.db.QueryRow(getFundraiserStatusQuery, fundraiserId)
+	err := row.Scan(&fundraiserStatus)
+
+	if err != nil {
+		return "", internal_errors.NotFoundError{Message: "Fundraiser not found"}
+	}
+
+	return fundraiserStatus, nil
 }

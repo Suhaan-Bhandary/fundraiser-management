@@ -40,6 +40,12 @@ const getOrganizerIdAndStatusFromFundraiserQuery = `
 	where id = $1;
 `
 
+const getFundraiserStatusQuery = `
+	select status
+	from fundraiser
+	where id = $1;
+`
+
 const banFundraiserQuery = `
 	update fundraiser
 	set status = 'banned', updated_at = CURRENT_TIMESTAMP

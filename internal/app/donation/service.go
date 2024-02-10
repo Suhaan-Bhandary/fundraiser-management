@@ -1,12 +1,15 @@
 package donation
 
 import (
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/repository"
 )
 
 type service struct {
-	donationRepo repository.DonationStorer
+	donationRepo   repository.DonationStorer
+	fundraiserRepo repository.FundraiserStorer
 }
 
 type Service interface {
@@ -16,13 +19,20 @@ type Service interface {
 	ListDonations() ([]dto.FundraiserDonationView, error)
 }
 
-func NewService(donationRepo repository.DonationStorer) Service {
+func NewService(donationRepo repository.DonationStorer, fundraiserRepo repository.FundraiserStorer) Service {
 	return &service{
-		donationRepo: donationRepo,
+		donationRepo:   donationRepo,
+		fundraiserRepo: fundraiserRepo,
 	}
 }
 
 func (donationSvc *service) CreateDonation(donationDetail dto.CreateDonationRequest) (uint, error) {
+	fundraiserStatus, err := donationSvc.fundraiserRepo.GetFundraiserStatus(donationDetail.FundraiserId)
+
+	if fundraiserStatus != constants.ACTIVE_STATUS {
+		return 0, internal_errors.BadRequest{Message: "cannot donate as fundraiser is not active"}
+	}
+
 	donationId, err := donationSvc.donationRepo.CreateDonation(donationDetail)
 	if err != nil {
 		return 0, err
