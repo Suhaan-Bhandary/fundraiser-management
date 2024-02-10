@@ -8,7 +8,7 @@ import (
 
 type OrganizerStorer interface {
 	RegisterOrganizer(orgDetail dto.RegisterOrganizerRequest) error
-	GetOrganizerIDPassword(email string) (uint, string, error)
+	GetOrganizerIDPasswordAndVerifyStatus(email string) (uint, string, bool, error)
 	VerifyOrganizer(organizerId uint) error
 	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
 	DeleteOrganizer(organizerId uint) error

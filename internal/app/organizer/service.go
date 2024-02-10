@@ -57,9 +57,13 @@ func (orgSvc *service) DeleteOrganizer(organizerId uint) error {
 }
 
 func (orgSvc *service) LoginOrganizer(req dto.LoginOrganizerRequest) (string, error) {
-	org_id, hashedPassword, err := orgSvc.organizerRepo.GetOrganizerIDPassword(req.Email)
+	org_id, hashedPassword, isVerified, err := orgSvc.organizerRepo.GetOrganizerIDPasswordAndVerifyStatus(req.Email)
 	if err != nil {
 		return "", err
+	}
+
+	if !isVerified {
+		return "", internal_errors.InvalidCredentialError{Message: "Organizer is not verified, please contact admin"}
 	}
 
 	isMatch := helpers.MatchPasswordAndHash(req.Password, hashedPassword)

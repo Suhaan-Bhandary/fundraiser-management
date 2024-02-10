@@ -42,18 +42,19 @@ func (organizerStore *organizerStore) RegisterOrganizer(orgDetail dto.RegisterOr
 	return nil
 }
 
-func (organizerStore *organizerStore) GetOrganizerIDPassword(email string) (uint, string, error) {
+func (organizerStore *organizerStore) GetOrganizerIDPasswordAndVerifyStatus(email string) (uint, string, bool, error) {
 	var id uint
 	var password string
+	var isVerified bool
 
 	row := organizerStore.db.QueryRow(getOrganizerIdPasswordQuery, email)
-	err := row.Scan(&id, &password)
+	err := row.Scan(&id, &password, &isVerified)
 
 	if err != nil {
-		return 0, "", internal_errors.NotFoundError{Message: "Invalid email or password"}
+		return 0, "", false, internal_errors.NotFoundError{Message: "Invalid email or password"}
 	}
 
-	return id, password, nil
+	return id, password, isVerified, nil
 }
 
 func (organizerStore *organizerStore) VerifyOrganizer(organizerId uint) error {
