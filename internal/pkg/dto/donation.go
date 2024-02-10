@@ -14,6 +14,17 @@ type DonationView struct {
 	CreatedAt       time.Time `json:"created_at"`
 }
 
+type FundariserDonationView struct {
+	ID              uint      `json:"id"`
+	UserId          uint      `json:"user_id"`
+	UserName        string    `json:"user_name"`
+	FundraiserId    uint      `json:"fundraiser_id"`
+	FundraiserTitle string    `json:"fundraiser_title"`
+	Amount          float64   `json:"amount"`
+	IsAnonymous     bool      `json:"is_anonymous"`
+	CreatedAt       time.Time `json:"created_at"`
+}
+
 type CreateDonationRequest struct {
 	UserId       uint    `json:"user_id"`
 	FundraiserId uint    `json:"fundraiser_id"`

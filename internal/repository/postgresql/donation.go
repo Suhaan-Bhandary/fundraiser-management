@@ -60,3 +60,33 @@ func (donationStore *donationStore) ListUserDonations(user_id int) ([]dto.Donati
 
 	return donationDetailList, nil
 }
+
+func (donationStore *donationStore) ListFundraiserDonations(fundraiserId int) ([]dto.FundariserDonationView, error) {
+	donationDetailList := []dto.FundariserDonationView{}
+
+	rows, err := donationStore.db.Query(listFundraiserDonationsQuery, fundraiserId)
+	if err != nil {
+		fmt.Println(err)
+		return []dto.FundariserDonationView{}, errors.New("error while fetching fundraiser donation")
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var donationDetail dto.FundariserDonationView
+		err := rows.Scan(
+			&donationDetail.ID, &donationDetail.UserId, &donationDetail.UserName,
+			&donationDetail.FundraiserId,
+			&donationDetail.FundraiserTitle, &donationDetail.Amount,
+			&donationDetail.IsAnonymous, &donationDetail.CreatedAt,
+		)
+
+		if err != nil {
+			fmt.Println(err)
+			return []dto.FundariserDonationView{}, errors.New("error while fetching fundraiser donation")
+		}
+
+		donationDetailList = append(donationDetailList, donationDetail)
+	}
+
+	return donationDetailList, nil
+}
