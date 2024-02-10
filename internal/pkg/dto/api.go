@@ -1,22 +1,8 @@
 package dto
 
-import "errors"
-
 type Token struct {
 	ID   int
 	Role string
-}
-
-type IdParam struct {
-	ID string
-}
-
-func (data *IdParam) validate() error {
-	if data.ID == "" {
-		return errors.New("Id is required")
-	}
-
-	return nil
 }
 
 type MessageResponse struct {

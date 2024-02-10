@@ -43,7 +43,7 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 	// Organizer routes
 	organizerRouter := router.PathPrefix("/organizer").Subrouter()
 	organizerRouter.HandleFunc("/register", RegisterOrganizerHandler(deps.OrganizerService)).Methods(http.MethodPost)
-	organizerRouter.HandleFunc("/login", LoginOranizerHandler(deps.OrganizerService)).Methods(http.MethodPost)
+	organizerRouter.HandleFunc("/login", LoginOrganizerHandler(deps.OrganizerService)).Methods(http.MethodPost)
 	organizerRouter.HandleFunc(
 		"",
 		middleware.CheckAuth(ListOrganizersHandler(deps.OrganizerService), []string{constants.ADMIN}),

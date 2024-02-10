@@ -16,3 +16,7 @@ const (
 	INACTIVE_STATUS = "inactive"
 	BANNED_STATUS   = "banned"
 )
+
+type TokenKeyType string
+
+const TokenKey TokenKeyType = "token-key"

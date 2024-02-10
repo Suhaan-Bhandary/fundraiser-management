@@ -26,11 +26,11 @@ type RegisterOrganizerRequest struct {
 
 func (req *RegisterOrganizerRequest) Validate() error {
 	if req.Name == "" {
-		return errors.New("Organizer name required")
+		return errors.New("organizer name required")
 	}
 
 	if req.Detail == "" {
-		return errors.New("Organizer detail required")
+		return errors.New("organizer detail required")
 	}
 
 	if req.Email == "" {
@@ -94,11 +94,11 @@ type UpdateOrganizerRequest struct {
 
 func (req *UpdateOrganizerRequest) Validate() error {
 	if req.OrganizerId <= 0 {
-		return errors.New("Invalid organizer id")
+		return errors.New("invalid organizer id")
 	}
 
 	if req.Detail == "" {
-		return errors.New("Organizer detail required")
+		return errors.New("organizer detail required")
 	}
 
 	if req.Email == "" {

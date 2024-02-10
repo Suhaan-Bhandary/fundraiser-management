@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/helpers"
 	"github.com/golang-jwt/jwt/v5"
@@ -16,7 +17,7 @@ func CheckAuth(handler func(w http.ResponseWriter, r *http.Request), allowed []s
 		tokenString := r.Header.Get("Authorization")
 
 		if tokenString == "" {
-			ErrorResponse(w, http.StatusUnauthorized, errors.New("Missing authorization header"))
+			ErrorResponse(w, http.StatusUnauthorized, errors.New("missing authorization header"))
 			return
 		}
 
@@ -24,7 +25,7 @@ func CheckAuth(handler func(w http.ResponseWriter, r *http.Request), allowed []s
 		token, err := helpers.VerifyToken(tokenString)
 		if err != nil {
 			fmt.Println(err)
-			ErrorResponse(w, http.StatusUnauthorized, errors.New("Invalid token"))
+			ErrorResponse(w, http.StatusUnauthorized, errors.New("invalid token"))
 			return
 		}
 
@@ -35,17 +36,17 @@ func CheckAuth(handler func(w http.ResponseWriter, r *http.Request), allowed []s
 
 			for _, role := range allowed {
 				if role == tokenRole {
-					rcopy := r.WithContext(context.WithValue(r.Context(), "token-data", dto.Token{
+					r_copy := r.WithContext(context.WithValue(r.Context(), constants.TokenKey, dto.Token{
 						ID:   id,
 						Role: tokenRole,
 					}))
 
-					handler(w, rcopy)
+					handler(w, r_copy)
 					return
 				}
 			}
 		}
 
-		ErrorResponse(w, http.StatusUnauthorized, errors.New("Invalid token"))
+		ErrorResponse(w, http.StatusUnauthorized, errors.New("invalid token"))
 	}
 }

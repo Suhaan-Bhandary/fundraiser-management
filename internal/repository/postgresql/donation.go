@@ -61,18 +61,18 @@ func (donationStore *donationStore) ListUserDonations(user_id int) ([]dto.Donati
 	return donationDetailList, nil
 }
 
-func (donationStore *donationStore) ListFundraiserDonations(fundraiserId int) ([]dto.FundariserDonationView, error) {
-	donationDetailList := []dto.FundariserDonationView{}
+func (donationStore *donationStore) ListFundraiserDonations(fundraiserId int) ([]dto.FundraiserDonationView, error) {
+	donationDetailList := []dto.FundraiserDonationView{}
 
 	rows, err := donationStore.db.Query(listFundraiserDonationsQuery, fundraiserId)
 	if err != nil {
 		fmt.Println(err)
-		return []dto.FundariserDonationView{}, errors.New("error while fetching fundraiser donation")
+		return []dto.FundraiserDonationView{}, errors.New("error while fetching fundraiser donation")
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var donationDetail dto.FundariserDonationView
+		var donationDetail dto.FundraiserDonationView
 		err := rows.Scan(
 			&donationDetail.ID, &donationDetail.UserId, &donationDetail.UserName,
 			&donationDetail.FundraiserId,
@@ -82,7 +82,7 @@ func (donationStore *donationStore) ListFundraiserDonations(fundraiserId int) ([
 
 		if err != nil {
 			fmt.Println(err)
-			return []dto.FundariserDonationView{}, errors.New("error while fetching fundraiser donation")
+			return []dto.FundraiserDonationView{}, errors.New("error while fetching fundraiser donation")
 		}
 
 		donationDetailList = append(donationDetailList, donationDetail)
@@ -91,18 +91,18 @@ func (donationStore *donationStore) ListFundraiserDonations(fundraiserId int) ([
 	return donationDetailList, nil
 }
 
-func (donationStore *donationStore) ListDonations() ([]dto.FundariserDonationView, error) {
-	donationDetailList := []dto.FundariserDonationView{}
+func (donationStore *donationStore) ListDonations() ([]dto.FundraiserDonationView, error) {
+	donationDetailList := []dto.FundraiserDonationView{}
 
 	rows, err := donationStore.db.Query(listDonationsQuery)
 	if err != nil {
 		fmt.Println(err)
-		return []dto.FundariserDonationView{}, errors.New("error while fetching donations")
+		return []dto.FundraiserDonationView{}, errors.New("error while fetching donations")
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var donationDetail dto.FundariserDonationView
+		var donationDetail dto.FundraiserDonationView
 		err := rows.Scan(
 			&donationDetail.ID, &donationDetail.UserId, &donationDetail.UserName,
 			&donationDetail.FundraiserId,
@@ -112,7 +112,7 @@ func (donationStore *donationStore) ListDonations() ([]dto.FundariserDonationVie
 
 		if err != nil {
 			fmt.Println(err)
-			return []dto.FundariserDonationView{}, errors.New("error while fetching donations")
+			return []dto.FundraiserDonationView{}, errors.New("error while fetching donations")
 		}
 
 		donationDetailList = append(donationDetailList, donationDetail)

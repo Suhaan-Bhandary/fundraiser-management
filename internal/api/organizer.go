@@ -36,7 +36,7 @@ func RegisterOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter
 	}
 }
 
-func LoginOranizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *http.Request) {
+func LoginOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		req, err := decodeLoginOrganizerRequest(r)
 		if err != nil {
