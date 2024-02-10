@@ -67,7 +67,12 @@ func createAdmin() {
 		return
 	}
 
-	db.Query("INSERT INTO admin (username, password) values($1, $2)", username, hashedPassword)
+	insertAdminQuery := "INSERT INTO admin (username, password) values($1, $2)"
+	_, err = db.Exec(insertAdminQuery, username, hashedPassword)
+	if err != nil {
+		fmt.Println("Cannot create admin:", err)
+		return
+	}
 }
 
 func startServer() {
