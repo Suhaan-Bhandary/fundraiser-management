@@ -12,15 +12,15 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func decodeId(r *http.Request) (int, error) {
+func decodeId(r *http.Request) (uint, error) {
 	id_str := mux.Vars(r)["id"]
 
 	id, err := strconv.Atoi(id_str)
-	if err != nil {
-		return -1, errors.New("invalid Id in path")
+	if err != nil || id <= 0 {
+		return 0, errors.New("invalid Id in path")
 	}
 
-	return id, nil
+	return uint(id), nil
 }
 
 func decodeTokenFromContext(ctx context.Context) (dto.Token, error) {

@@ -13,11 +13,11 @@ type service struct {
 }
 
 type Service interface {
-	CreateFundraiser(userDetail dto.CreateFundraiserRequest) (int, error)
-	DeleteFundraiser(fundraiserId int, tokenData dto.Token) error
-	GetFundraiserDetail(fundraiserId int) (dto.FundraiserView, error)
-	CloseFundraiser(fundraiserId int, tokenData dto.Token) error
-	BanFundraiser(fundraiserId int) error
+	CreateFundraiser(userDetail dto.CreateFundraiserRequest) (uint, error)
+	DeleteFundraiser(req dto.DeleteFundraiserRequest) error
+	GetFundraiserDetail(fundraiserId uint) (dto.FundraiserView, error)
+	CloseFundraiser(fundraiserId uint, tokenData dto.Token) error
+	BanFundraiser(fundraiserId uint) error
 	ListFundraisers() ([]dto.FundraiserView, error)
 	UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error
 }
@@ -28,31 +28,31 @@ func NewService(fundRepo repository.FundraiserStorer) Service {
 	}
 }
 
-func (fundSvc *service) CreateFundraiser(fundDetail dto.CreateFundraiserRequest) (int, error) {
+func (fundSvc *service) CreateFundraiser(fundDetail dto.CreateFundraiserRequest) (uint, error) {
 	fundraiserId, err := fundSvc.fundRepo.CreateFundraiser(fundDetail)
 	if err != nil {
-		return -1, err
+		return 0, err
 	}
 
 	return fundraiserId, nil
 }
 
-func (fundSvc *service) DeleteFundraiser(fundraiserId int, tokenData dto.Token) error {
+func (fundSvc *service) DeleteFundraiser(req dto.DeleteFundraiserRequest) error {
 	// if the role is organizer then we have to match the id and the organizer id of the fundraiser
-	if tokenData.Role == constants.ORGANIZER {
-		fundraiserOrganizerId, err := fundSvc.fundRepo.GetFundraiserOrganizerId(fundraiserId)
+	if req.Token.Role == constants.ORGANIZER {
+		fundraiserOrganizerId, err := fundSvc.fundRepo.GetFundraiserOrganizerId(req.FundraiserId)
 		if err != nil {
 			return err
 		}
 
-		if fundraiserOrganizerId != tokenData.ID {
+		if fundraiserOrganizerId != req.Token.ID {
 			return internal_errors.InvalidCredentialError{
 				Message: "Only creator of fundraiser or admin can delete the fundraiser.",
 			}
 		}
 	}
 
-	err := fundSvc.fundRepo.DeleteFundraiser(fundraiserId)
+	err := fundSvc.fundRepo.DeleteFundraiser(req.FundraiserId)
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (fundSvc *service) DeleteFundraiser(fundraiserId int, tokenData dto.Token) 
 	return nil
 }
 
-func (fundSvc *service) GetFundraiserDetail(fundraiserId int) (dto.FundraiserView, error) {
+func (fundSvc *service) GetFundraiserDetail(fundraiserId uint) (dto.FundraiserView, error) {
 	fundraiserDetail, err := fundSvc.fundRepo.GetFundraiser(fundraiserId)
 	if err != nil {
 		return dto.FundraiserView{}, err
@@ -69,7 +69,7 @@ func (fundSvc *service) GetFundraiserDetail(fundraiserId int) (dto.FundraiserVie
 	return fundraiserDetail, nil
 }
 
-func (fundSvc *service) CloseFundraiser(fundraiserId int, tokenData dto.Token) error {
+func (fundSvc *service) CloseFundraiser(fundraiserId uint, tokenData dto.Token) error {
 	// if the role is organizer then we have to match the id and the organizer id of the fundraiser
 	fundraiserOrganizerId, fundraiserStatus, err := fundSvc.fundRepo.GetFundraiserOrganizerIdAndStatus(fundraiserId)
 	if err != nil {
@@ -102,7 +102,7 @@ func (fundSvc *service) CloseFundraiser(fundraiserId int, tokenData dto.Token) e
 	return nil
 }
 
-func (fundSvc *service) BanFundraiser(fundraiserId int) error {
+func (fundSvc *service) BanFundraiser(fundraiserId uint) error {
 	err := fundSvc.fundRepo.BanFundraiser(fundraiserId)
 	if err != nil {
 		return err
@@ -121,12 +121,12 @@ func (fundSvc *service) ListFundraisers() ([]dto.FundraiserView, error) {
 }
 
 func (fundSvc *service) UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error {
-	fundraiserOrganizerId, err := fundSvc.fundRepo.GetFundraiserOrganizerId(int(updateDetail.FundraiserId))
+	fundraiserOrganizerId, err := fundSvc.fundRepo.GetFundraiserOrganizerId(updateDetail.FundraiserId)
 	if err != nil {
 		return err
 	}
 
-	if fundraiserOrganizerId != int(updateDetail.RequestOrganizerId) {
+	if fundraiserOrganizerId != updateDetail.RequestOrganizerId {
 		return internal_errors.InvalidCredentialError{
 			Message: "Only creator can update the fundraiser.",
 		}

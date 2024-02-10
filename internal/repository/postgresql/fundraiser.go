@@ -21,8 +21,8 @@ func NewFundraiserRepo(db *sql.DB) repository.FundraiserStorer {
 	}
 }
 
-func (fundStore *fundraiserStore) CreateFundraiser(fundDetail dto.CreateFundraiserRequest) (int, error) {
-	var fundraiserId int
+func (fundStore *fundraiserStore) CreateFundraiser(fundDetail dto.CreateFundraiserRequest) (uint, error) {
+	var fundraiserId uint
 	err := fundStore.db.QueryRow(
 		insertFundraiserQuery,
 		fundDetail.Title, fundDetail.Description, fundDetail.OrganizerId, fundDetail.ImageUrl, fundDetail.VideoUrl, fundDetail.TargetAmount, constants.ACTIVE_STATUS,
@@ -30,13 +30,13 @@ func (fundStore *fundraiserStore) CreateFundraiser(fundDetail dto.CreateFundrais
 
 	if err != nil {
 		fmt.Println(err)
-		return -1, errors.New("error while creating the fund")
+		return 0, errors.New("error while creating the fund")
 	}
 
 	return fundraiserId, nil
 }
 
-func (fundStore *fundraiserStore) DeleteFundraiser(fundraiserId int) error {
+func (fundStore *fundraiserStore) DeleteFundraiser(fundraiserId uint) error {
 	res, err := fundStore.db.Exec(
 		deleteFundraiserQuery,
 		fundraiserId,
@@ -58,20 +58,20 @@ func (fundStore *fundraiserStore) DeleteFundraiser(fundraiserId int) error {
 	return nil
 }
 
-func (fundStore *fundraiserStore) GetFundraiserOrganizerId(fundraiserId int) (int, error) {
-	var organizerId int
+func (fundStore *fundraiserStore) GetFundraiserOrganizerId(fundraiserId uint) (uint, error) {
+	var organizerId uint
 	row := fundStore.db.QueryRow(getOrganizerIdFromFundraiser, fundraiserId)
 	err := row.Scan(&organizerId)
 
 	if err != nil {
-		return -1, internal_errors.NotFoundError{Message: "Invalid username or password"}
+		return 0, internal_errors.NotFoundError{Message: "Invalid username or password"}
 	}
 
 	return organizerId, nil
 
 }
 
-func (fundStore *fundraiserStore) GetFundraiser(fundraiserId int) (dto.FundraiserView, error) {
+func (fundStore *fundraiserStore) GetFundraiser(fundraiserId uint) (dto.FundraiserView, error) {
 	var fundraiser dto.FundraiserView
 	row := fundStore.db.QueryRow(getFundraiserQuery, fundraiserId)
 
@@ -90,7 +90,7 @@ func (fundStore *fundraiserStore) GetFundraiser(fundraiserId int) (dto.Fundraise
 	return fundraiser, nil
 }
 
-func (fundStore *fundraiserStore) CloseFundraiser(fundraiserId int) error {
+func (fundStore *fundraiserStore) CloseFundraiser(fundraiserId uint) error {
 	res, err := fundStore.db.Exec(
 		closeFundraiserQuery,
 		fundraiserId,
@@ -112,20 +112,20 @@ func (fundStore *fundraiserStore) CloseFundraiser(fundraiserId int) error {
 	return nil
 }
 
-func (fundStore *fundraiserStore) GetFundraiserOrganizerIdAndStatus(fundraiserId int) (int, string, error) {
-	var organizerId int
+func (fundStore *fundraiserStore) GetFundraiserOrganizerIdAndStatus(fundraiserId uint) (uint, string, error) {
+	var organizerId uint
 	var fundraiserStatus string
 	row := fundStore.db.QueryRow(getOrganizerIdAndStatusFromFundraiserQuery, fundraiserId)
 	err := row.Scan(&organizerId, &fundraiserStatus)
 
 	if err != nil {
-		return -1, "", internal_errors.NotFoundError{Message: "Invalid username or password"}
+		return 0, "", internal_errors.NotFoundError{Message: "Invalid username or password"}
 	}
 
 	return organizerId, fundraiserStatus, nil
 }
 
-func (fundStore *fundraiserStore) BanFundraiser(fundraiserId int) error {
+func (fundStore *fundraiserStore) BanFundraiser(fundraiserId uint) error {
 	res, err := fundStore.db.Exec(
 		banFundraiserQuery,
 		fundraiserId,

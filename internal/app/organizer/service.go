@@ -18,10 +18,10 @@ type service struct {
 type Service interface {
 	RegisterOrganizer(userDetail dto.RegisterOrganizerRequest) error
 	LoginOrganizer(req dto.LoginOrganizerRequest) (string, error)
-	VerifyOrganizer(organizerId int) error
+	VerifyOrganizer(organizerId uint) error
 	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
-	DeleteOrganizer(organizerId int) error
-	GetOrganizer(organizerId int) (dto.OrganizerView, error)
+	DeleteOrganizer(organizerId uint) error
+	GetOrganizer(organizerId uint) (dto.OrganizerView, error)
 	UpdateOrganizer(req dto.UpdateOrganizerRequest) error
 }
 
@@ -47,7 +47,7 @@ func (orgSvc *service) RegisterOrganizer(orgDetail dto.RegisterOrganizerRequest)
 	return nil
 }
 
-func (orgSvc *service) DeleteOrganizer(organizerId int) error {
+func (orgSvc *service) DeleteOrganizer(organizerId uint) error {
 	err := orgSvc.organizerRepo.DeleteOrganizer(organizerId)
 	if err != nil {
 		return err
@@ -75,7 +75,7 @@ func (orgSvc *service) LoginOrganizer(req dto.LoginOrganizerRequest) (string, er
 	return token, nil
 }
 
-func (orgSvc *service) VerifyOrganizer(organizerId int) error {
+func (orgSvc *service) VerifyOrganizer(organizerId uint) error {
 	err := orgSvc.organizerRepo.VerifyOrganizer(organizerId)
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func (orgSvc *service) GetOrganizerList(search string, verified string) ([]dto.O
 	return organizers, nil
 }
 
-func (orgSvc *service) GetOrganizer(organizerId int) (dto.OrganizerView, error) {
+func (orgSvc *service) GetOrganizer(organizerId uint) (dto.OrganizerView, error) {
 	organizer, err := orgSvc.organizerRepo.GetOrganizer(organizerId)
 	if err != nil {
 		return dto.OrganizerView{}, err

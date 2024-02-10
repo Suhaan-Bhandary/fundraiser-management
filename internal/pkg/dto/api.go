@@ -1,7 +1,7 @@
 package dto
 
 type Token struct {
-	ID   int
+	ID   uint
 	Role string
 }
 

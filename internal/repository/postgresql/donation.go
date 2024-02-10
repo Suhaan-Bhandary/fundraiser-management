@@ -19,8 +19,8 @@ func NewDonationRepo(db *sql.DB) repository.DonationStorer {
 	}
 }
 
-func (donationStore *donationStore) CreateDonation(donationDetail dto.CreateDonationRequest) (int, error) {
-	var donationId int
+func (donationStore *donationStore) CreateDonation(donationDetail dto.CreateDonationRequest) (uint, error) {
+	var donationId uint
 	err := donationStore.db.QueryRow(
 		insertDonationQuery,
 		donationDetail.UserId, donationDetail.FundraiserId, donationDetail.Amount, donationDetail.IsAnonymous,
@@ -28,16 +28,16 @@ func (donationStore *donationStore) CreateDonation(donationDetail dto.CreateDona
 
 	if err != nil {
 		fmt.Println(err)
-		return -1, errors.New("error while creating donation")
+		return 0, errors.New("error while creating donation")
 	}
 
 	return donationId, nil
 }
 
-func (donationStore *donationStore) ListUserDonations(user_id int) ([]dto.DonationView, error) {
+func (donationStore *donationStore) ListUserDonations(userId uint) ([]dto.DonationView, error) {
 	donationDetailList := []dto.DonationView{}
 
-	rows, err := donationStore.db.Query(listUserDonations, user_id)
+	rows, err := donationStore.db.Query(listUserDonations, userId)
 	if err != nil {
 		fmt.Println(err)
 		return []dto.DonationView{}, errors.New("error while fetching user donation")
@@ -61,7 +61,7 @@ func (donationStore *donationStore) ListUserDonations(user_id int) ([]dto.Donati
 	return donationDetailList, nil
 }
 
-func (donationStore *donationStore) ListFundraiserDonations(fundraiserId int) ([]dto.FundraiserDonationView, error) {
+func (donationStore *donationStore) ListFundraiserDonations(fundraiserId uint) ([]dto.FundraiserDonationView, error) {
 	donationDetailList := []dto.FundraiserDonationView{}
 
 	rows, err := donationStore.db.Query(listFundraiserDonationsQuery, fundraiserId)

@@ -12,7 +12,7 @@ import (
 
 var SECRET_KEY = []byte(os.Getenv("SECRET_KEY"))
 
-func CreateToken(id int, role string) (string, error) {
+func CreateToken(id uint, role string) (string, error) {
 	expirationTime := time.Now().Add(time.Hour * 24 * 30) // 30 Days expiration
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
