@@ -86,6 +86,11 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 		middleware.CheckAuth(BanFundraiserHandler(deps.FundraiserService), []string{constants.ADMIN}),
 	).Methods(http.MethodPatch)
 
+	// Donation list
+	router.HandleFunc("/donation",
+		middleware.CheckAuth(ListDonationsHandler(deps.DonationService), []string{constants.ADMIN}),
+	).Methods(http.MethodGet)
+
 	// Not Found Router
 	router.HandleFunc("/", notFoundHandler).Methods(http.MethodGet)
 

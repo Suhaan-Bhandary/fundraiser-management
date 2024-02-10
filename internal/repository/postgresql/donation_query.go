@@ -31,3 +31,16 @@ const listFundraiserDonationsQuery = `
 	where donation.fundraiser_id = $1
 	order by created_at desc;
 `
+
+const listDonationsQuery = `
+	select 
+		donation.id, donation.user_id, (users.first_name || ' ' || users.last_name) as user_name,
+		donation.fundraiser_id, fundraiser.title as fundraiser_title, 
+		donation.amount, donation.is_anonymous, donation.created_at
+	from donation
+	join fundraiser
+	on donation.fundraiser_id = fundraiser.id
+	join users
+	on donation.user_id = users.id
+	order by created_at desc;
+`

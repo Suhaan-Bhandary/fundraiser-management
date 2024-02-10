@@ -71,3 +71,7 @@ type ListFundraisersResponse struct {
 type ListFundraiserDonationsResponse struct {
 	Donations []FundariserDonationView `json:"donations"`
 }
+
+type ListDonationsResponse struct {
+	Donations []FundariserDonationView `json:"donations"`
+}
