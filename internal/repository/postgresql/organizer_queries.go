@@ -6,7 +6,7 @@ const insertOrganizerQuery = `
 `
 
 const getOrganizerIdPasswordQuery = `
-	select id, password
+	select id, password, is_verified
 	from organizer
 	where email = $1;
 `
