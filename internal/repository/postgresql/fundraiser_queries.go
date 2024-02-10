@@ -30,7 +30,7 @@ const getFundraiserQuery = `
 
 const closeFundraiserQuery = `
 	update fundraiser
-	set status = 'inactive'
+	set status = 'inactive', updated_at = CURRENT_TIMESTAMP
 	where id = $1;
 `
 
@@ -42,7 +42,7 @@ const getOrganizerIdAndStatusFromFundraiserQuery = `
 
 const banFundraiserQuery = `
 	update fundraiser
-	set status = 'banned'
+	set status = 'banned', updated_at = CURRENT_TIMESTAMP
 	where id = $1;
 `
 

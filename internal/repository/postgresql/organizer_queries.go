@@ -19,7 +19,7 @@ const deleteOrganizerQuery = `
 
 const verifyOrganizerQuery = `
 	update organizer
-	set is_verified = true
+	set is_verified = true, updated_at = CURRENT_TIMESTAMP
 	where id = $1;
 `
 
@@ -44,6 +44,6 @@ const getOrganizerQuery = `
 
 const updateOrganizerQuery = `
 	update organizer
-	set email = $1, detail = $2, mobile = $3
+	set email = $1, detail = $2, mobile = $3, updated_at = CURRENT_TIMESTAMP 
 	where id = $4;
 `
