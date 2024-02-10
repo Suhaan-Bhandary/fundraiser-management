@@ -107,10 +107,20 @@ func VerifyOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, 
 
 func ListOrganizersHandler(orgSvc organizer.Service) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		search := r.URL.Query().Get("search")
-		verified := r.URL.Query().Get("verified")
+		req, err := decodeListOrganizerRequest(r)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
 
-		organizers, err := orgSvc.GetOrganizerList(search, verified)
+		err = req.Validate()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		organizers, count, err := orgSvc.GetOrganizerList(req)
 		if err != nil {
 			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
 			return
@@ -118,6 +128,7 @@ func ListOrganizersHandler(orgSvc organizer.Service) func(http.ResponseWriter, *
 
 		middleware.SuccessResponse(w, http.StatusOK, dto.GetNotVerifiedOrganizersResponse{
 			Organizers: organizers,
+			Count:      count,
 		})
 	}
 }

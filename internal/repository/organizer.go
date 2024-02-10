@@ -10,7 +10,8 @@ type OrganizerStorer interface {
 	RegisterOrganizer(orgDetail dto.RegisterOrganizerRequest) error
 	GetOrganizerIDPasswordAndVerifyStatus(email string) (uint, string, bool, error)
 	VerifyOrganizer(organizerId uint) error
-	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
+	GetOrganizerList(req dto.ListOrganizersRequest) ([]dto.OrganizerView, error)
+	GetOrganizerListCount(req dto.ListOrganizersRequest) (uint, error)
 	DeleteOrganizer(organizerId uint) error
 	GetOrganizer(organizerId uint) (dto.OrganizerView, error)
 	UpdateOrganizer(req dto.UpdateOrganizerRequest) error

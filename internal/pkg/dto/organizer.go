@@ -3,6 +3,7 @@ package dto
 import (
 	"errors"
 	"regexp"
+	"slices"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 )
@@ -79,6 +80,7 @@ func (req *LoginOrganizerRequest) Validate() error {
 
 type GetNotVerifiedOrganizersResponse struct {
 	Organizers []OrganizerView `json:"organizers"`
+	Count      uint            `json:"count"`
 }
 
 type GetOrganizerResponse struct {
@@ -113,6 +115,40 @@ func (req *UpdateOrganizerRequest) Validate() error {
 
 	if req.Mobile == "" {
 		return errors.New("password is required")
+	}
+
+	return nil
+}
+
+type ListOrganizersRequest struct {
+	Search             string `json:"search"`
+	Verified           string `json:"verified"`
+	Offset             uint   `json:"offset"`
+	Limit              uint   `json:"limit"`
+	OrderByKey         string `json:"order_by"`
+	OrderByIsAscending bool   `json:"is_ascending"`
+}
+
+func (req *ListOrganizersRequest) Validate() error {
+	if req.Verified != "" && req.Verified != "true" && req.Verified != "false" {
+		return errors.New("invalid value of verified, it can only be true or false")
+	}
+
+	if req.Offset < 0 {
+		return errors.New("invalid offset, offset cannot be negative")
+	}
+
+	if req.Limit <= 0 {
+		return errors.New("limit should be positive number")
+	}
+
+	if req.Limit > 1000 {
+		return errors.New("Limit should be in range [1, 1000]")
+	}
+
+	orderKeys := []string{"id", "name", "email", "mobile", "is_verified", "created_at", "updated_at"}
+	if req.OrderByKey != "" && !slices.Contains(orderKeys, req.OrderByKey) {
+		return errors.New("invalid order key")
 	}
 
 	return nil
