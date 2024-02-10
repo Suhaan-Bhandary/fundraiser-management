@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
 	"github.com/gorilla/mux"
@@ -16,7 +17,7 @@ func decodeId(r *http.Request) (int, error) {
 
 	id, err := strconv.Atoi(id_str)
 	if err != nil {
-		return -1, errors.New("Invalid Id in path")
+		return -1, errors.New("invalid Id in path")
 	}
 
 	return id, nil
@@ -27,7 +28,7 @@ func decodeTokenFromContext(ctx context.Context) (dto.Token, error) {
 		return dto.Token{}, internal_errors.NotFoundError{Message: "Data not found"}
 	}
 
-	tokenData, ok := ctx.Value("token-data").(dto.Token)
+	tokenData, ok := ctx.Value(constants.TokenKey).(dto.Token)
 	if !ok {
 		return dto.Token{}, internal_errors.NotFoundError{Message: "Data not found"}
 	}

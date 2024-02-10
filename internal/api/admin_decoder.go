@@ -12,7 +12,7 @@ func decodeLoginAdminRequest(r *http.Request) (dto.LoginAdminRequest, error) {
 	var req dto.LoginAdminRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		return dto.LoginAdminRequest{}, errors.New("Invalid Json in request body.")
+		return dto.LoginAdminRequest{}, errors.New("invalid Json in request body")
 	}
 
 	return req, nil

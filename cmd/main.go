@@ -62,6 +62,11 @@ func createAdmin() {
 	}
 
 	hashedPassword, err := helpers.HashPassword(password)
+	if err != nil {
+		fmt.Println("Cannot create admin:", err)
+		return
+	}
+
 	db.Query("INSERT INTO admin (username, password) values($1, $2)", username, hashedPassword)
 }
 

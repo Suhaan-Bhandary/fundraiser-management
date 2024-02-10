@@ -13,7 +13,7 @@ func decodeRegisterOrganizerRequest(r *http.Request) (dto.RegisterOrganizerReque
 	var req dto.RegisterOrganizerRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		return dto.RegisterOrganizerRequest{}, errors.New("Invalid Json in request body.")
+		return dto.RegisterOrganizerRequest{}, errors.New("invalid Json in request body")
 	}
 
 	return req, nil
@@ -23,7 +23,7 @@ func decodeLoginOrganizerRequest(r *http.Request) (dto.LoginOrganizerRequest, er
 	var req dto.LoginOrganizerRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		return dto.LoginOrganizerRequest{}, errors.New("Invalid Json in request body.")
+		return dto.LoginOrganizerRequest{}, errors.New("invalid Json in request body")
 	}
 
 	return req, nil
@@ -33,7 +33,7 @@ func decodeUpdateOrganizerRequest(r *http.Request) (dto.UpdateOrganizerRequest, 
 	var req dto.UpdateOrganizerRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		return dto.UpdateOrganizerRequest{}, errors.New("Invalid Json in request body.")
+		return dto.UpdateOrganizerRequest{}, errors.New("invalid Json in request body")
 	}
 
 	tokenData, err := decodeTokenFromContext(r.Context())

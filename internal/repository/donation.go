@@ -9,8 +9,8 @@ import (
 type DonationStorer interface {
 	CreateDonation(donationDetail dto.CreateDonationRequest) (int, error)
 	ListUserDonations(user_id int) ([]dto.DonationView, error)
-	ListFundraiserDonations(fundraiser_id int) ([]dto.FundariserDonationView, error)
-	ListDonations() ([]dto.FundariserDonationView, error)
+	ListFundraiserDonations(fundraiser_id int) ([]dto.FundraiserDonationView, error)
+	ListDonations() ([]dto.FundraiserDonationView, error)
 }
 
 type Donation struct {

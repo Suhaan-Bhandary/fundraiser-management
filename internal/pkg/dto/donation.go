@@ -14,7 +14,7 @@ type DonationView struct {
 	CreatedAt       time.Time `json:"created_at"`
 }
 
-type FundariserDonationView struct {
+type FundraiserDonationView struct {
 	ID              uint      `json:"id"`
 	UserId          uint      `json:"user_id"`
 	UserName        string    `json:"user_name"`

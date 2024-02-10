@@ -69,16 +69,16 @@ type ListFundraisersResponse struct {
 }
 
 type ListFundraiserDonationsResponse struct {
-	Donations []FundariserDonationView `json:"donations"`
+	Donations []FundraiserDonationView `json:"donations"`
 }
 
 type ListDonationsResponse struct {
-	Donations []FundariserDonationView `json:"donations"`
+	Donations []FundraiserDonationView `json:"donations"`
 }
 
 type UpdateFundraiserRequest struct {
 	RequestOrganizerId uint    `json:"request_organizer_id"`
-	FundraiserId       uint    `json:"fundrasier_id"`
+	FundraiserId       uint    `json:"fundraiser_id"`
 	Title              string  `json:"title"`
 	Description        string  `json:"description"`
 	ImageUrl           string  `json:"image_url"`
@@ -88,11 +88,11 @@ type UpdateFundraiserRequest struct {
 
 func (req *UpdateFundraiserRequest) Validate() error {
 	if req.RequestOrganizerId <= 0 {
-		return errors.New("Invalid organizer id in token")
+		return errors.New("invalid organizer id in token")
 	}
 
 	if req.FundraiserId <= 0 {
-		return errors.New("Invalid fundraiser id")
+		return errors.New("invalid fundraiser id")
 	}
 
 	if req.Title == "" {
