@@ -80,7 +80,7 @@ func TestLoginUser(t *testing.T) {
 			},
 			setup: func(userMock *mocks.UserStorer, password string) {
 				hashedPassword, _ := helpers.HashPassword(password)
-				userMock.On("GetUserIDPassword", mock.Anything).Return(0, hashedPassword, nil).Once()
+				userMock.On("GetUserIDPassword", mock.Anything).Return(uint(1), hashedPassword, nil).Once()
 			},
 			isErrorExpected: false,
 		},
@@ -91,7 +91,7 @@ func TestLoginUser(t *testing.T) {
 				Password: "123",
 			},
 			setup: func(userMock *mocks.UserStorer, _ string) {
-				userMock.On("GetUserIDPassword", mock.Anything).Return(-1, "", errors.New("Error")).Once()
+				userMock.On("GetUserIDPassword", mock.Anything).Return(uint(0), "", errors.New("Error")).Once()
 			},
 			isErrorExpected: true,
 		},
@@ -103,7 +103,7 @@ func TestLoginUser(t *testing.T) {
 			},
 			setup: func(userMock *mocks.UserStorer, _ string) {
 				hashedPassword, _ := helpers.HashPassword("other")
-				userMock.On("GetUserIDPassword", mock.Anything).Return(0, hashedPassword, nil).Once()
+				userMock.On("GetUserIDPassword", mock.Anything).Return(uint(0), hashedPassword, nil).Once()
 			},
 			isErrorExpected: true,
 		},

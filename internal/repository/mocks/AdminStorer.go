@@ -10,23 +10,23 @@ type AdminStorer struct {
 }
 
 // GetAdminIDPassword provides a mock function with given fields: username
-func (_m *AdminStorer) GetAdminIDPassword(username string) (int, string, error) {
+func (_m *AdminStorer) GetAdminIDPassword(username string) (uint, string, error) {
 	ret := _m.Called(username)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetAdminIDPassword")
 	}
 
-	var r0 int
+	var r0 uint
 	var r1 string
 	var r2 error
-	if rf, ok := ret.Get(0).(func(string) (int, string, error)); ok {
+	if rf, ok := ret.Get(0).(func(string) (uint, string, error)); ok {
 		return rf(username)
 	}
-	if rf, ok := ret.Get(0).(func(string) int); ok {
+	if rf, ok := ret.Get(0).(func(string) uint); ok {
 		r0 = rf(username)
 	} else {
-		r0 = ret.Get(0).(int)
+		r0 = ret.Get(0).(uint)
 	}
 
 	if rf, ok := ret.Get(1).(func(string) string); ok {

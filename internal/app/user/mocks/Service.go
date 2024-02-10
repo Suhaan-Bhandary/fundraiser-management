@@ -13,7 +13,7 @@ type Service struct {
 }
 
 // DeleteUser provides a mock function with given fields: userId
-func (_m *Service) DeleteUser(userId int) error {
+func (_m *Service) DeleteUser(userId uint) error {
 	ret := _m.Called(userId)
 
 	if len(ret) == 0 {
@@ -21,7 +21,7 @@ func (_m *Service) DeleteUser(userId int) error {
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(int) error); ok {
+	if rf, ok := ret.Get(0).(func(uint) error); ok {
 		r0 = rf(userId)
 	} else {
 		r0 = ret.Error(0)
@@ -30,12 +30,40 @@ func (_m *Service) DeleteUser(userId int) error {
 	return r0
 }
 
-// GetUserList provides a mock function with given fields:
-func (_m *Service) GetUserList() ([]dto.UserView, error) {
+// GetUserProfile provides a mock function with given fields: userId
+func (_m *Service) GetUserProfile(userId uint) (dto.UserView, error) {
+	ret := _m.Called(userId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserProfile")
+	}
+
+	var r0 dto.UserView
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint) (dto.UserView, error)); ok {
+		return rf(userId)
+	}
+	if rf, ok := ret.Get(0).(func(uint) dto.UserView); ok {
+		r0 = rf(userId)
+	} else {
+		r0 = ret.Get(0).(dto.UserView)
+	}
+
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(userId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListUsers provides a mock function with given fields:
+func (_m *Service) ListUsers() ([]dto.UserView, error) {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetUserList")
+		panic("no return value specified for ListUsers")
 	}
 
 	var r0 []dto.UserView
@@ -53,34 +81,6 @@ func (_m *Service) GetUserList() ([]dto.UserView, error) {
 
 	if rf, ok := ret.Get(1).(func() error); ok {
 		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetUserProfile provides a mock function with given fields: userId
-func (_m *Service) GetUserProfile(userId int) (dto.UserView, error) {
-	ret := _m.Called(userId)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetUserProfile")
-	}
-
-	var r0 dto.UserView
-	var r1 error
-	if rf, ok := ret.Get(0).(func(int) (dto.UserView, error)); ok {
-		return rf(userId)
-	}
-	if rf, ok := ret.Get(0).(func(int) dto.UserView); ok {
-		r0 = rf(userId)
-	} else {
-		r0 = ret.Get(0).(dto.UserView)
-	}
-
-	if rf, ok := ret.Get(1).(func(int) error); ok {
-		r1 = rf(userId)
 	} else {
 		r1 = ret.Error(1)
 	}
