@@ -22,7 +22,7 @@ func NewRouter(deps app.Dependencies) *mux.Router {
 	userRouter := router.PathPrefix("/user").Subrouter()
 	userRouter.HandleFunc("/register", RegisterUserHandler(deps.UserService)).Methods(http.MethodPost)
 	userRouter.HandleFunc("/login", LoginUserHandler(deps.UserService)).Methods(http.MethodPost)
-	userRouter.HandleFunc("", ListUsersHandler(deps.UserService)).Methods(http.MethodGet)
+	userRouter.HandleFunc("", middleware.CheckAuth(ListUsersHandler(deps.UserService), []string{constants.ADMIN})).Methods(http.MethodGet)
 	userRouter.HandleFunc(
 		"/{id}",
 		middleware.CheckAuth(DeleteUserHandler(deps.UserService), []string{constants.ADMIN}),
