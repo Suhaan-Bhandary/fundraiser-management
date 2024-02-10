@@ -17,7 +17,7 @@ paths:
     post:
       tags:
         - "user"
-      summary: Register an user DONE
+      summary: Register an user 
       description: Creates an user in the database
       requestBody:
         description: User data
@@ -80,7 +80,7 @@ paths:
     post:
       tags:
         - "user"
-      summary: User Login DONE
+      summary: User Login 
       description: Returns JWT token once loggedIn
       requestBody:
         description: email and password
@@ -183,7 +183,7 @@ paths:
     get:
       tags:
         - "user"
-      summary: Data of LoggedIn User DONE
+      summary: Data of LoggedIn User 
       description: Returns detail of the loggedIn user using token in header, user_id and user_id in token should match
       security:
         - userBearerAuth: []
@@ -231,7 +231,7 @@ paths:
     delete:
       tags:
         - "user"
-      summary: Delete an user DONE
+      summary: Delete an user 
       description: Deletes an user from the database
       security:
         - adminBearerAuth: []
@@ -336,7 +336,7 @@ paths:
     post:
       tags:
         - "organizer"
-      summary: Register an organizer DONE
+      summary: Register an organizer 
       description: Creates an organizer in the database
       requestBody:
         description: Organizer data
@@ -398,7 +398,7 @@ paths:
     post:
       tags:
         - "organizer"
-      summary: Organizer Login DONE
+      summary: Organizer Login 
       description: Returns JWT token once loggedIn
       requestBody:
         description: email and password
@@ -457,7 +457,7 @@ paths:
     get:
       tags:
         - "organizer"
-      summary: List of all organizer DONE
+      summary: List of all organizer 
       description: Returns list of all organizer
       security:
         - adminBearerAuth: []
@@ -573,7 +573,7 @@ paths:
     get:
       tags:
         - "organizer"
-      summary: Get an organizer Detail DONE
+      summary: Get an organizer Detail 
       description: Get detail of the organizer
       parameters:
         - in: path
@@ -634,7 +634,7 @@ paths:
     delete:
       tags:
         - "organizer"
-      summary: Delete an organizer DONE
+      summary: Delete an organizer 
       description: Deletes an organizer from the database
       parameters:
         - in: path
@@ -684,7 +684,7 @@ paths:
     get:
       tags:
         - "organizer"
-      summary: Not verified admin DONE
+      summary: Not verified admin 
       description: All the organizers who have registered by are not verified by the admin.
       security:
         - adminBearerAuth: []
@@ -737,7 +737,7 @@ paths:
     patch:
       tags:
         - "organizer"
-      summary: verify organizer DONE
+      summary: verify organizer 
       description: Sets the status of admin as verified
       parameters:
         - in: path
@@ -791,7 +791,7 @@ paths:
     post:
       tags:
         - "admin"
-      summary: Admin Login DONE
+      summary: Admin Login 
       description: Returns JWT token once loggedIn
       requestBody:
         description: username and password
@@ -851,7 +851,7 @@ paths:
     post:
       tags:
         - "fundraiser"
-      summary: Create an fundraiser DONE
+      summary: Create an fundraiser 
       description: Creates an fundraiser in the database
       security:
         - organizerBearerAuth: []
@@ -983,7 +983,7 @@ paths:
     get:
       tags:
         - "fundraiser"
-      summary: Fundraiser DONE
+      summary: Fundraiser 
       description: Returns a fundraiser with the given id
       parameters:
         - in: path
@@ -1115,7 +1115,7 @@ paths:
     delete:
       tags:
         - "fundraiser"
-      summary: Delete Fundraiser DONE
+      summary: Delete Fundraiser 
       description: Deletes the fundraiser
       security:
         - adminBearerAuth: []
@@ -1167,7 +1167,7 @@ paths:
     patch:
       tags:
         - "fundraiser"
-      summary: Fundraiser DONE
+      summary: Fundraiser 
       description: Organizer of the fundraiser or admin can close the fundraiser
       security:
         - adminBearerAuth: []
@@ -1218,7 +1218,7 @@ paths:
     patch:
       tags:
         - "fundraiser"
-      summary: Fundraiser DONE
+      summary: Fundraiser 
       description: admin can ban the fundraiser
       security:
         - adminBearerAuth: []
@@ -1268,7 +1268,7 @@ paths:
     post:
       tags:
         - "fundraiser"
-      summary: User can donate DONE
+      summary: User can donate 
       description: User can donate to a specific fundraiser, user id is take from the jwt token
       security:
         - userBearerAuth: []
