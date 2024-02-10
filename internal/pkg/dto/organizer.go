@@ -8,29 +8,29 @@ import (
 )
 
 type OrganizerView struct {
-	ID           uint
-	Organization string
-	Detail       string
-	Email        string
-	Mobile       string
-	IsVerified   bool
+	ID         uint
+	Name       string
+	Detail     string
+	Email      string
+	Mobile     string
+	IsVerified bool
 }
 
 type RegisterOrganizerRequest struct {
-	Organization string `json:"organization"`
-	Detail       string `json:"detail"`
-	Email        string `json:"email"`
-	Password     string `json:"password"`
-	Mobile       string `json:"mobile"`
+	Name     string `json:"name"`
+	Detail   string `json:"detail"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Mobile   string `json:"mobile"`
 }
 
 func (req *RegisterOrganizerRequest) Validate() error {
-	if req.Organization == "" {
-		return errors.New("Organization name required")
+	if req.Name == "" {
+		return errors.New("Organizer name required")
 	}
 
 	if req.Detail == "" {
-		return errors.New("Organization detail required")
+		return errors.New("Organizer detail required")
 	}
 
 	if req.Email == "" {
@@ -98,7 +98,7 @@ func (req *UpdateOrganizerRequest) Validate() error {
 	}
 
 	if req.Detail == "" {
-		return errors.New("Organization detail required")
+		return errors.New("Organizer detail required")
 	}
 
 	if req.Email == "" {

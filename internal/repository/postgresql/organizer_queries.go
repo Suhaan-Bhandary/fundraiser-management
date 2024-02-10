@@ -1,7 +1,7 @@
 package repository
 
 const insertOrganizerQuery = `
-	insert into organizer (organization, detail, email, password, mobile) 
+	insert into organizer (name, detail, email, password, mobile) 
 	values($1, $2, $3, $4, $5);
 `
 
@@ -24,20 +24,20 @@ const verifyOrganizerQuery = `
 `
 
 const getOrganizers = `
-	select id, organization, detail, email, mobile, is_verified
+	select id, name, detail, email, mobile, is_verified
 	from organizer
 	order by created_at desc;
 `
 
 const getOrganizersWithFilter = `
-	select id, organization, detail, email, mobile, is_verified
+	select id, name, detail, email, mobile, is_verified
 	from organizer
-	where (organization ilike '%' || $1 || '%') 
+	where (name ilike '%' || $1 || '%') 
 	order by created_at desc;
 `
 
 const getOrganizerQuery = `
-	select id, organization, detail, email, mobile, is_verified
+	select id, name, detail, email, mobile, is_verified
 	from organizer
 	where id = $1;
 `

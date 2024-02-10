@@ -24,7 +24,7 @@ func NewOrganizerRepo(db *sql.DB) repository.OrganizerStorer {
 func (organizerStore *organizerStore) RegisterOrganizer(orgDetail dto.RegisterOrganizerRequest) error {
 	_, err := organizerStore.db.Exec(
 		insertOrganizerQuery,
-		orgDetail.Organization, orgDetail.Detail, orgDetail.Email, orgDetail.Password, orgDetail.Mobile,
+		orgDetail.Name, orgDetail.Detail, orgDetail.Email, orgDetail.Password, orgDetail.Mobile,
 	)
 
 	if err != nil {
@@ -32,7 +32,7 @@ func (organizerStore *organizerStore) RegisterOrganizer(orgDetail dto.RegisterOr
 		pqErr, ok := err.(*pq.Error)
 		if ok && pqErr.Code == "23505" {
 			return internal_errors.DuplicateKeyError{
-				Message: "Organization with email already exists",
+				Message: "Organizer with email already exists",
 			}
 		}
 
@@ -99,7 +99,7 @@ func (organizerStore *organizerStore) GetOrganizerList(search string, verified s
 	organizers := []dto.OrganizerView{}
 	for rows.Next() {
 		organizer := dto.OrganizerView{}
-		rows.Scan(&organizer.ID, &organizer.Organization, &organizer.Detail, &organizer.Email, &organizer.Mobile, &organizer.IsVerified)
+		rows.Scan(&organizer.ID, &organizer.Name, &organizer.Detail, &organizer.Email, &organizer.Mobile, &organizer.IsVerified)
 		organizers = append(organizers, organizer)
 	}
 	defer rows.Close()
@@ -132,7 +132,7 @@ func (organizerStore *organizerStore) DeleteOrganizer(organizerId int) error {
 func (organizerStore *organizerStore) GetOrganizer(organizerId int) (dto.OrganizerView, error) {
 	var organizer dto.OrganizerView
 	err := organizerStore.db.QueryRow(getOrganizerQuery, organizerId).Scan(
-		&organizer.ID, &organizer.Organization,
+		&organizer.ID, &organizer.Name,
 		&organizer.Detail, &organizer.Email,
 		&organizer.Mobile, &organizer.IsVerified,
 	)

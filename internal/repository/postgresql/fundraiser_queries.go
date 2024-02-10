@@ -20,7 +20,7 @@ const getOrganizerIdFromFundraiser = `
 const getFundraiserQuery = `
 	select 
 		fundraiser.id, fundraiser.title, fundraiser.description, fundraiser.organizer_id, 
-		organizer.organization as organizer_name, fundraiser.image_url, fundraiser.video_url, 
+		organizer.name as organizer_name, fundraiser.image_url, fundraiser.video_url, 
 		fundraiser.target_amount, fundraiser.status, fundraiser.created_at, fundraiser.updated_at
 	from fundraiser
 	join organizer
@@ -49,7 +49,7 @@ const banFundraiserQuery = `
 const listFundraisers = `
 	select 
 		fundraiser.id, fundraiser.title, fundraiser.description, fundraiser.organizer_id, 
-		organizer.organization as organizer_name, fundraiser.image_url, fundraiser.video_url, 
+		organizer.name as organizer_name, fundraiser.image_url, fundraiser.video_url, 
 		fundraiser.target_amount, fundraiser.status, fundraiser.created_at, fundraiser.updated_at
 	from fundraiser
 	join organizer
