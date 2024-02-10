@@ -40,5 +40,10 @@ const getOrganizerQuery = `
 	select id, organization, detail, email, mobile, is_verified
 	from organizer
 	where id = $1;
+`
 
+const updateOrganizerQuery = `
+	update organizer
+	set email = $1, detail = $2, mobile = $3
+	where id = $4;
 `

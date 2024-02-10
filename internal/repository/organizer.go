@@ -13,6 +13,7 @@ type OrganizerStorer interface {
 	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
 	DeleteOrganizer(organizerId int) error
 	GetOrganizer(organizerId int) (dto.OrganizerView, error)
+	UpdateOrganizer(req dto.UpdateOrganizerRequest) error
 }
 
 type Organizer struct {

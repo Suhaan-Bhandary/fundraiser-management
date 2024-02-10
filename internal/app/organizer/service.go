@@ -22,6 +22,7 @@ type Service interface {
 	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
 	DeleteOrganizer(organizerId int) error
 	GetOrganizer(organizerId int) (dto.OrganizerView, error)
+	UpdateOrganizer(req dto.UpdateOrganizerRequest) error
 }
 
 func NewService(organizerRepo repository.OrganizerStorer) Service {
@@ -99,4 +100,13 @@ func (orgSvc *service) GetOrganizer(organizerId int) (dto.OrganizerView, error) 
 	}
 
 	return organizer, nil
+}
+
+func (orgSvc *service) UpdateOrganizer(req dto.UpdateOrganizerRequest) error {
+	err := orgSvc.organizerRepo.UpdateOrganizer(req)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
