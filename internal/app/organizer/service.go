@@ -19,7 +19,7 @@ type Service interface {
 	RegisterOrganizer(userDetail dto.RegisterOrganizerRequest) error
 	LoginOrganizer(req dto.LoginOrganizerRequest) (string, error)
 	VerifyOrganizer(organizerId uint) error
-	GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error)
+	GetOrganizerList(req dto.ListOrganizersRequest) ([]dto.OrganizerView, uint, error)
 	DeleteOrganizer(organizerId uint) error
 	GetOrganizer(organizerId uint) (dto.OrganizerView, error)
 	UpdateOrganizer(req dto.UpdateOrganizerRequest) error
@@ -88,13 +88,18 @@ func (orgSvc *service) VerifyOrganizer(organizerId uint) error {
 	return nil
 }
 
-func (orgSvc *service) GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error) {
-	organizers, err := orgSvc.organizerRepo.GetOrganizerList(search, verified)
+func (orgSvc *service) GetOrganizerList(req dto.ListOrganizersRequest) ([]dto.OrganizerView, uint, error) {
+	totalCount, err := orgSvc.organizerRepo.GetOrganizerListCount(req)
 	if err != nil {
-		return []dto.OrganizerView{}, err
+		return []dto.OrganizerView{}, 0, err
 	}
 
-	return organizers, nil
+	organizers, err := orgSvc.organizerRepo.GetOrganizerList(req)
+	if err != nil {
+		return []dto.OrganizerView{}, 0, err
+	}
+
+	return organizers, totalCount, nil
 }
 
 func (orgSvc *service) GetOrganizer(organizerId uint) (dto.OrganizerView, error) {

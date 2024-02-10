@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
@@ -42,5 +43,35 @@ func decodeUpdateOrganizerRequest(r *http.Request) (dto.UpdateOrganizerRequest, 
 	}
 	req.OrganizerId = uint(tokenData.ID)
 
+	return req, nil
+}
+
+func decodeListOrganizerRequest(r *http.Request) (dto.ListOrganizersRequest, error) {
+	value := r.URL.Query()
+
+	offset, err := strconv.Atoi(value.Get("offset"))
+	if err != nil || offset < 0 {
+		return dto.ListOrganizersRequest{}, internal_errors.BadRequest{Message: "Invalid offset value"}
+	}
+
+	limit, err := strconv.Atoi(value.Get("limit"))
+	if err != nil || limit <= 0 {
+		return dto.ListOrganizersRequest{}, internal_errors.BadRequest{Message: "Invalid limit value"}
+	}
+
+	// Keeping default as ascending order
+	isAscending, err := strconv.ParseBool(value.Get("is_ascending"))
+	if err != nil {
+		isAscending = true
+	}
+
+	req := dto.ListOrganizersRequest{
+		Search:             value.Get("search"),
+		Verified:           value.Get("verified"),
+		Offset:             uint(offset),
+		Limit:              uint(limit),
+		OrderByKey:         value.Get("order_by"),
+		OrderByIsAscending: isAscending,
+	}
 	return req, nil
 }

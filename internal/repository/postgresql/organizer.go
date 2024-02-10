@@ -81,16 +81,15 @@ func (organizerStore *organizerStore) VerifyOrganizer(organizerId uint) error {
 	return nil
 }
 
-func (organizerStore *organizerStore) GetOrganizerList(search string, verified string) ([]dto.OrganizerView, error) {
+func (organizerStore *organizerStore) GetOrganizerList(req dto.ListOrganizersRequest) ([]dto.OrganizerView, error) {
 	var rows *sql.Rows
 	var err error
 
-	// TODO: Check how to use verified also here
-	if len(search) >= 3 {
-		rows, err = organizerStore.db.Query(getOrganizersWithFilter, search)
-	} else {
-		rows, err = organizerStore.db.Query(getOrganizers)
-	}
+	toSkip := req.Offset * req.Limit
+	rows, err = organizerStore.db.Query(
+		listOrganizersQuery,
+		req.Search, req.Verified, req.OrderByKey, req.OrderByIsAscending, toSkip, req.Limit,
+	)
 
 	if err != nil {
 		fmt.Println(err)
@@ -106,6 +105,17 @@ func (organizerStore *organizerStore) GetOrganizerList(search string, verified s
 	defer rows.Close()
 
 	return organizers, nil
+}
+
+func (organizerStore *organizerStore) GetOrganizerListCount(req dto.ListOrganizersRequest) (uint, error) {
+	var count uint
+	err := organizerStore.db.QueryRow(getOrganizersListCountQuery, req.Search, req.Verified).Scan(&count)
+	if err != nil {
+		fmt.Println(err)
+		return 0, errors.New("error while fetching organizers")
+	}
+
+	return count, nil
 }
 
 func (organizerStore *organizerStore) DeleteOrganizer(organizerId uint) error {
