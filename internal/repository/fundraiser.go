@@ -13,6 +13,7 @@ type FundraiserStorer interface {
 	GetFundraiser(fundraiserId uint) (dto.FundraiserView, error)
 	CloseFundraiser(fundraiserId uint) error
 	BanFundraiser(fundraiserId uint) error
+	UnBanFundraiser(fundraiserId uint) error
 	GetFundraiserOrganizerIdAndStatus(fundraiserId uint) (uint, string, error)
 	ListFundraiser() ([]dto.FundraiserView, error)
 	UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error

@@ -1264,6 +1264,56 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /fundraiser/{fundraiser_id}/unban:
+    patch:
+      tags:
+        - "fundraiser"
+      summary: Fundraiser 
+      description: admin can unban the fundraiser
+      security:
+        - adminBearerAuth: []
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "UnBanned the fundraiser"
+        "404":
+          description: Fundraiser not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Fundraiser not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
   /fundraiser/{fundraiser_id}/donation:
     post:
       tags:
