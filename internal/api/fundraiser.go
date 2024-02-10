@@ -53,7 +53,7 @@ func DeleteFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWrite
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
 			Message: "Fundraiser deleted successfully",
 		})
 	}
@@ -101,7 +101,7 @@ func GetFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter, 
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.GetFundraiserResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.GetFundraiserResponse{
 			Fundraiser: fundraiserDetail,
 		})
 	}
@@ -128,7 +128,7 @@ func CloseFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
 			Message: "Fundraiser closed successfully",
 		})
 	}
@@ -149,7 +149,7 @@ func BanFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter, 
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
 			Message: "Fundraiser Banned successfully",
 		})
 	}
@@ -170,7 +170,7 @@ func UnBanFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
 			Message: "Fundraiser UnBanned successfully",
 		})
 	}
@@ -185,7 +185,7 @@ func ListFundraisersHandler(fundSvc fundraiser.Service) func(http.ResponseWriter
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.ListFundraisersResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.ListFundraisersResponse{
 			Fundraisers: fundraisers,
 		})
 	}
