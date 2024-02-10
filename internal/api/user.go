@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/donation"
@@ -67,15 +66,6 @@ func LoginUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Requ
 
 func DeleteUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		tokenData, err := decodeTokenFromContext(r.Context())
-		if err != nil {
-			middleware.ErrorResponse(w, http.StatusUnauthorized, err)
-			return
-		}
-
-		// Testing Token data
-		fmt.Println("Token Data: ", tokenData)
-
 		userId, err := decodeId(r)
 		if err != nil {
 			middleware.ErrorResponse(w, http.StatusBadRequest, err)
@@ -95,9 +85,9 @@ func DeleteUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Req
 	}
 }
 
-func UserListHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
+func ListUsersHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, _ *http.Request) {
-		users, err := userSvc.GetUserList()
+		users, err := userSvc.ListUsers()
 		if err != nil {
 			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
 			return

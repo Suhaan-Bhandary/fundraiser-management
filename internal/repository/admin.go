@@ -3,7 +3,7 @@ package repository
 import "time"
 
 type AdminStorer interface {
-	GetAdminIDPassword(username string) (int, string, error)
+	GetAdminIDPassword(username string) (uint, string, error)
 }
 
 type Admin struct {

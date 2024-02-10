@@ -56,8 +56,13 @@ func (req *CreateFundraiserRequest) Validate() error {
 	return nil
 }
 
+type DeleteFundraiserRequest struct {
+	Token
+	FundraiserId uint `json:"fundraiser_id"`
+}
+
 type CreateFundraiserResponse struct {
-	FundraiserId int `json:"fundraiser_id"`
+	FundraiserId uint `json:"fundraiser_id"`
 }
 
 type GetFundraiserResponse struct {

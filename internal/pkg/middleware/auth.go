@@ -31,7 +31,7 @@ func CheckAuth(handler func(w http.ResponseWriter, r *http.Request), allowed []s
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok {
 			// jwt is storing the id as float64 so first take it as float and then convert it
-			id := int(claims["id"].(float64))
+			id := uint(claims["id"].(float64))
 			tokenRole := claims["role"].(string)
 
 			for _, role := range allowed {

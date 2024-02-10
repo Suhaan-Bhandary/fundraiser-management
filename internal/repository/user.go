@@ -8,10 +8,10 @@ import (
 
 type UserStorer interface {
 	RegisterUser(userDetail dto.RegisterUserRequest) error
-	GetUserIDPassword(email string) (int, string, error)
-	DeleteUser(userId int) error
-	GetUserList() ([]dto.UserView, error)
-	GetUserProfile(userId int) (dto.UserView, error)
+	GetUserIDPassword(email string) (uint, string, error)
+	DeleteUser(userId uint) error
+	ListUsers() ([]dto.UserView, error)
+	GetUserProfile(userId uint) (dto.UserView, error)
 }
 
 type User struct {

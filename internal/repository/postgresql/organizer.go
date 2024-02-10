@@ -42,21 +42,21 @@ func (organizerStore *organizerStore) RegisterOrganizer(orgDetail dto.RegisterOr
 	return nil
 }
 
-func (organizerStore *organizerStore) GetOrganizerIDPassword(email string) (int, string, error) {
-	var id int
+func (organizerStore *organizerStore) GetOrganizerIDPassword(email string) (uint, string, error) {
+	var id uint
 	var password string
 
 	row := organizerStore.db.QueryRow(getOrganizerIdPasswordQuery, email)
 	err := row.Scan(&id, &password)
 
 	if err != nil {
-		return -1, "", internal_errors.NotFoundError{Message: "Invalid email or password"}
+		return 0, "", internal_errors.NotFoundError{Message: "Invalid email or password"}
 	}
 
 	return id, password, nil
 }
 
-func (organizerStore *organizerStore) VerifyOrganizer(organizerId int) error {
+func (organizerStore *organizerStore) VerifyOrganizer(organizerId uint) error {
 	res, err := organizerStore.db.Exec(
 		verifyOrganizerQuery,
 		organizerId,
@@ -107,7 +107,7 @@ func (organizerStore *organizerStore) GetOrganizerList(search string, verified s
 	return organizers, nil
 }
 
-func (organizerStore *organizerStore) DeleteOrganizer(organizerId int) error {
+func (organizerStore *organizerStore) DeleteOrganizer(organizerId uint) error {
 	res, err := organizerStore.db.Exec(
 		deleteOrganizerQuery,
 		organizerId,
@@ -129,7 +129,7 @@ func (organizerStore *organizerStore) DeleteOrganizer(organizerId int) error {
 	return nil
 }
 
-func (organizerStore *organizerStore) GetOrganizer(organizerId int) (dto.OrganizerView, error) {
+func (organizerStore *organizerStore) GetOrganizer(organizerId uint) (dto.OrganizerView, error) {
 	var organizer dto.OrganizerView
 	err := organizerStore.db.QueryRow(getOrganizerQuery, organizerId).Scan(
 		&organizer.ID, &organizer.Name,

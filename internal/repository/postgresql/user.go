@@ -41,21 +41,21 @@ func (userStore *userStore) RegisterUser(userDetail dto.RegisterUserRequest) err
 	return nil
 }
 
-func (userStore *userStore) GetUserIDPassword(email string) (int, string, error) {
-	var id int
+func (userStore *userStore) GetUserIDPassword(email string) (uint, string, error) {
+	var id uint
 	var password string
 
 	row := userStore.db.QueryRow(getUserPasswordQuery, email)
 	err := row.Scan(&id, &password)
 
 	if err != nil {
-		return -1, "", internal_errors.NotFoundError{Message: "Invalid username or password"}
+		return 0, "", internal_errors.NotFoundError{Message: "Invalid username or password"}
 	}
 
 	return id, password, nil
 }
 
-func (userStore *userStore) DeleteUser(userId int) error {
+func (userStore *userStore) DeleteUser(userId uint) error {
 	res, err := userStore.db.Exec(
 		deleteUserQuery,
 		userId,
@@ -76,7 +76,7 @@ func (userStore *userStore) DeleteUser(userId int) error {
 	return nil
 }
 
-func (userStore *userStore) GetUserList() ([]dto.UserView, error) {
+func (userStore *userStore) ListUsers() ([]dto.UserView, error) {
 	rows, err := userStore.db.Query(getUsersQuery)
 	if err != nil {
 		return []dto.UserView{}, errors.New("error while fetching users")
@@ -97,7 +97,7 @@ func (userStore *userStore) GetUserList() ([]dto.UserView, error) {
 	return users, nil
 }
 
-func (userStore *userStore) GetUserProfile(userId int) (dto.UserView, error) {
+func (userStore *userStore) GetUserProfile(userId uint) (dto.UserView, error) {
 	row := userStore.db.QueryRow(getUserQuery, userId)
 
 	user := dto.UserView{}

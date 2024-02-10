@@ -7,13 +7,13 @@ import (
 )
 
 type FundraiserStorer interface {
-	CreateFundraiser(fundDetail dto.CreateFundraiserRequest) (int, error)
-	DeleteFundraiser(fundraiserId int) error
-	GetFundraiserOrganizerId(fundraiserId int) (int, error)
-	GetFundraiser(fundraiserId int) (dto.FundraiserView, error)
-	CloseFundraiser(fundraiserId int) error
-	BanFundraiser(fundraiserId int) error
-	GetFundraiserOrganizerIdAndStatus(fundraiserId int) (int, string, error)
+	CreateFundraiser(fundDetail dto.CreateFundraiserRequest) (uint, error)
+	DeleteFundraiser(fundraiserId uint) error
+	GetFundraiserOrganizerId(fundraiserId uint) (uint, error)
+	GetFundraiser(fundraiserId uint) (dto.FundraiserView, error)
+	CloseFundraiser(fundraiserId uint) error
+	BanFundraiser(fundraiserId uint) error
+	GetFundraiserOrganizerIdAndStatus(fundraiserId uint) (uint, string, error)
 	ListFundraiser() ([]dto.FundraiserView, error)
 	UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error
 }

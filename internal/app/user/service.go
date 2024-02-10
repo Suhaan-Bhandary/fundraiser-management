@@ -18,9 +18,9 @@ type service struct {
 type Service interface {
 	RegisterUser(userDetail dto.RegisterUserRequest) error
 	LoginUser(req dto.LoginUserRequest) (string, error)
-	DeleteUser(userId int) error
-	GetUserList() ([]dto.UserView, error)
-	GetUserProfile(userId int) (dto.UserView, error)
+	DeleteUser(userId uint) error
+	ListUsers() ([]dto.UserView, error)
+	GetUserProfile(userId uint) (dto.UserView, error)
 }
 
 func NewService(userRepo repository.UserStorer) Service {
@@ -46,7 +46,7 @@ func (userSvc *service) RegisterUser(userDetail dto.RegisterUserRequest) error {
 }
 
 func (userSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
-	user_id, hashedPassword, err := userSvc.userRepo.GetUserIDPassword(req.Email)
+	userId, hashedPassword, err := userSvc.userRepo.GetUserIDPassword(req.Email)
 	if err != nil {
 		return "", err
 	}
@@ -56,7 +56,7 @@ func (userSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
 		return "", internal_errors.NotFoundError{Message: "incorrect email or password"}
 	}
 
-	token, err := helpers.CreateToken(user_id, constants.USER)
+	token, err := helpers.CreateToken(userId, constants.USER)
 	if err != nil {
 		return "", err
 	}
@@ -64,7 +64,7 @@ func (userSvc *service) LoginUser(req dto.LoginUserRequest) (string, error) {
 	return token, nil
 }
 
-func (userSvc *service) DeleteUser(userId int) error {
+func (userSvc *service) DeleteUser(userId uint) error {
 	err := userSvc.userRepo.DeleteUser(userId)
 	if err != nil {
 		return err
@@ -73,8 +73,8 @@ func (userSvc *service) DeleteUser(userId int) error {
 	return nil
 }
 
-func (userSvc *service) GetUserList() ([]dto.UserView, error) {
-	users, err := userSvc.userRepo.GetUserList()
+func (userSvc *service) ListUsers() ([]dto.UserView, error) {
+	users, err := userSvc.userRepo.ListUsers()
 
 	if err != nil {
 		return []dto.UserView{}, err
@@ -83,7 +83,7 @@ func (userSvc *service) GetUserList() ([]dto.UserView, error) {
 	return users, nil
 }
 
-func (userSvc *service) GetUserProfile(userId int) (dto.UserView, error) {
+func (userSvc *service) GetUserProfile(userId uint) (dto.UserView, error) {
 	user, err := userSvc.userRepo.GetUserProfile(userId)
 
 	if err != nil {

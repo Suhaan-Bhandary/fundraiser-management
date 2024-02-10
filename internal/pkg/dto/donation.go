@@ -49,7 +49,7 @@ func (req *CreateDonationRequest) Validate() error {
 }
 
 type CreateDonationResponse struct {
-	DonationId int `json:"donation_id"`
+	DonationId uint `json:"donation_id"`
 }
 
 type ListUserDonationsResponse struct {
