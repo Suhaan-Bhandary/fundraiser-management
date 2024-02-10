@@ -30,7 +30,7 @@ func NewServices(db *sql.DB) Dependencies {
 	adminService := admin.NewService(adminRepo)
 	organizerService := organizer.NewService(organizerRepo)
 	fundraiserService := fundraiser.NewService(fundraiserRepo)
-	donationService := donation.NewService(donationRepo)
+	donationService := donation.NewService(donationRepo, fundraiserRepo)
 
 	return Dependencies{
 		UserService:       userService,
