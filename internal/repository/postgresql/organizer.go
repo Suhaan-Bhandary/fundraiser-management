@@ -144,3 +144,34 @@ func (organizerStore *organizerStore) GetOrganizer(organizerId int) (dto.Organiz
 
 	return organizer, nil
 }
+
+func (organizerStore *organizerStore) UpdateOrganizer(req dto.UpdateOrganizerRequest) error {
+	res, err := organizerStore.db.Exec(
+		updateOrganizerQuery,
+		req.Email, req.Detail, req.Mobile, req.OrganizerId,
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		// Check if the error is a duplicate entry error
+		pqErr, ok := err.(*pq.Error)
+		if ok && pqErr.Code == "23505" {
+			return internal_errors.DuplicateKeyError{
+				Message: "Update failed, email already in use",
+			}
+		}
+		return errors.New("error while updating organizer")
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+		return errors.New("error while updating organizer")
+	}
+
+	if rowsAffected == 0 {
+		return internal_errors.NotFoundError{Message: "Organizer not found"}
+	}
+
+	return nil
+}

@@ -47,7 +47,7 @@ func (req *RegisterOrganizerRequest) Validate() error {
 		return errors.New("password is required")
 	}
 
-	if req.Password == "" {
+	if req.Mobile == "" {
 		return errors.New("mobile is required")
 	}
 
@@ -83,4 +83,37 @@ type GetNotVerifiedOrganizersResponse struct {
 
 type GetOrganizerResponse struct {
 	Organizer OrganizerView `json:"organizer"`
+}
+
+type UpdateOrganizerRequest struct {
+	OrganizerId uint   `json:"organizer_id"`
+	Detail      string `json:"detail"`
+	Email       string `json:"email"`
+	Mobile      string `json:"mobile"`
+}
+
+func (req *UpdateOrganizerRequest) Validate() error {
+	if req.OrganizerId <= 0 {
+		return errors.New("Invalid organizer id")
+	}
+
+	if req.Detail == "" {
+		return errors.New("Organization detail required")
+	}
+
+	if req.Email == "" {
+		return errors.New("email is required")
+	}
+
+	// check if email is in correct format
+	match, err := regexp.MatchString(constants.EMAIL_REGEX, req.Email)
+	if err != nil || !match {
+		return errors.New("email is invalid")
+	}
+
+	if req.Mobile == "" {
+		return errors.New("password is required")
+	}
+
+	return nil
 }

@@ -142,3 +142,30 @@ func GetOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *ht
 		})
 	}
 }
+
+func UpdateOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		req, err := decodeUpdateOrganizerRequest(r)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		err = req.Validate()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		err = orgSvc.UpdateOrganizer(req)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
+			Message: "Organizer updated successfully",
+		})
+	}
+}

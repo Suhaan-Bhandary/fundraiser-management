@@ -500,6 +500,75 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+    put:
+      tags:
+        - "organizer"
+      summary: Update an organizer
+      description: Updates an organizer in the database
+      parameters:
+        - in: path
+          name: organizer_id
+          schema:
+            type: integer
+          required: true
+      security:
+        - organizerBearerAuth: []
+      requestBody:
+        description: organizer detail, only keys to be updated are passed
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organization:
+                  type: string
+                  example: "organization"
+                detail:
+                  type: string
+                  example: "detail"
+                email:
+                  type: string
+                  example: "organization@gmail.com"
+                password:
+                  type: string
+                  example: "abcdefg"
+      responses:
+        "200":
+          description: Organizer updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Organizer updated successfully"
+        "400":
+          description: Invalid Field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Empty body not allowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+
   /organizer/{organizer_id}:
     get:
       tags:
@@ -561,75 +630,6 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
     
-
-    put:
-      tags:
-        - "organizer"
-      summary: Update an organizer
-      description: Updates an organizer in the database
-      parameters:
-        - in: path
-          name: organizer_id
-          schema:
-            type: integer
-          required: true
-      security:
-        - adminBearerAuth: []
-        - organizerBearerAuth: []
-      requestBody:
-        description: organizer detail, only keys to be updated are passed
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                organization:
-                  type: string
-                  example: "organization"
-                detail:
-                  type: string
-                  example: "detail"
-                email:
-                  type: string
-                  example: "organization@gmail.com"
-                password:
-                  type: string
-                  example: "abcdefg"
-      responses:
-        "200":
-          description: Organizer updated successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: integer
-                    example: 0
-                  error_message:
-                    type: string
-                    example: ""
-                  data:
-                    type: object
-                    properties:
-                      message:
-                        type: string
-                        example: "Organizer updated successfully"
-        "400":
-          description: Invalid Field
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: integer
-                    example: 400
-                  error_message:
-                    type: string
-                    example: "Empty body not allowed"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
 
     delete:
       tags:
