@@ -38,7 +38,7 @@ func (req *CreateFundraiserRequest) Validate() error {
 	}
 
 	if req.OrganizerId == 0 {
-		return errors.New("organization id is required")
+		return errors.New("organizer id is required")
 	}
 
 	if req.ImageUrl == "" {
