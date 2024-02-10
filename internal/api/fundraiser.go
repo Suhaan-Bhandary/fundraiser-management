@@ -181,3 +181,24 @@ func ListFundraisersHandler(fundSvc fundraiser.Service) func(http.ResponseWriter
 		})
 	}
 }
+
+func ListFundraiserDonationsHandler(donationSvc donation.Service) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fundraiserId, err := decodeId(r)
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		donations, err := donationSvc.ListFundraiserDonations(fundraiserId)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		middleware.SuccessResponse(w, http.StatusOK, dto.ListFundraiserDonationsResponse{
+			Donations: donations,
+		})
+	}
+}
