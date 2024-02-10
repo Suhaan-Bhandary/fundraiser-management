@@ -15,6 +15,7 @@ type FundraiserStorer interface {
 	BanFundraiser(fundraiserId int) error
 	GetFundraiserOrganizerIdAndStatus(fundraiserId int) (int, string, error)
 	ListFundraiser() ([]dto.FundraiserView, error)
+	UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error
 }
 
 type Fundraiser struct {

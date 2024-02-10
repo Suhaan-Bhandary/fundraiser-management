@@ -19,6 +19,7 @@ type Service interface {
 	CloseFundraiser(fundraiserId int, tokenData dto.Token) error
 	BanFundraiser(fundraiserId int) error
 	ListFundraisers() ([]dto.FundraiserView, error)
+	UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error
 }
 
 func NewService(fundRepo repository.FundraiserStorer) Service {
@@ -117,4 +118,24 @@ func (fundSvc *service) ListFundraisers() ([]dto.FundraiserView, error) {
 	}
 
 	return fundraisers, nil
+}
+
+func (fundSvc *service) UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error {
+	fundraiserOrganizerId, err := fundSvc.fundRepo.GetFundraiserOrganizerId(int(updateDetail.FundraiserId))
+	if err != nil {
+		return err
+	}
+
+	if fundraiserOrganizerId != int(updateDetail.RequestOrganizerId) {
+		return internal_errors.InvalidCredentialError{
+			Message: "Only creator can update the fundraiser.",
+		}
+	}
+
+	err = fundSvc.fundRepo.UpdateFundraiser(updateDetail)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

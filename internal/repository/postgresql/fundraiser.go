@@ -174,3 +174,25 @@ func (fundraiserStore *fundraiserStore) ListFundraiser() ([]dto.FundraiserView, 
 
 	return fundraiserDetailList, nil
 }
+
+func (fundStore *fundraiserStore) UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error {
+	res, err := fundStore.db.Exec(
+		updateFundraiserQuery,
+		updateDetail.Title, updateDetail.Description, updateDetail.ImageUrl, updateDetail.VideoUrl, updateDetail.TargetAmount, updateDetail.FundraiserId,
+	)
+
+	if err != nil {
+		return errors.New("error while updating the fundraiser")
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return errors.New("error while updating the fundraiser")
+	}
+
+	if rowsAffected == 0 {
+		return internal_errors.NotFoundError{Message: "Fundraiser not found"}
+	}
+
+	return nil
+}
