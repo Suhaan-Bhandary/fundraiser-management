@@ -39,7 +39,7 @@ func decodeListUserRequest(r *http.Request) (dto.ListUserRequest, error) {
 	}
 
 	limit, err := strconv.Atoi(value.Get("limit"))
-	if err != nil {
+	if err != nil || limit < 0 {
 		return dto.ListUserRequest{}, internal_errors.BadRequest{Message: "Invalid limit value"}
 	}
 
@@ -51,6 +51,42 @@ func decodeListUserRequest(r *http.Request) (dto.ListUserRequest, error) {
 
 	req := dto.ListUserRequest{
 		Search:             value.Get("search"),
+		Offset:             uint(offset),
+		Limit:              uint(limit),
+		OrderByKey:         value.Get("order_by"),
+		OrderByIsAscending: isAscending,
+	}
+	return req, nil
+}
+
+func decodeListUserDonationsRequest(r *http.Request) (dto.ListUserDonationsRequest, error) {
+	value := r.URL.Query()
+
+	offset, err := strconv.Atoi(value.Get("offset"))
+	if err != nil || offset < 0 {
+		return dto.ListUserDonationsRequest{}, internal_errors.BadRequest{Message: "Invalid offset value"}
+	}
+
+	limit, err := strconv.Atoi(value.Get("limit"))
+	if err != nil || limit < 0 {
+		return dto.ListUserDonationsRequest{}, internal_errors.BadRequest{Message: "Invalid limit value"}
+	}
+
+	// Keeping default as ascending order
+	isAscending, err := strconv.ParseBool(value.Get("is_ascending"))
+	if err != nil {
+		isAscending = true
+	}
+
+	tokenData, err := decodeTokenFromContext(r.Context())
+	if err != nil {
+		return dto.ListUserDonationsRequest{}, internal_errors.InvalidCredentialError{Message: "token not found"}
+	}
+
+	req := dto.ListUserDonationsRequest{
+		UserId:             tokenData.ID,
+		Search:             value.Get("search"),
+		IsAnonymous:        value.Get("is_anonymous"),
 		Offset:             uint(offset),
 		Limit:              uint(limit),
 		OrderByKey:         value.Get("order_by"),

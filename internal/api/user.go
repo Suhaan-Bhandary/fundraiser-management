@@ -135,20 +135,28 @@ func GetUserProfileHandler(userSvc user.Service) func(http.ResponseWriter, *http
 
 func ListUserDonationsHandler(donationSvc donation.Service) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		tokenData, err := decodeTokenFromContext(r.Context())
+		req, err := decodeListUserDonationsRequest(r)
 		if err != nil {
-			middleware.ErrorResponse(w, http.StatusUnauthorized, err)
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
 			return
 		}
 
-		userDonations, err := donationSvc.ListUserDonation(tokenData.ID)
+		err = req.Validate()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		userDonations, totalCount, err := donationSvc.ListUserDonation(req)
 		if err != nil {
 			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
 			return
 		}
 
 		middleware.SuccessResponse(w, http.StatusOK, dto.ListUserDonationsResponse{
-			Donations: userDonations,
+			Donations:  userDonations,
+			TotalCount: totalCount,
 		})
 	}
 }

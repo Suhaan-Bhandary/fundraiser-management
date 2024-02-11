@@ -5,15 +5,48 @@ const insertDonationQuery = `
 	values($1, $2, $3, $4) Returning id;
 `
 
-const listUserDonations = `
+const listUserDonationsQuery = `
 	select 
 		donation.id, donation.fundraiser_id, fundraiser.title as fundraiser_title, 
 		donation.amount, donation.is_anonymous, donation.created_at
 	from donation
 	join fundraiser
 	on donation.fundraiser_id = fundraiser.id
-	where donation.user_id = $1
-	order by created_at desc;
+	where	(donation.user_id = $1) and 
+		(CASE when $7 in ('true', 'false') THEN is_anonymous = ($7 = 'true') ELSE true END) and
+		(fundraiser.title ilike '%' || $2 || '%')
+	order by 
+	    CASE WHEN $3 = 'donation_id' and $4 THEN donation.id END ASC,
+	    CASE WHEN $3 = 'donation_id' and not $4 THEN donation.id END DESC,
+
+	    CASE WHEN $3 = 'fundraiser_id' and $4 THEN donation.fundraiser_id END ASC,
+	    CASE WHEN $3 = 'fundraiser_id' and not $4 THEN donation.fundraiser_id END DESC,
+
+	    CASE WHEN $3 = 'title' and $4 THEN fundraiser.title END ASC,
+	    CASE WHEN $3 = 'title' and not $4 THEN fundraiser.title END DESC,
+
+	    CASE WHEN $3 = 'amount' and $4 THEN donation.amount END ASC,
+	    CASE WHEN $3 = 'amount' and not $4 THEN donation.amount END DESC,
+
+	    CASE WHEN $3 = 'is_anonymous' and $4 THEN donation.is_anonymous END ASC,
+	    CASE WHEN $3 = 'is_anonymous' and not $4 THEN donation.is_anonymous END DESC,
+
+	    CASE WHEN $3 = 'created_at' and $4 THEN donation.created_at END ASC,
+	    CASE WHEN $3 = 'created_at' and not $4 THEN donation.created_at END DESC,
+
+	    CASE WHEN $3 = '' THEN donation.created_at END DESC
+	offset $5 
+	limit $6;
+`
+
+const getListUserDonationsCountQuery = `
+	select count(donation.id)
+	from donation
+	join fundraiser
+	on donation.fundraiser_id = fundraiser.id
+	where	(donation.user_id = $1) and 
+		(CASE when $3 in ('true', 'false') THEN is_anonymous = ($3 = 'true') ELSE true END) and
+		(fundraiser.title ilike '%' || $2 || '%');
 `
 
 const listFundraiserDonationsQuery = `
