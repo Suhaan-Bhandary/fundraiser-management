@@ -169,13 +169,16 @@ func (fundStore *fundraiserStore) UnBanFundraiser(fundraiserId uint) error {
 	return nil
 }
 
-func (fundraiserStore *fundraiserStore) ListFundraiser() ([]dto.FundraiserView, error) {
+func (fundraiserStore *fundraiserStore) ListFundraiser(req dto.ListFundraisersRequest) ([]dto.FundraiserView, error) {
 	fundraiserDetailList := []dto.FundraiserView{}
 
-	rows, err := fundraiserStore.db.Query(listFundraisers)
+	rows, err := fundraiserStore.db.Query(
+		listFundraisersQuery,
+		req.Search, req.Status, req.OrderByKey, req.OrderByIsAscending, req.Offset, req.Limit,
+	)
 	if err != nil {
 		fmt.Println(err)
-		return []dto.FundraiserView{}, errors.New("error while fetching user fundraiser")
+		return []dto.FundraiserView{}, errors.New("error while fetching fundraiser")
 	}
 	defer rows.Close()
 
@@ -188,13 +191,24 @@ func (fundraiserStore *fundraiserStore) ListFundraiser() ([]dto.FundraiserView, 
 		)
 
 		if err != nil {
-			return []dto.FundraiserView{}, errors.New("error while fetching user fundraiser")
+			return []dto.FundraiserView{}, errors.New("error while fetching fundraiser")
 		}
 
 		fundraiserDetailList = append(fundraiserDetailList, fundraiserDetail)
 	}
 
 	return fundraiserDetailList, nil
+}
+
+func (fundStore *fundraiserStore) GetListFundraisersCount(req dto.ListFundraisersRequest) (uint, error) {
+	var count uint
+	err := fundStore.db.QueryRow(getListFundraisersCountQuery, req.Search, req.Status).Scan(&count)
+	if err != nil {
+		fmt.Println(err)
+		return 0, errors.New("error while fetching fundraisers")
+	}
+
+	return count, nil
 }
 
 func (fundStore *fundraiserStore) UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error {
