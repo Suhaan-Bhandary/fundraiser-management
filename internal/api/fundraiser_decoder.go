@@ -182,3 +182,32 @@ func decodeFundraiserDonationsRequest(r *http.Request) (dto.ListFundraiserDonati
 	}
 	return req, nil
 }
+
+func decodeListFundraisersRequest(r *http.Request) (dto.ListFundraisersRequest, error) {
+	value := r.URL.Query()
+	offset, err := strconv.Atoi(value.Get("offset"))
+	if err != nil || offset < 0 {
+		return dto.ListFundraisersRequest{}, internal_errors.BadRequest{Message: "Invalid offset value"}
+	}
+
+	limit, err := strconv.Atoi(value.Get("limit"))
+	if err != nil || limit < 0 {
+		return dto.ListFundraisersRequest{}, internal_errors.BadRequest{Message: "Invalid limit value"}
+	}
+
+	// Keeping default as ascending order
+	isAscending, err := strconv.ParseBool(value.Get("is_ascending"))
+	if err != nil {
+		isAscending = true
+	}
+
+	req := dto.ListFundraisersRequest{
+		Search:             value.Get("search"),
+		Status:             value.Get("status"),
+		Offset:             uint(offset),
+		Limit:              uint(limit),
+		OrderByKey:         value.Get("order_by"),
+		OrderByIsAscending: isAscending,
+	}
+	return req, nil
+}

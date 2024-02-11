@@ -178,7 +178,20 @@ func UnBanFundraiserHandler(fundSvc fundraiser.Service) func(http.ResponseWriter
 
 func ListFundraisersHandler(fundSvc fundraiser.Service) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fundraisers, err := fundSvc.ListFundraisers()
+		req, err := decodeListFundraisersRequest(r)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		err = req.Validate()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		fundraisers, totalCount, err := fundSvc.ListFundraisers(req)
 		if err != nil {
 			statusCode, errResponse := internal_errors.MatchError(err)
 			middleware.ErrorResponse(w, statusCode, errResponse)
@@ -187,6 +200,7 @@ func ListFundraisersHandler(fundSvc fundraiser.Service) func(http.ResponseWriter
 
 		middleware.SuccessResponse(w, http.StatusOK, dto.ListFundraisersResponse{
 			Fundraisers: fundraisers,
+			TotalCount:  totalCount,
 		})
 	}
 }
