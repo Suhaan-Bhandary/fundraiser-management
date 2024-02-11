@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
@@ -76,9 +77,15 @@ func (userStore *userStore) DeleteUser(userId uint) error {
 	return nil
 }
 
-func (userStore *userStore) ListUsers() ([]dto.UserView, error) {
-	rows, err := userStore.db.Query(getUsersQuery)
+func (userStore *userStore) ListUsers(req dto.ListUserRequest) ([]dto.UserView, error) {
+	toSkip := req.Offset * req.Limit
+	rows, err := userStore.db.Query(
+		listUsersQuery,
+		req.Search, req.OrderByKey, req.OrderByIsAscending, toSkip, req.Limit,
+	)
+
 	if err != nil {
+		fmt.Println(err)
 		return []dto.UserView{}, errors.New("error while fetching users")
 	}
 
@@ -95,6 +102,17 @@ func (userStore *userStore) ListUsers() ([]dto.UserView, error) {
 	defer rows.Close()
 
 	return users, nil
+}
+
+func (userStore *userStore) GetListUsersCount(req dto.ListUserRequest) (uint, error) {
+	var count uint
+	err := userStore.db.QueryRow(getListUsersCountQuery, req.Search).Scan(&count)
+	if err != nil {
+		fmt.Println(err)
+		return 0, errors.New("error while fetching users")
+	}
+
+	return count, nil
 }
 
 func (userStore *userStore) GetUserProfile(userId uint) (dto.UserView, error) {
