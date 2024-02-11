@@ -126,9 +126,9 @@ func ListOrganizersHandler(orgSvc organizer.Service) func(http.ResponseWriter, *
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusOK, dto.GetNotVerifiedOrganizersResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.ListOrganizersResponse{
 			Organizers: organizers,
-			Count:      count,
+			TotalCount: count,
 		})
 	}
 }
