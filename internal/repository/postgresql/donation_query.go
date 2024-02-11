@@ -19,8 +19,8 @@ const listUserDonationsQuery = `
 	    CASE WHEN $3 = 'donation_id' and $4 THEN donation.id END ASC,
 	    CASE WHEN $3 = 'donation_id' and not $4 THEN donation.id END DESC,
 
-	    CASE WHEN $3 = 'fundraiser_id' and $4 THEN donation.fundraiser_id END ASC,
-	    CASE WHEN $3 = 'fundraiser_id' and not $4 THEN donation.fundraiser_id END DESC,
+	    CASE WHEN $3 = 'fundraiser_id' and $4 THEN fundraiser.fundraiser_id END ASC,
+	    CASE WHEN $3 = 'fundraiser_id' and not $4 THEN fundraiser.fundraiser_id END DESC,
 
 	    CASE WHEN $3 = 'title' and $4 THEN fundraiser.title END ASC,
 	    CASE WHEN $3 = 'title' and not $4 THEN fundraiser.title END DESC,
