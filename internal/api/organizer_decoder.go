@@ -55,7 +55,7 @@ func decodeListOrganizerRequest(r *http.Request) (dto.ListOrganizersRequest, err
 	}
 
 	limit, err := strconv.Atoi(value.Get("limit"))
-	if err != nil || limit <= 0 {
+	if err != nil || limit < 0 {
 		return dto.ListOrganizersRequest{}, internal_errors.BadRequest{Message: "Invalid limit value"}
 	}
 

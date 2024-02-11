@@ -8,7 +8,8 @@ import (
 
 type DonationStorer interface {
 	CreateDonation(donationDetail dto.CreateDonationRequest) (uint, error)
-	ListUserDonations(userId uint) ([]dto.DonationView, error)
+	ListUserDonations(req dto.ListUserDonationsRequest) ([]dto.DonationView, error)
+	GetListUserDonationsCount(req dto.ListUserDonationsRequest) (uint, error)
 	ListFundraiserDonations(fundraiserId uint) ([]dto.FundraiserDonationView, error)
 	ListDonations() ([]dto.FundraiserDonationView, error)
 }

@@ -2,6 +2,7 @@ package dto
 
 import (
 	"errors"
+	"slices"
 	"time"
 )
 
@@ -10,7 +11,7 @@ type DonationView struct {
 	FundraiserId    uint      `json:"fundraiser_id"`
 	FundraiserTitle string    `json:"fundraiser_title"`
 	Amount          float64   `json:"amount"`
-	IsAnonymous     bool      `json:"is_anonymous"`
+	IsAnonymous     string    `json:"is_anonymous"`
 	CreatedAt       time.Time `json:"created_at"`
 }
 
@@ -53,5 +54,37 @@ type CreateDonationResponse struct {
 }
 
 type ListUserDonationsResponse struct {
-	Donations []DonationView `json:"donations"`
+	Donations  []DonationView `json:"donations"`
+	TotalCount uint           `json:"total_count"`
+}
+
+type ListUserDonationsRequest struct {
+	UserId             uint   `json:"user_id"`
+	Search             string `json:"search"`
+	IsAnonymous        string `json:"is_anonymous"`
+	Offset             uint   `json:"offset"`
+	Limit              uint   `json:"limit"`
+	OrderByKey         string `json:"order_by"`
+	OrderByIsAscending bool   `json:"is_ascending"`
+}
+
+func (req *ListUserDonationsRequest) Validate() error {
+	if req.Offset < 0 {
+		return errors.New("invalid offset, offset cannot be negative")
+	}
+
+	if req.Limit <= 0 {
+		return errors.New("limit should be positive number")
+	}
+
+	if req.Limit > 1000 {
+		return errors.New("Limit should be in range [1, 1000]")
+	}
+
+	orderKeys := []string{"id", "fundraiser_title", "amount", "created_at", "updated_at"}
+	if req.OrderByKey != "" && !slices.Contains(orderKeys, req.OrderByKey) {
+		return errors.New("invalid order key")
+	}
+
+	return nil
 }
