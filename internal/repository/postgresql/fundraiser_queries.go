@@ -58,7 +58,7 @@ const unbanFundraiserQuery = `
 	where id = $1;
 `
 
-const listFundraisers = `
+const listFundraisersQuery = `
 	select 
 		fundraiser.id, fundraiser.title, fundraiser.description, fundraiser.organizer_id, 
 		organizer.name as organizer_name, fundraiser.image_url, fundraiser.video_url, 
@@ -66,7 +66,35 @@ const listFundraisers = `
 	from fundraiser
 	join organizer
 	on fundraiser.organizer_id = organizer.id
-	order by fundraiser.updated_at desc;
+	where	
+		(
+			fundraiser.title ilike '%' || $1 || '%' or 
+			fundraiser.description ilike '%' || $1 || '%' or
+			organizer.name ilike '%' || $1 || '%' 
+		) and
+		(CASE when $2 in ('active', 'inactive', 'banned') THEN fundraiser.status = $2 ELSE true END)
+	order by 
+	    CASE WHEN $3 = 'donation_id' and $4 THEN donation.id END ASC,
+	    CASE WHEN $3 = 'donation_id' and not $4 THEN donation.id END DESC,
+
+	    CASE WHEN $3 = 'fundraiser_id' and $4 THEN fundraiser.fundraiser_id END ASC,
+	    CASE WHEN $3 = 'fundraiser_id' and not $4 THEN fundraiser.fundraiser_id END DESC,
+
+	    CASE WHEN $3 = 'title' and $4 THEN fundraiser.title END ASC,
+	    CASE WHEN $3 = 'title' and not $4 THEN fundraiser.title END DESC,
+
+	    CASE WHEN $3 = 'amount' and $4 THEN donation.amount END ASC,
+	    CASE WHEN $3 = 'amount' and not $4 THEN donation.amount END DESC,
+
+	    CASE WHEN $3 = 'is_anonymous' and $4 THEN donation.is_anonymous END ASC,
+	    CASE WHEN $3 = 'is_anonymous' and not $4 THEN donation.is_anonymous END DESC,
+
+	    CASE WHEN $3 = 'created_at' and $4 THEN donation.created_at END ASC,
+	    CASE WHEN $3 = 'created_at' and not $4 THEN donation.created_at END DESC,
+
+	    CASE WHEN $3 = '' THEN donation.created_at END DESC
+	offset $5 
+	limit $6;
 `
 
 const updateFundraiserQuery = `
