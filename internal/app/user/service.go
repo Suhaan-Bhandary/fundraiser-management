@@ -19,7 +19,7 @@ type Service interface {
 	RegisterUser(userDetail dto.RegisterUserRequest) error
 	LoginUser(req dto.LoginUserRequest) (string, error)
 	DeleteUser(userId uint) error
-	ListUsers() ([]dto.UserView, error)
+	ListUsers(req dto.ListUserRequest) ([]dto.UserView, uint, error)
 	GetUserProfile(userId uint) (dto.UserView, error)
 }
 
@@ -73,14 +73,19 @@ func (userSvc *service) DeleteUser(userId uint) error {
 	return nil
 }
 
-func (userSvc *service) ListUsers() ([]dto.UserView, error) {
-	users, err := userSvc.userRepo.ListUsers()
-
+func (userSvc *service) ListUsers(req dto.ListUserRequest) ([]dto.UserView, uint, error) {
+	totalCount, err := userSvc.userRepo.GetListUsersCount(req)
 	if err != nil {
-		return []dto.UserView{}, err
+		return []dto.UserView{}, 0, err
 	}
 
-	return users, nil
+	users, err := userSvc.userRepo.ListUsers(req)
+
+	if err != nil {
+		return []dto.UserView{}, 0, err
+	}
+
+	return users, totalCount, nil
 }
 
 func (userSvc *service) GetUserProfile(userId uint) (dto.UserView, error) {

@@ -86,15 +86,29 @@ func DeleteUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Req
 }
 
 func ListUsersHandler(userSvc user.Service) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, _ *http.Request) {
-		users, err := userSvc.ListUsers()
+	return func(w http.ResponseWriter, r *http.Request) {
+		req, err := decodeListUserRequest(r)
+		if err != nil {
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
+			return
+		}
+
+		err = req.Validate()
+		if err != nil {
+			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+
+		users, totalCount, err := userSvc.ListUsers(req)
 		if err != nil {
 			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
 			return
 		}
 
 		middleware.SuccessResponse(w, http.StatusOK, dto.GetUsersResponse{
-			Users: users,
+			Users:      users,
+			TotalCount: totalCount,
 		})
 	}
 }

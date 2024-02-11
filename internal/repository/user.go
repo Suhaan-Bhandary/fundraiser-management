@@ -10,7 +10,8 @@ type UserStorer interface {
 	RegisterUser(userDetail dto.RegisterUserRequest) error
 	GetUserIDPassword(email string) (uint, string, error)
 	DeleteUser(userId uint) error
-	ListUsers() ([]dto.UserView, error)
+	ListUsers(req dto.ListUserRequest) ([]dto.UserView, error)
+	GetListUsersCount(req dto.ListUserRequest) (uint, error)
 	GetUserProfile(userId uint) (dto.UserView, error)
 }
 
