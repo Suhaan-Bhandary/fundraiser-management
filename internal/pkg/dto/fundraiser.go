@@ -78,7 +78,8 @@ type ListFundraiserDonationsResponse struct {
 }
 
 type ListDonationsResponse struct {
-	Donations []FundraiserDonationView `json:"donations"`
+	Donations  []FundraiserDonationView `json:"donations"`
+	TotalCount uint                     `json:"total_count"`
 }
 
 type UpdateFundraiserRequest struct {

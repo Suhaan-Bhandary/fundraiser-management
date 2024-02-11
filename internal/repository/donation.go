@@ -11,7 +11,8 @@ type DonationStorer interface {
 	ListUserDonations(req dto.ListUserDonationsRequest) ([]dto.DonationView, error)
 	GetListUserDonationsCount(req dto.ListUserDonationsRequest) (uint, error)
 	ListFundraiserDonations(fundraiserId uint) ([]dto.FundraiserDonationView, error)
-	ListDonations() ([]dto.FundraiserDonationView, error)
+	ListDonations(req dto.ListDonationsRequest) ([]dto.FundraiserDonationView, error)
+	GetListDonationsCount(req dto.ListDonationsRequest) (uint, error)
 }
 
 type Donation struct {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/internal_errors"
@@ -88,5 +89,71 @@ func decodeUpdateFundraiser(r *http.Request) (dto.UpdateFundraiserRequest, error
 	req.FundraiserId = uint(fundraiserId)
 	req.RequestOrganizerId = uint(tokenData.ID)
 
+	return req, nil
+}
+
+func decodeUserDonationsRequest(r *http.Request) (dto.ListUserDonationsRequest, error) {
+	value := r.URL.Query()
+
+	offset, err := strconv.Atoi(value.Get("offset"))
+	if err != nil || offset < 0 {
+		return dto.ListUserDonationsRequest{}, internal_errors.BadRequest{Message: "Invalid offset value"}
+	}
+
+	limit, err := strconv.Atoi(value.Get("limit"))
+	if err != nil || limit < 0 {
+		return dto.ListUserDonationsRequest{}, internal_errors.BadRequest{Message: "Invalid limit value"}
+	}
+
+	// Keeping default as ascending order
+	isAscending, err := strconv.ParseBool(value.Get("is_ascending"))
+	if err != nil {
+		isAscending = true
+	}
+
+	tokenData, err := decodeTokenFromContext(r.Context())
+	if err != nil {
+		return dto.ListUserDonationsRequest{}, internal_errors.InvalidCredentialError{Message: "Token not found"}
+	}
+
+	req := dto.ListUserDonationsRequest{
+		UserId:             tokenData.ID,
+		Search:             value.Get("search"),
+		IsAnonymous:        value.Get("is_anonymous"),
+		Offset:             uint(offset),
+		Limit:              uint(limit),
+		OrderByKey:         value.Get("order_by"),
+		OrderByIsAscending: isAscending,
+	}
+	return req, nil
+}
+
+func decodeDonationsRequest(r *http.Request) (dto.ListDonationsRequest, error) {
+	value := r.URL.Query()
+
+	offset, err := strconv.Atoi(value.Get("offset"))
+	if err != nil || offset < 0 {
+		return dto.ListDonationsRequest{}, internal_errors.BadRequest{Message: "Invalid offset value"}
+	}
+
+	limit, err := strconv.Atoi(value.Get("limit"))
+	if err != nil || limit < 0 {
+		return dto.ListDonationsRequest{}, internal_errors.BadRequest{Message: "Invalid limit value"}
+	}
+
+	// Keeping default as ascending order
+	isAscending, err := strconv.ParseBool(value.Get("is_ascending"))
+	if err != nil {
+		isAscending = true
+	}
+
+	req := dto.ListDonationsRequest{
+		Search:             value.Get("search"),
+		IsAnonymous:        value.Get("is_anonymous"),
+		Offset:             uint(offset),
+		Limit:              uint(limit),
+		OrderByKey:         value.Get("order_by"),
+		OrderByIsAscending: isAscending,
+	}
 	return req, nil
 }
