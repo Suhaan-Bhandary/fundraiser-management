@@ -62,7 +62,15 @@ const listFundraiserDonationsQuery = `
 	join users
 	on donation.user_id = users.id
 	where donation.fundraiser_id = $1
-	order by created_at desc;
+	order by donation.created_at DESC
+	offset $2 
+	limit $3;
+`
+
+const getListFundraiserDonationsCountQuery = `
+	select count(donation.id) 
+	from donation
+	where donation.fundraiser_id = $1;
 `
 
 const listDonationsQuery = `

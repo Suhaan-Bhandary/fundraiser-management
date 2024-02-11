@@ -74,7 +74,8 @@ type ListFundraisersResponse struct {
 }
 
 type ListFundraiserDonationsResponse struct {
-	Donations []FundraiserDonationView `json:"donations"`
+	Donations  []FundraiserDonationView `json:"donations"`
+	TotalCount uint                     `json:"total_count"`
 }
 
 type ListDonationsResponse struct {

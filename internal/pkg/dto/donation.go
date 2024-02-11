@@ -118,3 +118,25 @@ func (req *ListDonationsRequest) Validate() error {
 
 	return nil
 }
+
+type ListFundraiserDonationsRequest struct {
+	FundraiserId uint `json:"fundraiser_id"`
+	Offset       uint `json:"offset"`
+	Limit        uint `json:"limit"`
+}
+
+func (req *ListFundraiserDonationsRequest) Validate() error {
+	if req.Offset < 0 {
+		return errors.New("invalid offset, offset cannot be negative")
+	}
+
+	if req.Limit <= 0 {
+		return errors.New("limit should be positive number")
+	}
+
+	if req.Limit > 1000 {
+		return errors.New("Limit should be in range [1, 1000]")
+	}
+
+	return nil
+}
