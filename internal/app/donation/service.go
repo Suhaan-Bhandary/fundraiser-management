@@ -16,7 +16,7 @@ type Service interface {
 	CreateDonation(donationDetail dto.CreateDonationRequest) (uint, error)
 	ListUserDonation(req dto.ListUserDonationsRequest) ([]dto.DonationView, uint, error)
 	ListFundraiserDonations(fundraiserId uint) ([]dto.FundraiserDonationView, error)
-	ListDonations() ([]dto.FundraiserDonationView, error)
+	ListDonations(req dto.ListDonationsRequest) ([]dto.FundraiserDonationView, uint, error)
 }
 
 func NewService(donationRepo repository.DonationStorer, fundraiserRepo repository.FundraiserStorer) Service {
@@ -64,11 +64,16 @@ func (donationSvc *service) ListFundraiserDonations(fundraiserId uint) ([]dto.Fu
 	return fundraiserDonations, nil
 }
 
-func (donationSvc *service) ListDonations() ([]dto.FundraiserDonationView, error) {
-	donations, err := donationSvc.donationRepo.ListDonations()
+func (donationSvc *service) ListDonations(req dto.ListDonationsRequest) ([]dto.FundraiserDonationView, uint, error) {
+	totalCount, err := donationSvc.donationRepo.GetListDonationsCount(req)
 	if err != nil {
-		return []dto.FundraiserDonationView{}, err
+		return []dto.FundraiserDonationView{}, 0, err
 	}
 
-	return donations, nil
+	donations, err := donationSvc.donationRepo.ListDonations(req)
+	if err != nil {
+		return []dto.FundraiserDonationView{}, 0, err
+	}
+
+	return donations, totalCount, nil
 }
