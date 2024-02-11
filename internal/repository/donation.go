@@ -10,7 +10,8 @@ type DonationStorer interface {
 	CreateDonation(donationDetail dto.CreateDonationRequest) (uint, error)
 	ListUserDonations(req dto.ListUserDonationsRequest) ([]dto.DonationView, error)
 	GetListUserDonationsCount(req dto.ListUserDonationsRequest) (uint, error)
-	ListFundraiserDonations(fundraiserId uint) ([]dto.FundraiserDonationView, error)
+	ListFundraiserDonations(req dto.ListFundraiserDonationsRequest) ([]dto.FundraiserDonationView, error)
+	GetListFundraiserDonationsCount(req dto.ListFundraiserDonationsRequest) (uint, error)
 	ListDonations(req dto.ListDonationsRequest) ([]dto.FundraiserDonationView, error)
 	GetListDonationsCount(req dto.ListDonationsRequest) (uint, error)
 }

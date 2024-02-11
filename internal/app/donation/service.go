@@ -15,7 +15,7 @@ type service struct {
 type Service interface {
 	CreateDonation(donationDetail dto.CreateDonationRequest) (uint, error)
 	ListUserDonation(req dto.ListUserDonationsRequest) ([]dto.DonationView, uint, error)
-	ListFundraiserDonations(fundraiserId uint) ([]dto.FundraiserDonationView, error)
+	ListFundraiserDonations(req dto.ListFundraiserDonationsRequest) ([]dto.FundraiserDonationView, uint, error)
 	ListDonations(req dto.ListDonationsRequest) ([]dto.FundraiserDonationView, uint, error)
 }
 
@@ -55,13 +55,18 @@ func (donationSvc *service) ListUserDonation(req dto.ListUserDonationsRequest) (
 	return userDonations, totalCount, nil
 }
 
-func (donationSvc *service) ListFundraiserDonations(fundraiserId uint) ([]dto.FundraiserDonationView, error) {
-	fundraiserDonations, err := donationSvc.donationRepo.ListFundraiserDonations(fundraiserId)
+func (donationSvc *service) ListFundraiserDonations(req dto.ListFundraiserDonationsRequest) ([]dto.FundraiserDonationView, uint, error) {
+	totalCount, err := donationSvc.donationRepo.GetListFundraiserDonationsCount(req)
 	if err != nil {
-		return []dto.FundraiserDonationView{}, err
+		return []dto.FundraiserDonationView{}, 0, err
 	}
 
-	return fundraiserDonations, nil
+	fundraiserDonations, err := donationSvc.donationRepo.ListFundraiserDonations(req)
+	if err != nil {
+		return []dto.FundraiserDonationView{}, 0, err
+	}
+
+	return fundraiserDonations, totalCount, nil
 }
 
 func (donationSvc *service) ListDonations(req dto.ListDonationsRequest) ([]dto.FundraiserDonationView, uint, error) {

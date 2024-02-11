@@ -157,3 +157,28 @@ func decodeDonationsRequest(r *http.Request) (dto.ListDonationsRequest, error) {
 	}
 	return req, nil
 }
+
+func decodeFundraiserDonationsRequest(r *http.Request) (dto.ListFundraiserDonationsRequest, error) {
+	fundraiserId, err := decodeId(r)
+	if err != nil {
+		return dto.ListFundraiserDonationsRequest{}, internal_errors.BadRequest{Message: "fundraiser id not found"}
+	}
+
+	value := r.URL.Query()
+	offset, err := strconv.Atoi(value.Get("offset"))
+	if err != nil || offset < 0 {
+		return dto.ListFundraiserDonationsRequest{}, internal_errors.BadRequest{Message: "Invalid offset value"}
+	}
+
+	limit, err := strconv.Atoi(value.Get("limit"))
+	if err != nil || limit < 0 {
+		return dto.ListFundraiserDonationsRequest{}, internal_errors.BadRequest{Message: "Invalid limit value"}
+	}
+
+	req := dto.ListFundraiserDonationsRequest{
+		FundraiserId: fundraiserId,
+		Offset:       uint(offset),
+		Limit:        uint(limit),
+	}
+	return req, nil
+}
