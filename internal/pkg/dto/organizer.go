@@ -78,9 +78,9 @@ func (req *LoginOrganizerRequest) Validate() error {
 	return nil
 }
 
-type GetNotVerifiedOrganizersResponse struct {
+type ListOrganizersResponse struct {
 	Organizers []OrganizerView `json:"organizers"`
-	Count      uint            `json:"count"`
+	TotalCount uint            `json:"total_count"`
 }
 
 type GetOrganizerResponse struct {
