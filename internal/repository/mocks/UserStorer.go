@@ -30,6 +30,34 @@ func (_m *UserStorer) DeleteUser(userId uint) error {
 	return r0
 }
 
+// GetListUsersCount provides a mock function with given fields: req
+func (_m *UserStorer) GetListUsersCount(req dto.ListUserRequest) (uint, error) {
+	ret := _m.Called(req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetListUsersCount")
+	}
+
+	var r0 uint
+	var r1 error
+	if rf, ok := ret.Get(0).(func(dto.ListUserRequest) (uint, error)); ok {
+		return rf(req)
+	}
+	if rf, ok := ret.Get(0).(func(dto.ListUserRequest) uint); ok {
+		r0 = rf(req)
+	} else {
+		r0 = ret.Get(0).(uint)
+	}
+
+	if rf, ok := ret.Get(1).(func(dto.ListUserRequest) error); ok {
+		r1 = rf(req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetUserIDPassword provides a mock function with given fields: email
 func (_m *UserStorer) GetUserIDPassword(email string) (uint, string, error) {
 	ret := _m.Called(email)
@@ -93,9 +121,9 @@ func (_m *UserStorer) GetUserProfile(userId uint) (dto.UserView, error) {
 	return r0, r1
 }
 
-// ListUsers provides a mock function with given fields:
-func (_m *UserStorer) ListUsers() ([]dto.UserView, error) {
-	ret := _m.Called()
+// ListUsers provides a mock function with given fields: req
+func (_m *UserStorer) ListUsers(req dto.ListUserRequest) ([]dto.UserView, error) {
+	ret := _m.Called(req)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ListUsers")
@@ -103,19 +131,19 @@ func (_m *UserStorer) ListUsers() ([]dto.UserView, error) {
 
 	var r0 []dto.UserView
 	var r1 error
-	if rf, ok := ret.Get(0).(func() ([]dto.UserView, error)); ok {
-		return rf()
+	if rf, ok := ret.Get(0).(func(dto.ListUserRequest) ([]dto.UserView, error)); ok {
+		return rf(req)
 	}
-	if rf, ok := ret.Get(0).(func() []dto.UserView); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(dto.ListUserRequest) []dto.UserView); ok {
+		r0 = rf(req)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]dto.UserView)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(dto.ListUserRequest) error); ok {
+		r1 = rf(req)
 	} else {
 		r1 = ret.Error(1)
 	}
