@@ -79,7 +79,7 @@ func DeleteUserHandler(userSvc user.Service) func(http.ResponseWriter, *http.Req
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.MessageResponse{
 			Message: "User deleted successfully",
 		})
 	}

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/donation"
@@ -75,6 +76,7 @@ func CreateDonationHandler(donationSvc donation.Service) func(http.ResponseWrite
 		}
 
 		donationId, err := donationSvc.CreateDonation(req)
+		fmt.Println(donationId, err)
 		if err != nil {
 			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
 			return
