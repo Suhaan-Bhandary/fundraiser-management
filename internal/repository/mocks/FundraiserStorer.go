@@ -185,9 +185,65 @@ func (_m *FundraiserStorer) GetFundraiserOrganizerIdAndStatus(fundraiserId uint)
 	return r0, r1, r2
 }
 
-// ListFundraiser provides a mock function with given fields:
-func (_m *FundraiserStorer) ListFundraiser() ([]dto.FundraiserView, error) {
-	ret := _m.Called()
+// GetFundraiserStatus provides a mock function with given fields: fundraiserId
+func (_m *FundraiserStorer) GetFundraiserStatus(fundraiserId uint) (string, error) {
+	ret := _m.Called(fundraiserId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetFundraiserStatus")
+	}
+
+	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint) (string, error)); ok {
+		return rf(fundraiserId)
+	}
+	if rf, ok := ret.Get(0).(func(uint) string); ok {
+		r0 = rf(fundraiserId)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(fundraiserId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetListFundraisersCount provides a mock function with given fields: req
+func (_m *FundraiserStorer) GetListFundraisersCount(req dto.ListFundraisersRequest) (uint, error) {
+	ret := _m.Called(req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetListFundraisersCount")
+	}
+
+	var r0 uint
+	var r1 error
+	if rf, ok := ret.Get(0).(func(dto.ListFundraisersRequest) (uint, error)); ok {
+		return rf(req)
+	}
+	if rf, ok := ret.Get(0).(func(dto.ListFundraisersRequest) uint); ok {
+		r0 = rf(req)
+	} else {
+		r0 = ret.Get(0).(uint)
+	}
+
+	if rf, ok := ret.Get(1).(func(dto.ListFundraisersRequest) error); ok {
+		r1 = rf(req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ListFundraiser provides a mock function with given fields: req
+func (_m *FundraiserStorer) ListFundraiser(req dto.ListFundraisersRequest) ([]dto.FundraiserView, error) {
+	ret := _m.Called(req)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ListFundraiser")
@@ -195,19 +251,19 @@ func (_m *FundraiserStorer) ListFundraiser() ([]dto.FundraiserView, error) {
 
 	var r0 []dto.FundraiserView
 	var r1 error
-	if rf, ok := ret.Get(0).(func() ([]dto.FundraiserView, error)); ok {
-		return rf()
+	if rf, ok := ret.Get(0).(func(dto.ListFundraisersRequest) ([]dto.FundraiserView, error)); ok {
+		return rf(req)
 	}
-	if rf, ok := ret.Get(0).(func() []dto.FundraiserView); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(dto.ListFundraisersRequest) []dto.FundraiserView); ok {
+		r0 = rf(req)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]dto.FundraiserView)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(dto.ListFundraisersRequest) error); ok {
+		r1 = rf(req)
 	} else {
 		r1 = ret.Error(1)
 	}

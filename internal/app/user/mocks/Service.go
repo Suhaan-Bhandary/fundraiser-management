@@ -58,34 +58,41 @@ func (_m *Service) GetUserProfile(userId uint) (dto.UserView, error) {
 	return r0, r1
 }
 
-// ListUsers provides a mock function with given fields:
-func (_m *Service) ListUsers() ([]dto.UserView, error) {
-	ret := _m.Called()
+// ListUsers provides a mock function with given fields: req
+func (_m *Service) ListUsers(req dto.ListUserRequest) ([]dto.UserView, uint, error) {
+	ret := _m.Called(req)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ListUsers")
 	}
 
 	var r0 []dto.UserView
-	var r1 error
-	if rf, ok := ret.Get(0).(func() ([]dto.UserView, error)); ok {
-		return rf()
+	var r1 uint
+	var r2 error
+	if rf, ok := ret.Get(0).(func(dto.ListUserRequest) ([]dto.UserView, uint, error)); ok {
+		return rf(req)
 	}
-	if rf, ok := ret.Get(0).(func() []dto.UserView); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(dto.ListUserRequest) []dto.UserView); ok {
+		r0 = rf(req)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]dto.UserView)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(dto.ListUserRequest) uint); ok {
+		r1 = rf(req)
 	} else {
-		r1 = ret.Error(1)
+		r1 = ret.Get(1).(uint)
 	}
 
-	return r0, r1
+	if rf, ok := ret.Get(2).(func(dto.ListUserRequest) error); ok {
+		r2 = rf(req)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
 }
 
 // LoginUser provides a mock function with given fields: req
