@@ -122,3 +122,157 @@ func TestLoginUser(t *testing.T) {
 		})
 	}
 }
+
+func TestDeleteUser(t *testing.T) {
+	userRepo := mocks.NewUserStorer(t)
+	service := NewService(userRepo)
+
+	tests := []struct {
+		name            string
+		input           uint
+		setup           func(userMock *mocks.UserStorer)
+		isErrorExpected bool
+	}{
+		{
+			name:  "Success delete user",
+			input: 1,
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("DeleteUser", mock.Anything).Return(nil).Once()
+			},
+			isErrorExpected: false,
+		},
+		{
+			name:  "Fail delete user",
+			input: 1,
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("DeleteUser", mock.Anything).Return(errors.New("error")).Once()
+			},
+			isErrorExpected: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.setup(userRepo)
+
+			// test service
+			err := service.DeleteUser(test.input)
+
+			if (err != nil) != test.isErrorExpected {
+				t.Errorf("Test Failed, expected error to be %v, but got err %v", test.isErrorExpected, err != nil)
+			}
+		})
+	}
+}
+
+func TestListUsers(t *testing.T) {
+	userRepo := mocks.NewUserStorer(t)
+	service := NewService(userRepo)
+
+	tests := []struct {
+		name            string
+		input           dto.ListUserRequest
+		setup           func(userMock *mocks.UserStorer)
+		isErrorExpected bool
+	}{
+		{
+			name: "Success all users",
+			input: dto.ListUserRequest{
+				Search:             "search",
+				Offset:             0,
+				Limit:              100,
+				OrderByKey:         "first_name",
+				OrderByIsAscending: true,
+			},
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("GetListUsersCount", mock.Anything).Return(uint(10), nil).Once()
+				userMock.On("ListUsers", mock.Anything).Return([]dto.UserView{}, nil).Once()
+			},
+			isErrorExpected: false,
+		},
+		{
+			name: "Fail GetListUsersCount",
+			input: dto.ListUserRequest{
+				Search:             "search",
+				Offset:             0,
+				Limit:              100,
+				OrderByKey:         "first_name",
+				OrderByIsAscending: true,
+			},
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("GetListUsersCount", mock.Anything).Return(uint(0), errors.New("error")).Once()
+			},
+			isErrorExpected: true,
+		},
+		{
+			name: "Fail ListUsers",
+			input: dto.ListUserRequest{
+				Search:             "search",
+				Offset:             0,
+				Limit:              100,
+				OrderByKey:         "first_name",
+				OrderByIsAscending: true,
+			},
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("GetListUsersCount", mock.Anything).Return(uint(10), nil).Once()
+				userMock.On("ListUsers", mock.Anything).Return([]dto.UserView{}, errors.New("error")).Once()
+			},
+			isErrorExpected: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.setup(userRepo)
+
+			// test service
+			_, _, err := service.ListUsers(test.input)
+
+			if (err != nil) != test.isErrorExpected {
+				t.Errorf("Test Failed, expected error to be %v, but got err %v", test.isErrorExpected, err != nil)
+			}
+		})
+	}
+}
+
+func TestGetUserProfile(t *testing.T) {
+	userRepo := mocks.NewUserStorer(t)
+	service := NewService(userRepo)
+
+	tests := []struct {
+		name            string
+		userId          uint
+		setup           func(userMock *mocks.UserStorer)
+		isErrorExpected bool
+	}{
+		{
+			name:   "Success get user",
+			userId: 1,
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("GetUserProfile", mock.Anything).Return(dto.UserView{}, nil).Once()
+			},
+			isErrorExpected: false,
+		},
+		{
+			name:   "Fail get user",
+			userId: 1,
+			setup: func(userMock *mocks.UserStorer) {
+				userMock.On("GetUserProfile", mock.Anything).Return(dto.UserView{}, errors.New("error")).Once()
+			},
+			isErrorExpected: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.setup(userRepo)
+
+			// test service
+			_, err := service.GetUserProfile(test.userId)
+
+			if (err != nil) != test.isErrorExpected {
+				t.Errorf("Test Failed, expected error to be %v, but got err %v", test.isErrorExpected, err != nil)
+			}
+		})
+	}
+}
