@@ -80,7 +80,6 @@ func (userSvc *service) ListUsers(req dto.ListUserRequest) ([]dto.UserView, uint
 	}
 
 	users, err := userSvc.userRepo.ListUsers(req)
-
 	if err != nil {
 		return []dto.UserView{}, 0, err
 	}
