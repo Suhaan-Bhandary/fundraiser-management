@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
@@ -34,17 +35,17 @@ func CheckAuth(handler func(w http.ResponseWriter, r *http.Request), allowed []s
 			id := uint(claims["id"].(float64))
 			tokenRole := claims["role"].(string)
 
-			for _, role := range allowed {
-				if role == tokenRole {
-					r_copy := r.WithContext(context.WithValue(r.Context(), constants.TokenKey, dto.Token{
-						ID:   id,
-						Role: tokenRole,
-					}))
-
-					handler(w, r_copy)
-					return
-				}
+			if !slices.Contains(allowed, tokenRole) {
+				ErrorResponse(w, http.StatusUnauthorized, errors.New("invalid token"))
+				return
 			}
+
+			r_copy := r.WithContext(context.WithValue(r.Context(), constants.TokenKey, dto.Token{
+				ID:   id,
+				Role: tokenRole,
+			}))
+			handler(w, r_copy)
+			return
 		}
 
 		ErrorResponse(w, http.StatusUnauthorized, errors.New("invalid token"))
