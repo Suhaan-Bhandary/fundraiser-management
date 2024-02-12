@@ -28,6 +28,9 @@ func NewService(donationRepo repository.DonationStorer, fundraiserRepo repositor
 
 func (donationSvc *service) CreateDonation(donationDetail dto.CreateDonationRequest) (uint, error) {
 	fundraiserStatus, err := donationSvc.fundraiserRepo.GetFundraiserStatus(donationDetail.FundraiserId)
+	if err != nil {
+		return 0, err
+	}
 
 	if fundraiserStatus != constants.ACTIVE_STATUS {
 		return 0, internal_errors.BadRequest{Message: "cannot donate as fundraiser is not active"}
