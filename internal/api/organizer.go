@@ -158,7 +158,8 @@ func UpdateOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, 
 	return func(w http.ResponseWriter, r *http.Request) {
 		req, err := decodeUpdateOrganizerRequest(r)
 		if err != nil {
-			middleware.ErrorResponse(w, http.StatusBadRequest, err)
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
 			return
 		}
 

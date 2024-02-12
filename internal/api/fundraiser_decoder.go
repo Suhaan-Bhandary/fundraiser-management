@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -14,7 +13,7 @@ func decodeCreateFundraiser(r *http.Request) (dto.CreateFundraiserRequest, error
 	var req dto.CreateFundraiserRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		return dto.CreateFundraiserRequest{}, errors.New("invalid Json in request body")
+		return dto.CreateFundraiserRequest{}, internal_errors.BadRequest{Message: "invalid Json in request body"}
 	}
 
 	// Assigning the organizer id before validating it

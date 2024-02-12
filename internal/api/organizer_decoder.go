@@ -34,7 +34,7 @@ func decodeUpdateOrganizerRequest(r *http.Request) (dto.UpdateOrganizerRequest, 
 	var req dto.UpdateOrganizerRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		return dto.UpdateOrganizerRequest{}, errors.New("invalid Json in request body")
+		return dto.UpdateOrganizerRequest{}, internal_errors.BadRequest{Message: "invalid Json in request body"}
 	}
 
 	tokenData, err := decodeTokenFromContext(r.Context())
