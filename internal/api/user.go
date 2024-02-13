@@ -123,7 +123,8 @@ func GetUserProfileHandler(userSvc user.Service) func(http.ResponseWriter, *http
 
 		user, err := userSvc.GetUserProfile(tokenData.ID)
 		if err != nil {
-			middleware.ErrorResponse(w, http.StatusInternalServerError, err)
+			statusCode, errResponse := internal_errors.MatchError(err)
+			middleware.ErrorResponse(w, statusCode, errResponse)
 			return
 		}
 

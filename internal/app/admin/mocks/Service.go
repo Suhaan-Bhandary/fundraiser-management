@@ -40,6 +40,24 @@ func (_m *Service) LoginAdmin(req dto.LoginAdminRequest) (string, error) {
 	return r0, r1
 }
 
+// RegisterAdmin provides a mock function with given fields: req
+func (_m *Service) RegisterAdmin(req dto.RegisterAdminRequest) error {
+	ret := _m.Called(req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for RegisterAdmin")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(dto.RegisterAdminRequest) error); ok {
+		r0 = rf(req)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewService creates a new instance of Service. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewService(t interface {

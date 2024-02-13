@@ -122,6 +122,10 @@ func (userStore *userStore) GetUserProfile(userId uint) (dto.UserView, error) {
 	err := row.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return dto.UserView{}, internal_errors.InvalidCredentialError{Message: "Invalid user token"}
+		}
+
 		return dto.UserView{}, errors.New("error while fetching users")
 	}
 
