@@ -8,9 +8,11 @@ import (
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/api"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app"
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/admin"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
-	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/helpers"
-	"github.com/Suhaan-Bhandary/fundraiser-management/internal/repository"
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
+	repository "github.com/Suhaan-Bhandary/fundraiser-management/internal/repository"
+	postgresql "github.com/Suhaan-Bhandary/fundraiser-management/internal/repository/postgresql"
 	"github.com/joho/godotenv"
 )
 
@@ -32,46 +34,6 @@ func main() {
 		createAdmin()
 	default:
 		startServer()
-	}
-}
-
-func createAdmin() {
-	ctx := context.Background()
-
-	// Initialize DB
-	db, err := repository.InitializeDatabase(ctx)
-	if err != nil {
-		fmt.Println("DB Error:", err)
-		return
-	}
-
-	var username, password string
-
-	fmt.Print("Enter admin username: ")
-	_, err = fmt.Scanln(&username)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Print("Enter admin password: ")
-	_, err = fmt.Scanln(&password)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	hashedPassword, err := helpers.HashPassword(password)
-	if err != nil {
-		fmt.Println("Cannot create admin:", err)
-		return
-	}
-
-	insertAdminQuery := "INSERT INTO admin (username, password) values($1, $2)"
-	_, err = db.Exec(insertAdminQuery, username, hashedPassword)
-	if err != nil {
-		fmt.Println("Cannot create admin:", err)
-		return
 	}
 }
 
@@ -100,4 +62,42 @@ func startServer() {
 		fmt.Println(err)
 		return
 	}
+}
+
+func createAdmin() {
+	ctx := context.Background()
+
+	// Initialize DB
+	db, err := repository.InitializeDatabase(ctx)
+	adminRepo := postgresql.NewAdminRepo(db)
+	adminService := admin.NewService(adminRepo)
+
+	if err != nil {
+		fmt.Println("DB Error:", err)
+		return
+	}
+
+	var req dto.RegisterAdminRequest
+
+	fmt.Print("Enter admin username: ")
+	_, err = fmt.Scanln(&req.Username)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Print("Enter admin password: ")
+	_, err = fmt.Scanln(&req.Password)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	err = adminService.RegisterAdmin(req)
+	if err != nil {
+		fmt.Println("Cannot create admin:", err)
+		return
+	}
+
+	fmt.Println("Admin created successfully")
 }

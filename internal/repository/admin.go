@@ -1,8 +1,13 @@
 package repository
 
-import "time"
+import (
+	"time"
+
+	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
+)
 
 type AdminStorer interface {
+	RegisterAdmin(req dto.RegisterAdminRequest) error
 	GetAdminIDPassword(username string) (uint, string, error)
 }
 
