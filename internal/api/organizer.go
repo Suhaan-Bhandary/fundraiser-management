@@ -31,7 +31,7 @@ func RegisterOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter
 		}
 
 		middleware.SuccessResponse(w, http.StatusCreated, dto.MessageResponse{
-			Message: "Organizer registered successfully",
+			Message: "Organizer registered successfully, contact admin for verification",
 		})
 	}
 }
