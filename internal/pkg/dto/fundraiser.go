@@ -152,7 +152,7 @@ func (req *ListFundraisersRequest) Validate() error {
 	}
 
 	allStatus := []string{constants.ACTIVE_STATUS, constants.INACTIVE_STATUS, constants.BANNED_STATUS}
-	if req.OrderByKey != "" && !slices.Contains(allStatus, req.Status) {
+	if req.Status != "" && !slices.Contains(allStatus, req.Status) {
 		return errors.New("invalid status key")
 	}
 
