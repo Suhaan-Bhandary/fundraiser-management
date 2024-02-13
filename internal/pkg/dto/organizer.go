@@ -2,6 +2,7 @@ package dto
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"slices"
 
@@ -48,8 +49,11 @@ func (req *RegisterOrganizerRequest) Validate() error {
 		return errors.New("password is required")
 	}
 
-	if req.Mobile == "" {
-		return errors.New("mobile is required")
+	match, err = regexp.MatchString(constants.MOBILE_REGEX, req.Mobile)
+	if err != nil || !match {
+		fmt.Println("#####################")
+		fmt.Println(err, match)
+		return errors.New("mobile is invalid")
 	}
 
 	return nil
@@ -113,8 +117,9 @@ func (req *UpdateOrganizerRequest) Validate() error {
 		return errors.New("email is invalid")
 	}
 
-	if req.Mobile == "" {
-		return errors.New("password is required")
+	match, err = regexp.MatchString(constants.MOBILE_REGEX, req.Mobile)
+	if err != nil || !match {
+		return errors.New("mobile is invalid")
 	}
 
 	return nil
