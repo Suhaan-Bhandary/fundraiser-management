@@ -804,11 +804,438 @@ func TestUnBanFundraiserHandler(t *testing.T) {
 	}
 }
 
-func TestListFundraisersHandler(t *testing.T) {}
+func TestListFundraisersHandler(t *testing.T) {
+	fundSvc := fundMocks.NewService(t)
+	ListFundraisersHandler := ListFundraisersHandler(fundSvc)
 
-func TestListFundraiserDonationsHandler(t *testing.T) {}
+	type Input struct {
+		Search             string
+		Status             string
+		OrderByKey         string
+		OrderByIsAscending string
+		Offset             string
+		Limit              string
+	}
 
-func TestListDonationsHandler(t *testing.T) {}
+	tests := []struct {
+		name               string
+		input              Input
+		setup              func(mock *fundMocks.Service)
+		expectedStatusCode int
+	}{
+		{
+			name: "Success for list fundraiser",
+			input: Input{
+				Search:             "name",
+				Status:             "active",
+				OrderByKey:         "title",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup: func(mockSvc *fundMocks.Service) {
+				mockSvc.On("ListFundraisers", mock.Anything, mock.Anything).Return([]dto.FundraiserView{}, uint(1), nil).Once()
+			},
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name: "Success for list fundraiser if search not present",
+			input: Input{
+				Status:             "active",
+				OrderByKey:         "title",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup: func(mockSvc *fundMocks.Service) {
+				mockSvc.On("ListFundraisers", mock.Anything, mock.Anything).Return([]dto.FundraiserView{}, uint(1), nil).Once()
+			},
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name: "Fail for invalid offset",
+			input: Input{
+				Search:             "name",
+				Status:             "active",
+				OrderByKey:         "title",
+				OrderByIsAscending: "true",
+				Offset:             "-1",
+				Limit:              "10",
+			},
+			setup:              func(mockSvc *fundMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for invalid status",
+			input: Input{
+				Search:             "name",
+				Status:             "invalid",
+				OrderByKey:         "title",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup:              func(mockSvc *fundMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Success for invalid is_ascending, default sets to true",
+			input: Input{
+				Search:             "name",
+				Status:             "active",
+				OrderByKey:         "title",
+				OrderByIsAscending: "invalid",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup: func(mockSvc *fundMocks.Service) {
+				mockSvc.On("ListFundraisers", mock.Anything, mock.Anything).Return([]dto.FundraiserView{}, uint(1), nil).Once()
+			},
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name: "Fail for higher limit",
+			input: Input{
+				Search:             "name",
+				Status:             "active",
+				OrderByKey:         "title",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10000",
+			},
+			setup:              func(mockSvc *fundMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for negative limit",
+			input: Input{
+				Search:             "name",
+				Status:             "active",
+				OrderByKey:         "title",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "-10",
+			},
+			setup:              func(mockSvc *fundMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail list fundraisers",
+			input: Input{
+				Search:             "name",
+				Status:             "active",
+				OrderByKey:         "title",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup: func(mockSvc *fundMocks.Service) {
+				mockSvc.On("ListFundraisers", mock.Anything, mock.Anything).Return([]dto.FundraiserView{}, uint(0), errors.New("error")).Once()
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.setup(fundSvc)
+
+			req, err := http.NewRequest(
+				"GET",
+				fmt.Sprintf(
+					"/fundraiser?search=%s&status=%s&order_by=%s&is_ascending=%s&offset=%s&limit=%s",
+					test.input.Search,
+					test.input.Status,
+					test.input.OrderByKey,
+					test.input.OrderByIsAscending,
+					test.input.Offset,
+					test.input.Limit,
+				), bytes.NewBuffer([]byte("")),
+			)
+			if err != nil {
+				t.Fatal(err)
+				return
+			}
+
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc(ListFundraisersHandler)
+			handler.ServeHTTP(rr, req)
+
+			if rr.Result().StatusCode != test.expectedStatusCode {
+				t.Errorf("Expected %d but got %d", test.expectedStatusCode, rr.Result().StatusCode)
+			}
+		})
+	}
+}
+
+func TestListFundraiserDonationsHandler(t *testing.T) {
+	donationSvc := donationMocks.NewService(t)
+	ListFundraisersHandler := ListFundraiserDonationsHandler(donationSvc)
+
+	type Input struct {
+		FundraiserId string
+		Offset       string
+		Limit        string
+	}
+
+	tests := []struct {
+		name               string
+		input              Input
+		setup              func(mock *donationMocks.Service)
+		expectedStatusCode int
+	}{
+		{
+			name: "Success for list fundraiser donations",
+			input: Input{
+				FundraiserId: "1",
+				Offset:       "0",
+				Limit:        "10",
+			},
+			setup: func(mockSvc *donationMocks.Service) {
+				mockSvc.On("ListFundraiserDonations", mock.Anything, mock.Anything).Return([]dto.FundraiserDonationView{}, uint(1), nil).Once()
+			},
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name: "Fail for invalid offset",
+			input: Input{
+				FundraiserId: "1",
+				Offset:       "-1",
+				Limit:        "10",
+			},
+			setup:              func(mockSvc *donationMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for higher limit",
+			input: Input{
+				FundraiserId: "1",
+				Offset:       "0",
+				Limit:        "10000",
+			},
+			setup:              func(mockSvc *donationMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for negative limit",
+			input: Input{
+				FundraiserId: "1",
+				Offset:       "0",
+				Limit:        "-10",
+			},
+			setup:              func(mockSvc *donationMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail list fundraisers",
+			input: Input{
+				FundraiserId: "1",
+				Offset:       "0",
+				Limit:        "10",
+			},
+			setup: func(mockSvc *donationMocks.Service) {
+				mockSvc.On("ListFundraiserDonations", mock.Anything, mock.Anything).Return([]dto.FundraiserDonationView{}, uint(0), errors.New("error")).Once()
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.setup(donationSvc)
+
+			req, err := http.NewRequest(
+				"GET",
+				fmt.Sprintf(
+					"/fundraiser/%s/donation?offset=%s&limit=%s",
+					test.input.FundraiserId,
+					test.input.Offset,
+					test.input.Limit,
+				), bytes.NewBuffer([]byte("")),
+			)
+			if err != nil {
+				t.Fatal(err)
+				return
+			}
+
+			req = mux.SetURLVars(req, map[string]string{
+				"id": test.input.FundraiserId,
+			})
+
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc(ListFundraisersHandler)
+			handler.ServeHTTP(rr, req)
+
+			if rr.Result().StatusCode != test.expectedStatusCode {
+				t.Errorf("Expected %d but got %d", test.expectedStatusCode, rr.Result().StatusCode)
+			}
+		})
+	}
+}
+
+func TestListDonationsHandler(t *testing.T) {
+	donationSvc := donationMocks.NewService(t)
+	ListDonationssHandler := ListDonationsHandler(donationSvc)
+
+	type Input struct {
+		Search             string
+		IsAnonymous        string
+		OrderByKey         string
+		OrderByIsAscending string
+		Offset             string
+		Limit              string
+	}
+
+	tests := []struct {
+		name               string
+		input              Input
+		setup              func(mock *donationMocks.Service)
+		expectedStatusCode int
+	}{
+		{
+			name: "Success for list donations",
+			input: Input{
+				Search:             "name",
+				IsAnonymous:        "true",
+				OrderByKey:         "first_name",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup: func(mockSvc *donationMocks.Service) {
+				mockSvc.On("ListDonations", mock.Anything, mock.Anything).Return([]dto.FundraiserDonationView{}, uint(1), nil).Once()
+			},
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name: "Success for list donations if search not present",
+			input: Input{
+				IsAnonymous:        "true",
+				OrderByKey:         "first_name",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup: func(mockSvc *donationMocks.Service) {
+				mockSvc.On("ListDonations", mock.Anything, mock.Anything).Return([]dto.FundraiserDonationView{}, uint(1), nil).Once()
+			},
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name: "Fail for invalid isAnonymous",
+			input: Input{
+				Search:             "name",
+				IsAnonymous:        "invalid",
+				OrderByKey:         "first_name",
+				OrderByIsAscending: "true",
+				Offset:             "-1",
+				Limit:              "10",
+			},
+			setup:              func(mockSvc *donationMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for invalid offset",
+			input: Input{
+				Search:             "name",
+				IsAnonymous:        "true",
+				OrderByKey:         "first_name",
+				OrderByIsAscending: "true",
+				Offset:             "-1",
+				Limit:              "10",
+			},
+			setup:              func(mockSvc *donationMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Success for invalid is_ascending, default sets to true",
+			input: Input{
+				Search:             "name",
+				IsAnonymous:        "true",
+				OrderByKey:         "first_name",
+				OrderByIsAscending: "invalid",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup: func(mockSvc *donationMocks.Service) {
+				mockSvc.On("ListDonations", mock.Anything, mock.Anything).Return([]dto.FundraiserDonationView{}, uint(1), nil).Once()
+			},
+			expectedStatusCode: http.StatusOK,
+		},
+		{
+			name: "Fail for higher limit",
+			input: Input{
+				Search:             "name",
+				IsAnonymous:        "true",
+				OrderByKey:         "first_name",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10000",
+			},
+			setup:              func(mockSvc *donationMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail for negative limit",
+			input: Input{
+				Search:             "name",
+				IsAnonymous:        "true",
+				OrderByKey:         "first_name",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "-10",
+			},
+			setup:              func(mockSvc *donationMocks.Service) {},
+			expectedStatusCode: http.StatusBadRequest,
+		},
+		{
+			name: "Fail list donations",
+			input: Input{
+				Search:             "name",
+				IsAnonymous:        "true",
+				OrderByKey:         "first_name",
+				OrderByIsAscending: "true",
+				Offset:             "0",
+				Limit:              "10",
+			},
+			setup: func(mockSvc *donationMocks.Service) {
+				mockSvc.On("ListDonations", mock.Anything, mock.Anything).Return([]dto.FundraiserDonationView{}, uint(0), errors.New("error")).Once()
+			},
+			expectedStatusCode: http.StatusInternalServerError,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.setup(donationSvc)
+
+			req, err := http.NewRequest(
+				"GET",
+				fmt.Sprintf(
+					"/fundraiser?search=%s&is_anonymous=%s&order_by=%s&is_ascending=%s&offset=%s&limit=%s",
+					test.input.Search,
+					test.input.IsAnonymous,
+					test.input.OrderByKey,
+					test.input.OrderByIsAscending,
+					test.input.Offset,
+					test.input.Limit,
+				), bytes.NewBuffer([]byte("")),
+			)
+			if err != nil {
+				t.Fatal(err)
+				return
+			}
+
+			rr := httptest.NewRecorder()
+			handler := http.HandlerFunc(ListDonationssHandler)
+			handler.ServeHTTP(rr, req)
+
+			if rr.Result().StatusCode != test.expectedStatusCode {
+				t.Errorf("Expected %d but got %d", test.expectedStatusCode, rr.Result().StatusCode)
+			}
+		})
+	}
+}
 
 func TestUpdateFundraiserHandler(t *testing.T) {
 	fundSvc := fundMocks.NewService(t)

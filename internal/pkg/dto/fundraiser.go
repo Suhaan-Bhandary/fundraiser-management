@@ -152,11 +152,15 @@ func (req *ListFundraisersRequest) Validate() error {
 	}
 
 	allStatus := []string{constants.ACTIVE_STATUS, constants.INACTIVE_STATUS, constants.BANNED_STATUS}
-	if req.OrderByKey != "" && !slices.Contains(allStatus, req.OrderByKey) {
-		return errors.New("invalid order key")
+	if req.OrderByKey != "" && !slices.Contains(allStatus, req.Status) {
+		return errors.New("invalid status key")
 	}
 
-	orderKeys := []string{"id", "first_name", "last_name", "fundraiser_title", "amount", "created_at"}
+	orderKeys := []string{
+		"fundraiser_id", "organizer_id", "title", "description", "organizer_name",
+		"target_amount", "status", "created_at", "updated_at",
+	}
+
 	if req.OrderByKey != "" && !slices.Contains(orderKeys, req.OrderByKey) {
 		return errors.New("invalid order key")
 	}
