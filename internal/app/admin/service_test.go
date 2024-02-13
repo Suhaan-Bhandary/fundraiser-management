@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
@@ -9,6 +10,54 @@ import (
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/repository/mocks"
 	"github.com/stretchr/testify/mock"
 )
+
+func TestRegisterAdmin(t *testing.T) {
+	adminRepo := mocks.NewAdminStorer(t)
+	service := NewService(adminRepo)
+
+	tests := []struct {
+		name            string
+		input           dto.RegisterAdminRequest
+		setup           func(adminMock *mocks.AdminStorer)
+		isErrorExpected bool
+	}{
+		{
+			name: "Success for user Detail",
+			input: dto.RegisterAdminRequest{
+				Username: "suhaan",
+				Password: "123",
+			},
+			setup: func(adminMock *mocks.AdminStorer) {
+				adminMock.On("RegisterAdmin", mock.Anything).Return(nil).Once()
+			},
+			isErrorExpected: false,
+		},
+		{
+			name: "Failed because RegisterAdmin",
+			input: dto.RegisterAdminRequest{
+				Username: "suhaan",
+				Password: "123",
+			},
+			setup: func(adminMock *mocks.AdminStorer) {
+				adminMock.On("RegisterAdmin", mock.Anything).Return(errors.New("Error")).Once()
+			},
+			isErrorExpected: true,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			test.setup(adminRepo)
+
+			// test service
+			err := service.RegisterAdmin(test.input)
+
+			if (err != nil) != test.isErrorExpected {
+				t.Errorf("Test Failed, expected error to be %v, but got err %v", test.isErrorExpected, err != nil)
+			}
+		})
+	}
+}
 
 func TestLoginAdmin(t *testing.T) {
 	adminRepo := mocks.NewAdminStorer(t)
