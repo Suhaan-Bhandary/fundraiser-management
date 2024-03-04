@@ -1,0 +1,1493 @@
+openapi: 3.0.3
+info:
+  title: Fund Raise Management System
+  description: |-
+    This is a Fund Raise Management System, which is used to raise funds and organize events for a fundraiser.
+  contact:
+    email: suhaanbhandary1@gmail.com
+  version: 1.0.11
+tags:
+  - name: user
+  - name: organizer
+  - name: admin
+  - name: fundraiser
+paths:
+  # User
+  /user/register:
+    post:
+      tags:
+        - "user"
+      summary: Register an user 
+      description: Creates an user in the database
+      requestBody:
+        description: User data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: "suhaan"
+                last_name:
+                  type: string
+                  example: "bhandary"
+                email:
+                  type: string
+                  example: "suhaanbhandary1@gmail.com"
+                password:
+                  type: string
+                  example: "abcdefg"
+
+        required: true
+      responses:
+        "200":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "User created successfully"
+        "400":
+          description: Invalid Field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "All fields are required"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /user/login:
+    post:
+      tags:
+        - "user"
+      summary: User Login 
+      description: Returns JWT token once loggedIn
+      requestBody:
+        description: email and password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "Email of registered user"
+                password:
+                  type: string
+                  example: "Password of registered user"
+        required: true
+      responses:
+        "200":
+          description: Successful Login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "User loggedIn successfully"
+                      token:
+                        type: string
+                        description: "JWT token"
+        "400":
+          description: Incorrect email or Password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Incorrect email or Password"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /user:
+    get:
+      tags:
+        - "user"
+      summary: List of all users
+      description: Returns list of all users
+      security:
+        - adminBearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data: 
+                    type: object
+                    properties:
+                      user:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: "suhaan"
+                            last_name:
+                              type: string
+                              example: "bhandary"
+                            email:
+                              type: string
+                              example: "suhaanbhandary1@gmail.com"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /user/profile:
+    get:
+      tags:
+        - "user"
+      summary: Data of LoggedIn User 
+      description: Returns detail of the loggedIn user using token in header, user_id and user_id in token should match
+      security:
+        - userBearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          first_name:
+                            type: string
+                            example: "suhaan"
+                          last_name:
+                            type: string
+                            example: "bhandary"
+                          email:
+                            type: string
+                            example: "suhaanbhandary1@gmail.com"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  
+  /user/{user_id}:
+    delete:
+      tags:
+        - "user"
+      summary: Delete an user 
+      description: Deletes an user from the database
+      security:
+        - adminBearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+      
+      responses:
+        "200":
+          description: user deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "user deleted successfully"
+        "404":
+          description: user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "user with the given id not found"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /user/donation:
+    get:
+      tags:
+        - "user"
+      summary: Donations of the user, userId will be taken from token
+      description: All donations of the user sorted by date and filtered by the search parameter if passed.
+      security:
+        - userBearerAuth: []
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: false
+      responses:
+        "200":
+          description: user donations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      donations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            fundraiser_id:
+                              type: integer
+                            fundraiser_title:
+                              type: string
+                            organizer_title:
+                              type: string
+                            amount:
+                              type: integer
+                            is_anonymous:
+                              type: boolean
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # Organizer
+  /organizer/register:
+    post:
+      tags:
+        - "organizer"
+      summary: Register an organizer 
+      description: Creates an organizer in the database
+      requestBody:
+        description: Organizer data
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organization:
+                  type: string
+                  example: "organization"
+                detail:
+                  type: string
+                  example: "detail"
+                email:
+                  type: string
+                  example: "organization@gmail.com"
+                password:
+                  type: string
+                  example: "abcdefg"
+        required: true
+      responses:
+        "200":
+          description: Organizer created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Organizer created successfully, sent to admin for verification"
+        "400":
+          description: Invalid Field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "All fields are required"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /organizer/login:
+    post:
+      tags:
+        - "organizer"
+      summary: Organizer Login 
+      description: Returns JWT token once loggedIn
+      requestBody:
+        description: email and password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "Email of registered Organizer"
+                password:
+                  type: string
+                  example: "Password of registered Organizer"
+        required: true
+      responses:
+        "200":
+          description: Successful Login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Organizer loggedIn successfully"
+                      token:
+                        type: string
+                        description: "JWT token"
+        "400":
+          description: Incorrect email or Password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Incorrect email or Password"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /organizer:
+    get:
+      tags:
+        - "organizer"
+      summary: List of all organizer 
+      description: Returns list of all organizer
+      security:
+        - adminBearerAuth: []
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      organizers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            organization:
+                              type: string
+                              example: "organization"
+                            detail:
+                              type: string
+                              example: "detail"
+                            email:
+                              type: string
+                              example: "organization@gmail.com"
+                            password:
+                              type: string
+                              example: "abcdefg"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    put:
+      tags:
+        - "organizer"
+      summary: Update an organizer
+      description: Updates an organizer in the database
+      parameters:
+        - in: path
+          name: organizer_id
+          schema:
+            type: integer
+          required: true
+      security:
+        - organizerBearerAuth: []
+      requestBody:
+        description: organizer detail, only keys to be updated are passed
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                organization:
+                  type: string
+                  example: "organization"
+                detail:
+                  type: string
+                  example: "detail"
+                email:
+                  type: string
+                  example: "organization@gmail.com"
+                password:
+                  type: string
+                  example: "abcdefg"
+      responses:
+        "200":
+          description: Organizer updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Organizer updated successfully"
+        "400":
+          description: Invalid Field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Empty body not allowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+
+  /organizer/{organizer_id}:
+    get:
+      tags:
+        - "organizer"
+      summary: Get an organizer Detail 
+      description: Get detail of the organizer
+      parameters:
+        - in: path
+          name: organizer_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Organizer updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      organizer: 
+                        type: object
+                        properties:
+                          organization:
+                            type: string
+                            example: "organization"
+                          detail:
+                            type: string
+                            example: "detail"
+                          email:
+                            type: string
+                            example: "organization@gmail.com"
+                          mobile:
+                            type: string 
+                            example: "888888888"
+        "404":
+          description: Organizer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Organizer not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    
+
+    delete:
+      tags:
+        - "organizer"
+      summary: Delete an organizer 
+      description: Deletes an organizer from the database
+      parameters:
+        - in: path
+          name: organizer_id
+          schema:
+            type: integer
+          required: true
+      security:
+        - adminBearerAuth: []
+      responses:
+        "200":
+          description: Organizer deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:  
+                      message:
+                        type: string
+                        example: "Organizer deleted successfully"
+        "404":
+          description: Organizer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Organizer with the given id not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /organizer/{organizer_id}/verify:
+    patch:
+      tags:
+        - "organizer"
+      summary: verify organizer 
+      description: Sets the status of admin as verified
+      parameters:
+        - in: path
+          name: organizer_id
+          schema:
+            type: integer
+          required: true
+
+      security:
+        - adminBearerAuth: []
+      responses:
+        "200":
+          description: Organizer verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Organizer verified successfully"
+        "404":
+          description: Organizer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Organizer not found"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # Admin
+  /admin/login:
+    post:
+      tags:
+        - "admin"
+      summary: Admin Login 
+      description: Returns JWT token once loggedIn
+      requestBody:
+        description: username and password
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "Admin username"
+                password:
+                  type: string
+                  example: "Admin password"
+        required: true
+      responses:
+        "200":
+          description: Successful Login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Admin loggedIn successfully"
+                      token:
+                        type: string
+                        description: "JWT token"
+        "400":
+          description: Incorrect username or Password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Incorrect username or Password"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  # Fundraiser
+  /fundraiser:
+    post:
+      tags:
+        - "fundraiser"
+      summary: Create an fundraiser 
+      description: Creates an fundraiser in the database
+      security:
+        - organizerBearerAuth: []
+      requestBody:
+        description: fundraiser detail
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                organizer_id:
+                  type: integer
+                image_url:
+                  type: string
+                video_url:
+                  type: string
+                target_amount:
+                  type: integer
+      responses:
+        "200":
+          description: Fundraiser created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Fundraiser created successfully"
+        "400":
+          description: Invalid Field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "All fields are required"
+
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    get:
+      tags:
+        - "fundraiser"
+      summary: list of fundraisers
+      description: Returns list of fundraisers sorted by the given field and filtered
+      parameters:
+        # TODO: Find other parameters for sorting and filtering
+        - in: query
+          name: sortBy
+          description: Used to sort the fundraiser by amount, creation date
+          schema:
+            type: string
+          required: false
+      responses:
+        "200":
+          description: List of Fundraisers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data: 
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "List of Fundraisers"
+                      fundraisers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            mobile:
+                              type: string
+                            organizer_id:
+                              type: integer
+                            image_url:
+                              type: string
+                            video_url:
+                              type: string
+                            target_amount:
+                              type: integer
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Incorrect value of sort by"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /fundraiser/{fundraiser_id}:
+    get:
+      tags:
+        - "fundraiser"
+      summary: Fundraiser 
+      description: Returns a fundraiser with the given id
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Fundraiser
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Fundraiser"
+                      fundraiser:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          description:
+                            type: string
+                          mobile:
+                            type: string
+                          organizer_id:
+                            type: integer
+                          image_url:
+                            type: string
+                          video_url:
+                            type: string
+                          target_amount:
+                            type: integer
+        "404":
+          description: Fundraiser not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Fundraiser not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    put:
+      tags:
+        - "fundraiser"
+      summary: Fundraiser
+      description: Updates the fundraiser with the given id(only admin and the organizer can edit the fundraiser)
+      security:
+        - adminBearerAuth: []
+        - organizerBearerAuth: []
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                image_url:
+                  type: string
+                video_url:
+                  type: string
+                target_amount:
+                  type: integer
+
+      responses:
+        "200":
+          description: Fundraiser
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Fundraiser updated successfully"
+
+        "404":
+          description: Fundraiser not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Fundraiser not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    delete:
+      tags:
+        - "fundraiser"
+      summary: Delete Fundraiser 
+      description: Deletes the fundraiser
+      security:
+        - adminBearerAuth: []
+        - organizerBearerAuth: []
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Fundraiser
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data: 
+                    type: object
+                    properties:  
+                      message:
+                        type: string
+                        example: "Fundraiser deleted successfully"
+
+        "404":
+          description: Fundraiser not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Fundraiser not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /fundraiser/{fundraiser_id}/close:
+    patch:
+      tags:
+        - "fundraiser"
+      summary: Fundraiser 
+      description: Organizer of the fundraiser or admin can close the fundraiser
+      security:
+        - organizerBearerAuth: []
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Closed the fundraiser"
+        "404":
+          description: Fundraiser not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Fundraiser not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /fundraiser/{fundraiser_id}/ban:
+    patch:
+      tags:
+        - "fundraiser"
+      summary: Fundraiser 
+      description: admin can ban the fundraiser
+      security:
+        - adminBearerAuth: []
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Banned the fundraiser"
+        "404":
+          description: Fundraiser not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Fundraiser not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /fundraiser/{fundraiser_id}/unban:
+    patch:
+      tags:
+        - "fundraiser"
+      summary: Fundraiser 
+      description: admin can unban the fundraiser
+      security:
+        - adminBearerAuth: []
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "UnBanned the fundraiser"
+        "404":
+          description: Fundraiser not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 404
+                  error_message:
+                    type: string
+                    example: "Fundraiser not found"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /fundraiser/{fundraiser_id}/donation:
+    post:
+      tags:
+        - "fundraiser"
+      summary: User can donate 
+      description: User can donate to a specific fundraiser, user id is take from the jwt token
+      security:
+        - userBearerAuth: []
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        description: Donation detail
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: integer
+                is_anonymous:
+                  type: boolean
+      responses:
+        "200":
+          description: Donation Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Donated amount successfully"
+        "400":
+          description: Invalid Field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Amount cannot be negative"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+    get:
+      tags:
+        - "fundraiser"
+      summary: list of donations
+      description: Returns list of donations sorted by the date of creation in descending order
+      parameters:
+        - in: path
+          name: fundraiser_id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: List of Fundraisers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "List of Fundraisers"
+                      fundraisers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            user_id:
+                              type: integer
+                            email:
+                              type: string
+                            fundraiser_id:
+                              type: integer
+                            title:
+                              type: string
+                            is_anonymous:
+                              type: boolean
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Incorrect value of sort by"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /donation:
+    get:
+      tags:
+        - "fundraiser"
+      summary: list of all donations
+      description: Returns list of all donations sorted by the date of creation in descending order
+      security:
+        - adminBearerAuth: []
+      responses:
+        "200":
+          description: List of donations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 0
+                  error_message:
+                    type: string
+                    example: ""
+                  data:
+                    type: object
+                    properties:  
+                      message:
+                        type: string
+                        example: "List of donations"
+                      donations:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            user_id:
+                              type: integer
+                            email:
+                              type: string
+                            fundraiser_id:
+                              type: integer
+                            title:
+                              type: string
+                            is_anonymous:
+                              type: boolean
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: integer
+                    example: 400
+                  error_message:
+                    type: string
+                    example: "Incorrect value of sort by"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  responses:
+    InternalServerError:
+      description: Server Error/
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error_code:
+                type: integer
+                example: 500
+              error_message:
+                type: string
+                example: "Something went wrong"
+    UnauthorizedError:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error_code:
+                type: integer
+                example: 401
+              error_message:
+                type: string
+                example: "Unauthorized access"
+
+  securitySchemes:
+    userBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: User token
+    organizerBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Organizer token
+    adminBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Admin token
