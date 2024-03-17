@@ -1,13 +1,14 @@
-
 # Fundraiser Management System in Go
 
 ## Use Case
 
 ### There are 3 types of actors
-    
-    User (Donors)
-    Organizer (organizes fundraisers)
-    Admin
+
+```
+User (Donors)
+Organizer (organizes fundraisers)
+Admin
+```
 
 1. Donor
 
@@ -20,16 +21,17 @@
 - Keep their donation anonymous
 
 2. Organizer
+
 - Request to register on the platform
 - Create and Edit fundraiser
 - View list of users who have donated to a specific fundraiser
 
 3. Admin
+
 - Monitor everything
 - Verify organizer and grant access
 - Ban a fundraiser
 - Edit and delete an organize
-
 
 ## Prerequisites
 
@@ -60,14 +62,13 @@ Setup Env in root directory, refer the Environment Variables section
 
 ```bash
   cd fundraiser-management
-``` 
+```
 
 Start the server
 
 ```bash
   make run
 ```
-
 
 ## Swagger
 
@@ -76,6 +77,7 @@ Swagger file is provided with the project to view routes and their working
 ## Postman Collection
 
 [Postman Collection](https://www.postman.com/mission-architect-94960085/workspace/public/collection/16036286-a6c28b2e-5b8f-4267-b6a7-e999b9e02e7e?action=share&creator=16036286)
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
@@ -84,9 +86,11 @@ To run this project, you will need to add the following environment variables to
 
 `SECRET_KEY`
 
-Note:
-PSQL_INFO format = "host=<> port=<> user=<> password=<> dbname=<> sslmode=disable"
+`ORIGIN_ALLOWED`
 
+Note:
+PSQL_INFO format = "host=\<> port=\<> user=\<> password=\<> dbname=\<> sslmode=disable"
+ORIGIN_ALLOWED="http://localhost:3000", here ORIGIN_ALLOWED is the client which is making request to the server.
 
 ## Running Tests
 
@@ -98,16 +102,18 @@ To run tests, run the following command
   make test
 ```
 
-### Test with coverage Detail 
+### Test with coverage Detail
+
 ```bash
   make test-cover
 ```
 
 ### Test with coverage Detail in browser
+
 ```bash
   make html-cover
 ```
+
 ## Authors
 
 - [@suhaanbhandary](https://suhaan-bhandary.vercel.app/)
-

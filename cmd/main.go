@@ -13,6 +13,7 @@ import (
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	repository "github.com/Suhaan-Bhandary/fundraiser-management/internal/repository"
 	postgresql "github.com/Suhaan-Bhandary/fundraiser-management/internal/repository/postgresql"
+	"github.com/gorilla/handlers"
 	"github.com/joho/godotenv"
 )
 
@@ -56,8 +57,16 @@ func startServer() {
 	// Initializing router
 	router := api.NewRouter(services)
 
+	// Cors
+	allowedOrigin := os.Getenv("ORIGIN_ALLOWED")
+
+	credentials := handlers.AllowCredentials()
+	methods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	origins := handlers.AllowedOrigins([]string{allowedOrigin})
+	headers := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
+
 	// Listening to the server and assigning our custom router
-	err = http.ListenAndServe(constants.SERVER_ADDRESS, router)
+	err = http.ListenAndServe(constants.SERVER_ADDRESS, handlers.CORS(credentials, methods, origins, headers)(router))
 	if err != nil {
 		fmt.Println(err)
 		return
