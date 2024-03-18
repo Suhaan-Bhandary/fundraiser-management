@@ -79,7 +79,7 @@ func (fundStore *fundraiserStore) GetFundraiser(fundraiserId uint) (dto.Fundrais
 	err := row.Scan(
 		&fundraiser.ID, &fundraiser.Title, &fundraiser.Description, &fundraiser.OrganizerId,
 		&fundraiser.OrganizerName, &fundraiser.ImageUrl, &fundraiser.VideoUrl, &fundraiser.TargetAmount,
-		&fundraiser.Status, &fundraiser.CreatedAt, &fundraiser.UpdatedAt,
+		&fundraiser.AmountCollected, &fundraiser.Status, &fundraiser.CreatedAt, &fundraiser.UpdatedAt,
 	)
 
 	if err != nil {
@@ -187,7 +187,7 @@ func (fundraiserStore *fundraiserStore) ListFundraiser(req dto.ListFundraisersRe
 		err := rows.Scan(
 			&fundraiserDetail.ID, &fundraiserDetail.Title, &fundraiserDetail.Description, &fundraiserDetail.OrganizerId,
 			&fundraiserDetail.OrganizerName, &fundraiserDetail.ImageUrl, &fundraiserDetail.VideoUrl, &fundraiserDetail.TargetAmount,
-			&fundraiserDetail.Status, &fundraiserDetail.CreatedAt, &fundraiserDetail.UpdatedAt,
+			&fundraiserDetail.AmountCollected, &fundraiserDetail.Status, &fundraiserDetail.CreatedAt, &fundraiserDetail.UpdatedAt,
 		)
 
 		if err != nil {

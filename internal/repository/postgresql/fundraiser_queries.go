@@ -20,8 +20,13 @@ const getOrganizerIdFromFundraiser = `
 const getFundraiserQuery = `
 	select 
 		fundraiser.id, fundraiser.title, fundraiser.description, fundraiser.organizer_id, 
-		organizer.name as organizer_name, fundraiser.image_url, fundraiser.video_url, 
-		fundraiser.target_amount, fundraiser.status, fundraiser.created_at, fundraiser.updated_at
+		organizer.name as organizer_name, fundraiser.image_url, fundraiser.video_url, fundraiser.target_amount,
+        (
+            select SUM(donation.amount)
+            from donation
+            where donation.fundraiser_id = $1
+        ) as amount_collected,
+        fundraiser.status, fundraiser.created_at, fundraiser.updated_at
 	from fundraiser
 	join organizer
 	on fundraiser.organizer_id = organizer.id
@@ -60,9 +65,14 @@ const unbanFundraiserQuery = `
 
 const listFundraisersQuery = `
 	select 
-		fundraiser.id, fundraiser.title, fundraiser.description, fundraiser.organizer_id, 
-		organizer.name as organizer_name, fundraiser.image_url, fundraiser.video_url, 
-		fundraiser.target_amount, fundraiser.status, fundraiser.created_at, fundraiser.updated_at
+		fundraiser.id, fundraiser.title, fundraiser.description, fundraiser.organizer_id,
+		organizer.name as organizer_name, fundraiser.image_url, fundraiser.video_url, fundraiser.target_amount,
+        (
+            select SUM(donation.amount)
+            from donation
+            where donation.fundraiser_id = fundraiser.id
+        ) as amount_collected,
+        fundraiser.status, fundraiser.created_at, fundraiser.updated_at
 	from fundraiser
 	join organizer
 	on fundraiser.organizer_id = organizer.id
