@@ -61,7 +61,7 @@ func startServer() {
 	allowedOrigin := os.Getenv("ORIGIN_ALLOWED")
 
 	credentials := handlers.AllowCredentials()
-	methods := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	methods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"})
 	origins := handlers.AllowedOrigins([]string{allowedOrigin})
 	headers := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
 
