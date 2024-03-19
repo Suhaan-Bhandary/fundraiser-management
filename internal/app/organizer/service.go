@@ -17,7 +17,7 @@ type service struct {
 
 type Service interface {
 	RegisterOrganizer(userDetail dto.RegisterOrganizerRequest) error
-	LoginOrganizer(req dto.LoginOrganizerRequest) (string, error)
+	LoginOrganizer(req dto.LoginOrganizerRequest) (uint, string, error)
 	VerifyOrganizer(organizerId uint) error
 	GetOrganizerList(req dto.ListOrganizersRequest) ([]dto.OrganizerView, uint, error)
 	DeleteOrganizer(organizerId uint) error
@@ -56,27 +56,27 @@ func (orgSvc *service) DeleteOrganizer(organizerId uint) error {
 	return nil
 }
 
-func (orgSvc *service) LoginOrganizer(req dto.LoginOrganizerRequest) (string, error) {
+func (orgSvc *service) LoginOrganizer(req dto.LoginOrganizerRequest) (uint, string, error) {
 	org_id, hashedPassword, isVerified, err := orgSvc.organizerRepo.GetOrganizerIDPasswordAndVerifyStatus(req.Email)
 	if err != nil {
-		return "", err
+		return 0, "", err
 	}
 
 	if !isVerified {
-		return "", internal_errors.InvalidCredentialError{Message: "Organizer is not verified, please contact admin"}
+		return 0, "", internal_errors.InvalidCredentialError{Message: "Organizer is not verified, please contact admin"}
 	}
 
 	isMatch := helpers.MatchPasswordAndHash(req.Password, hashedPassword)
 	if !isMatch {
-		return "", internal_errors.NotFoundError{Message: "incorrect email or password"}
+		return 0, "", internal_errors.NotFoundError{Message: "incorrect email or password"}
 	}
 
 	token, err := helpers.CreateToken(org_id, constants.ORGANIZER)
 	if err != nil {
-		return "", err
+		return 0, "", err
 	}
 
-	return token, nil
+	return org_id, token, nil
 }
 
 func (orgSvc *service) VerifyOrganizer(organizerId uint) error {

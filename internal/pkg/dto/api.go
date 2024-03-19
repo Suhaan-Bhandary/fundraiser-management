@@ -10,5 +10,6 @@ type MessageResponse struct {
 }
 
 type LoginResponse struct {
-	Token string `json:"token"`
+	OrganizerId uint   `json:"organizer_id"`
+	Token       string `json:"token"`
 }

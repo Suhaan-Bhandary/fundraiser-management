@@ -50,7 +50,7 @@ func LoginOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *
 			return
 		}
 
-		token, err := orgSvc.LoginOrganizer(req)
+		organizerId, token, err := orgSvc.LoginOrganizer(req)
 		if err != nil {
 			statusCode, errResponse := internal_errors.MatchError(err)
 			middleware.ErrorResponse(w, statusCode, errResponse)
@@ -58,7 +58,8 @@ func LoginOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *
 		}
 
 		middleware.SuccessResponse(w, http.StatusOK, dto.LoginResponse{
-			Token: token,
+			OrganizerId: organizerId,
+			Token:       token,
 		})
 	}
 }
