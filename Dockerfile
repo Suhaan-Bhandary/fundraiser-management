@@ -27,6 +27,11 @@ EXPOSE 8080
 
 USER nonroot:nonroot
 
+ENV SERVER_ADDRESS "fundraiser-go:8080"
+ENV PSQL_INFO "host=go_db port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
+ENV SECRET_KEY "SECRET KEY"
+ENV ORIGIN_ALLOWED "http://localhost:3000"
+
 # Use below entry point to create admin
 # ENTRYPOINT ["./fundraiserApplication", "create-admin", "admin", "password"]
 ENTRYPOINT ["./fundraiserApplication"]
