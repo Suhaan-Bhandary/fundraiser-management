@@ -148,6 +148,18 @@ func decodeFundraiserDonationsRequest(r *http.Request) (dto.ListFundraiserDonati
 
 func decodeListFundraisersRequest(r *http.Request) (dto.ListFundraisersRequest, error) {
 	value := r.URL.Query()
+
+	// Organizer id is optional, default to 0(all organizers)
+	organizer_id := 0
+	if value.Get("organizer_id") != "" {
+		numeric_organizer_id, err := strconv.Atoi(value.Get("organizer_id"))
+		if err != nil || numeric_organizer_id < 0 {
+			return dto.ListFundraisersRequest{}, internal_errors.BadRequest{Message: "Invalid organizer_id value"}
+		}
+
+		organizer_id = numeric_organizer_id
+	}
+
 	offset, err := strconv.Atoi(value.Get("offset"))
 	if err != nil || offset < 0 {
 		return dto.ListFundraisersRequest{}, internal_errors.BadRequest{Message: "Invalid offset value"}
@@ -167,6 +179,7 @@ func decodeListFundraisersRequest(r *http.Request) (dto.ListFundraisersRequest, 
 	req := dto.ListFundraisersRequest{
 		Search:             value.Get("search"),
 		Status:             value.Get("status"),
+		OrganizerId:        uint(organizer_id),
 		Offset:             uint(offset),
 		Limit:              uint(limit),
 		OrderByKey:         value.Get("order_by"),

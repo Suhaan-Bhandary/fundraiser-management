@@ -174,7 +174,7 @@ func (fundraiserStore *fundraiserStore) ListFundraiser(req dto.ListFundraisersRe
 
 	rows, err := fundraiserStore.db.Query(
 		listFundraisersQuery,
-		req.Search, req.Status, req.OrderByKey, req.OrderByIsAscending, req.Offset, req.Limit,
+		req.Search, req.Status, req.OrderByKey, req.OrderByIsAscending, req.Offset, req.Limit, req.OrganizerId,
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -202,7 +202,7 @@ func (fundraiserStore *fundraiserStore) ListFundraiser(req dto.ListFundraisersRe
 
 func (fundStore *fundraiserStore) GetListFundraisersCount(req dto.ListFundraisersRequest) (uint, error) {
 	var count uint
-	err := fundStore.db.QueryRow(getListFundraisersCountQuery, req.Search, req.Status).Scan(&count)
+	err := fundStore.db.QueryRow(getListFundraisersCountQuery, req.Search, req.Status, req.OrganizerId).Scan(&count)
 	if err != nil {
 		fmt.Println(err)
 		return 0, errors.New("error while fetching fundraisers")

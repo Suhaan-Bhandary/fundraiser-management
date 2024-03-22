@@ -88,7 +88,8 @@ const listFundraisersQuery = `
 			fundraiser.description ilike '%' || $1 || '%' or
 			organizer.name ilike '%' || $1 || '%' 
 		) and
-		(CASE when $2 in ('active', 'inactive', 'banned') THEN fundraiser.status = $2 ELSE true END)
+		(CASE when $2 in ('active', 'inactive', 'banned') THEN fundraiser.status = $2 ELSE true END) and
+		(CASE when $7 <> 0 THEN fundraiser.organizer_id = $7 ELSE true END)
 	order by 
 	    CASE WHEN $3 = 'fundraiser_id' and $4 THEN fundraiser.id END ASC,
 	    CASE WHEN $3 = 'fundraiser_id' and not $4 THEN fundraiser.id END DESC,
@@ -133,7 +134,8 @@ const getListFundraisersCountQuery = `
 			fundraiser.description ilike '%' || $1 || '%' or
 			organizer.name ilike '%' || $1 || '%' 
 		) and
-		(CASE when $2 in ('active', 'inactive', 'banned') THEN fundraiser.status = $2 ELSE true END);
+		(CASE when $2 in ('active', 'inactive', 'banned') THEN fundraiser.status = $2 ELSE true END) and
+		(CASE when $3 <> 0 THEN fundraiser.organizer_id = $3 ELSE true END);
 `
 
 const updateFundraiserQuery = `

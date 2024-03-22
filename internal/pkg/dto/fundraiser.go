@@ -133,6 +133,7 @@ func (req *UpdateFundraiserRequest) Validate() error {
 type ListFundraisersRequest struct {
 	Search             string `json:"search"`
 	Status             string `json:"status"`
+	OrganizerId        uint   `json:"organizer_id"`
 	OrderByKey         string `json:"order_by"`
 	OrderByIsAscending bool   `json:"is_ascending"`
 	Offset             uint   `json:"offset"`
