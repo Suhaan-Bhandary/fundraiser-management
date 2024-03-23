@@ -170,7 +170,7 @@ func TestLoginOrganizer(t *testing.T) {
 			test.setup(orgRepo, test.input.Password)
 
 			// test service
-			_, err := service.LoginOrganizer(test.input)
+			_, _, err := service.LoginOrganizer(test.input)
 
 			if (err != nil) != test.isErrorExpected {
 				t.Errorf("Test Failed, expected error to be %v, but got err %v", test.isErrorExpected, err != nil)

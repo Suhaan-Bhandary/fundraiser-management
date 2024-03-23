@@ -96,31 +96,38 @@ func (_m *Service) GetOrganizerList(req dto.ListOrganizersRequest) ([]dto.Organi
 }
 
 // LoginOrganizer provides a mock function with given fields: req
-func (_m *Service) LoginOrganizer(req dto.LoginOrganizerRequest) (string, error) {
+func (_m *Service) LoginOrganizer(req dto.LoginOrganizerRequest) (uint, string, error) {
 	ret := _m.Called(req)
 
 	if len(ret) == 0 {
 		panic("no return value specified for LoginOrganizer")
 	}
 
-	var r0 string
-	var r1 error
-	if rf, ok := ret.Get(0).(func(dto.LoginOrganizerRequest) (string, error)); ok {
+	var r0 uint
+	var r1 string
+	var r2 error
+	if rf, ok := ret.Get(0).(func(dto.LoginOrganizerRequest) (uint, string, error)); ok {
 		return rf(req)
 	}
-	if rf, ok := ret.Get(0).(func(dto.LoginOrganizerRequest) string); ok {
+	if rf, ok := ret.Get(0).(func(dto.LoginOrganizerRequest) uint); ok {
 		r0 = rf(req)
 	} else {
-		r0 = ret.Get(0).(string)
+		r0 = ret.Get(0).(uint)
 	}
 
-	if rf, ok := ret.Get(1).(func(dto.LoginOrganizerRequest) error); ok {
+	if rf, ok := ret.Get(1).(func(dto.LoginOrganizerRequest) string); ok {
 		r1 = rf(req)
 	} else {
-		r1 = ret.Error(1)
+		r1 = ret.Get(1).(string)
 	}
 
-	return r0, r1
+	if rf, ok := ret.Get(2).(func(dto.LoginOrganizerRequest) error); ok {
+		r2 = rf(req)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
 }
 
 // RegisterOrganizer provides a mock function with given fields: userDetail

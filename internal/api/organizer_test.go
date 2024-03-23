@@ -182,7 +182,7 @@ func TestLoginOrganizerHandler(t *testing.T) {
 						"password": "123"   
 					}`,
 			setup: func(mockSvc *mocks.Service) {
-				mockSvc.On("LoginOrganizer", mock.Anything).Return("token", nil).Once()
+				mockSvc.On("LoginOrganizer", mock.Anything).Return(uint(0), "token", nil).Once()
 			},
 			expectedStatusCode: http.StatusOK,
 		},
@@ -223,7 +223,7 @@ func TestLoginOrganizerHandler(t *testing.T) {
 						"password": "123"   
 					}`,
 			setup: func(mockSvc *mocks.Service) {
-				mockSvc.On("LoginOrganizer", mock.Anything).Return("", errors.New("Error when login")).Once()
+				mockSvc.On("LoginOrganizer", mock.Anything).Return(uint(0), "", errors.New("Error when login")).Once()
 			},
 			expectedStatusCode: http.StatusInternalServerError,
 		},
@@ -234,7 +234,7 @@ func TestLoginOrganizerHandler(t *testing.T) {
 						"password": "123"   
 					}`,
 			setup: func(mockSvc *mocks.Service) {
-				mockSvc.On("LoginOrganizer", mock.Anything).Return("", internal_errors.NotFoundError{Message: "Not found"}).Once()
+				mockSvc.On("LoginOrganizer", mock.Anything).Return(uint(0), "", internal_errors.NotFoundError{Message: "Not found"}).Once()
 			},
 			expectedStatusCode: http.StatusNotFound,
 		},
