@@ -57,7 +57,7 @@ func LoginOrganizerHandler(orgSvc organizer.Service) func(http.ResponseWriter, *
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusOK, dto.LoginResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.OrganizerLoginResponse{
 			OrganizerId: organizerId,
 			Token:       token,
 		})

@@ -9,7 +9,15 @@ type MessageResponse struct {
 	Message string `json:"message"`
 }
 
-type LoginResponse struct {
-	OrganizerId uint   `json:"organizer_id"`
+type UserLoginResponse struct {
+	Token string `json:"token"`
+}
+
+type OrganizerLoginResponse struct {
 	Token       string `json:"token"`
+	OrganizerId uint   `json:"organizer_id"`
+}
+
+type AdminLoginResponse struct {
+	Token string `json:"token"`
 }

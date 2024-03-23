@@ -30,7 +30,7 @@ func LoginAdminHandler(adminSvc admin.Service) func(http.ResponseWriter, *http.R
 			return
 		}
 
-		middleware.SuccessResponse(w, http.StatusOK, dto.LoginResponse{
+		middleware.SuccessResponse(w, http.StatusOK, dto.AdminLoginResponse{
 			Token: token,
 		})
 	}
