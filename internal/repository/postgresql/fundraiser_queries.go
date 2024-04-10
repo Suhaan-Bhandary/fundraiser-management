@@ -143,3 +143,22 @@ const updateFundraiserQuery = `
 	set title = $1, description = $2, image_url = $3, video_url = $4, target_amount = $5 
 	where id = $6;
 `
+
+// Update fundraiser status to 'active', 'inactive'
+// Conditionally decide 'active', 'inactive'
+const updateFundraiserStatusQuery = `
+	update fundraiser
+	set status = (
+        CASE when (
+            COALESCE((
+                    select SUM(donation.amount)
+                    from donation
+                    where donation.fundraiser_id = $1
+            ), 0) < (select target_amount from fundraiser where id = $1)
+        )
+        THEN 'active'
+        ELSE 'inactive'
+        END
+    )
+	where id = $1 and status <> 'banned';
+`

@@ -19,6 +19,7 @@ type FundraiserStorer interface {
 	GetListFundraisersCount(req dto.ListFundraisersRequest) (uint, error)
 	UpdateFundraiser(updateDetail dto.UpdateFundraiserRequest) error
 	GetFundraiserStatus(fundraiserId uint) (string, error)
+	UpdateFundraiserStatus(fundraiserId uint) error
 }
 
 type Fundraiser struct {

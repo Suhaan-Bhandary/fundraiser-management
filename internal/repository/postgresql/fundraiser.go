@@ -244,3 +244,13 @@ func (fundStore *fundraiserStore) GetFundraiserStatus(fundraiserId uint) (string
 
 	return fundraiserStatus, nil
 }
+
+func (fundStore *fundraiserStore) UpdateFundraiserStatus(fundraiserId uint) error {
+	_, err := fundStore.db.Exec(updateFundraiserStatusQuery, fundraiserId)
+
+	if err != nil {
+		return errors.New("error while updating the fundraiser")
+	}
+
+	return nil
+}
