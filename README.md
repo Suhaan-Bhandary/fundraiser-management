@@ -70,6 +70,20 @@ Start the server
   make run
 ```
 
+## Using Docker
+
+### Creating Admin
+
+1. Go to Docker file in the root and un-comment `# ENTRYPOINT ["./fundraiserApplication", "create-admin", "admin", "password"]` and comment `ENTRYPOINT ["./fundraiserApplication"]`
+1. `docker compose build`
+1. `docker compose up`
+1. Close docker compose
+
+### Running Server
+
+1. `docker compose build`
+1. `docker compose up`
+
 ## Swagger
 
 Swagger file is provided with the project to view routes and their working
@@ -82,6 +96,8 @@ Swagger file is provided with the project to view routes and their working
 
 To run this project, you will need to add the following environment variables to your .env file
 
+`SERVER_ADDRESS`
+
 `PSQL_INFO`
 
 `SECRET_KEY`
@@ -89,6 +105,7 @@ To run this project, you will need to add the following environment variables to
 `ORIGIN_ALLOWED`
 
 Note:
+SERVER_ADDRESS="127.0.0.1:8080"
 PSQL_INFO format = "host=\<> port=\<> user=\<> password=\<> dbname=\<> sslmode=disable"
 ORIGIN_ALLOWED="http://localhost:3000", here ORIGIN_ALLOWED is the client which is making request to the server.
 

@@ -9,7 +9,6 @@ import (
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/api"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/app/admin"
-	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/constants"
 	"github.com/Suhaan-Bhandary/fundraiser-management/internal/pkg/dto"
 	repository "github.com/Suhaan-Bhandary/fundraiser-management/internal/repository"
 	postgresql "github.com/Suhaan-Bhandary/fundraiser-management/internal/repository/postgresql"
@@ -19,7 +18,7 @@ import (
 
 func main() {
 	action := ""
-	if len(os.Args) == 2 {
+	if len(os.Args) == 4 {
 		action = os.Args[1]
 	}
 
@@ -27,12 +26,13 @@ func main() {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file")
-		return
 	}
 
 	switch action {
 	case "create-admin":
-		createAdmin()
+		username := os.Args[2]
+		password := os.Args[3]
+		createAdmin(username, password)
 	default:
 		startServer()
 	}
@@ -66,14 +66,14 @@ func startServer() {
 	headers := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
 
 	// Listening to the server and assigning our custom router
-	err = http.ListenAndServe(constants.SERVER_ADDRESS, handlers.CORS(credentials, methods, origins, headers)(router))
+	err = http.ListenAndServe(os.Getenv("SERVER_ADDRESS"), handlers.CORS(credentials, methods, origins, headers)(router))
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 }
 
-func createAdmin() {
+func createAdmin(username, password string) {
 	ctx := context.Background()
 
 	// Initialize DB
@@ -87,20 +87,8 @@ func createAdmin() {
 	}
 
 	var req dto.RegisterAdminRequest
-
-	fmt.Print("Enter admin username: ")
-	_, err = fmt.Scanln(&req.Username)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Print("Enter admin password: ")
-	_, err = fmt.Scanln(&req.Password)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	req.Username = username
+	req.Password = password
 
 	err = adminService.RegisterAdmin(req)
 	if err != nil {
