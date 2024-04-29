@@ -15,3 +15,12 @@ test-cover: ## Run all unit tests in the project with test coverage
 
 html-cover: test-cover
 	go tool cover -html="coverage.out"
+
+mock-app:
+	find ./internal/app -mindepth 1 -maxdepth 1 -type d -execdir sh -c 'cd "{}" && mockery --name=Service' \;
+
+mock-repository:
+	cd internal/repository && mockery --all
+
+mock: mock-app mock-repository
+	@echo "Mocks Generated"
