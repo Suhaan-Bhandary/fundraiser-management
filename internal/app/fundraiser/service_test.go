@@ -487,6 +487,7 @@ func TestUpdateFundraiser(t *testing.T) {
 			setup: func(fundMock *mocks.FundraiserStorer) {
 				fundMock.On("GetFundraiserOrganizerId", mock.Anything).Return(uint(1), nil).Once()
 				fundMock.On("UpdateFundraiser", mock.Anything).Return(nil).Once()
+				fundMock.On("UpdateFundraiserStatus", mock.Anything).Return(nil).Once()
 			},
 			isErrorExpected: false,
 		},
@@ -536,6 +537,24 @@ func TestUpdateFundraiser(t *testing.T) {
 			setup: func(fundMock *mocks.FundraiserStorer) {
 				fundMock.On("GetFundraiserOrganizerId", mock.Anything).Return(uint(1), nil).Once()
 				fundMock.On("UpdateFundraiser", mock.Anything).Return(errors.New("error")).Once()
+			},
+			isErrorExpected: true,
+		},
+		{
+			name: "Fail for update fundraiser status",
+			input: dto.UpdateFundraiserRequest{
+				RequestOrganizerId: 1,
+				FundraiserId:       1,
+				Title:              "Fundraiser",
+				Description:        "Description",
+				ImageUrl:           "image",
+				VideoUrl:           "video",
+				TargetAmount:       1000,
+			},
+			setup: func(fundMock *mocks.FundraiserStorer) {
+				fundMock.On("GetFundraiserOrganizerId", mock.Anything).Return(uint(1), nil).Once()
+				fundMock.On("UpdateFundraiser", mock.Anything).Return(nil).Once()
+				fundMock.On("UpdateFundraiserStatus", mock.Anything).Return(errors.New("Error")).Once()
 			},
 			isErrorExpected: true,
 		},

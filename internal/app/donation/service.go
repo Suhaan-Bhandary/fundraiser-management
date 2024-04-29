@@ -43,6 +43,9 @@ func (donationSvc *service) CreateDonation(donationDetail dto.CreateDonationRequ
 
 	// Update Fundraiser status according to total amount collected and target amount
 	err = donationSvc.fundraiserRepo.UpdateFundraiserStatus(donationDetail.FundraiserId)
+	if err != nil {
+		return 0, err
+	}
 
 	return donationId, nil
 }

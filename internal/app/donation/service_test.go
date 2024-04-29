@@ -32,6 +32,7 @@ func TestCreateDonation(t *testing.T) {
 			setup: func(donationMock *mocks.DonationStorer, fundMock *mocks.FundraiserStorer) {
 				fundMock.On("GetFundraiserStatus", mock.Anything).Return(constants.ACTIVE_STATUS, nil).Once()
 				donationMock.On("CreateDonation", mock.Anything).Return(uint(1), nil).Once()
+				fundMock.On("UpdateFundraiserStatus", mock.Anything).Return(nil).Once()
 			},
 			isErrorExpected: false,
 		},
@@ -85,6 +86,21 @@ func TestCreateDonation(t *testing.T) {
 			setup: func(donationMock *mocks.DonationStorer, fundMock *mocks.FundraiserStorer) {
 				fundMock.On("GetFundraiserStatus", mock.Anything).Return(constants.ACTIVE_STATUS, nil).Once()
 				donationMock.On("CreateDonation", mock.Anything).Return(uint(0), errors.New("Error")).Once()
+			},
+			isErrorExpected: true,
+		},
+		{
+			name: "Update fundraiser status failed",
+			input: dto.CreateDonationRequest{
+				UserId:       1,
+				FundraiserId: 1,
+				Amount:       10,
+				IsAnonymous:  true,
+			},
+			setup: func(donationMock *mocks.DonationStorer, fundMock *mocks.FundraiserStorer) {
+				fundMock.On("GetFundraiserStatus", mock.Anything).Return(constants.ACTIVE_STATUS, nil).Once()
+				donationMock.On("CreateDonation", mock.Anything).Return(uint(1), nil).Once()
+				fundMock.On("UpdateFundraiserStatus", mock.Anything).Return(errors.New("Error")).Once()
 			},
 			isErrorExpected: true,
 		},

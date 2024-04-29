@@ -307,6 +307,24 @@ func (_m *FundraiserStorer) UpdateFundraiser(updateDetail dto.UpdateFundraiserRe
 	return r0
 }
 
+// UpdateFundraiserStatus provides a mock function with given fields: fundraiserId
+func (_m *FundraiserStorer) UpdateFundraiserStatus(fundraiserId uint) error {
+	ret := _m.Called(fundraiserId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateFundraiserStatus")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(uint) error); ok {
+		r0 = rf(fundraiserId)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewFundraiserStorer creates a new instance of FundraiserStorer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewFundraiserStorer(t interface {

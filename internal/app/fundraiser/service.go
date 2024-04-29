@@ -154,6 +154,9 @@ func (fundSvc *service) UpdateFundraiser(updateDetail dto.UpdateFundraiserReques
 
 	// Update Fundraiser status according to total amount collected and target amount
 	err = fundSvc.fundRepo.UpdateFundraiserStatus(updateDetail.FundraiserId)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
